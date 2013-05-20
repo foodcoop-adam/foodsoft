@@ -8,7 +8,7 @@ More information about using this software and contributing can be found on the 
 Install
 --------
 
-Have a look at [README_DEVEL](https://github.com/wvengen/foodsoft/blob/rails3/README_DEVEL) (possibly outdated) and the (more recent) [Developing](https://github.com/wvengen/foodsoft/wiki/Developing) page on the wiki.
+Have a look at [doc/DEVELOPING](https://github.com/wvengen/foodsoft/blob/rails3/doc/DEVELOPING) (possibly outdated) and the (more recent) [Developing](https://github.com/wvengen/foodsoft/wiki/Developing) page on the wiki.
 
 License
 -------
