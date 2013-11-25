@@ -14,15 +14,16 @@ class GroupOrder < ActiveRecord::Base
   validates_numericality_of :price
   validates_uniqueness_of :ordergroup_id, :scope => :order_id   # order groups can only order once per order
 
-  scope :in_open_orders, joins(:order).merge(Order.open)
-  scope :in_finished_orders, joins(:order).merge(Order.finished_not_closed)
-
   scope :ordered, :include => :ordergroup, :order => 'groups.name'
+
+  # filter group orders by order, e.g. `GroupOrders.in_orders(state: ['open', 'closed'])`
+  def self.in_orders(options)
+    joins(:order).merge(Order.where(options))
+  end
 
   # Generate some data for the javascript methods in ordering view
   def load_data
     data = {}
-    data[:available_funds] = ordergroup.get_available_funds(self)
 
     # load prices and other stuff....
     data[:order_articles] = {}
@@ -83,6 +84,11 @@ class GroupOrder < ActiveRecord::Base
       save_group_order_articles
       update_price!
     end
+  end
+
+  # returns the available funds apart from this order
+  def available_funds
+    @available_funds ||= ordergroup.available_funds(self)
   end
 
 end

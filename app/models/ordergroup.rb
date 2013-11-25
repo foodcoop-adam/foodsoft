@@ -26,18 +26,22 @@ class Ordergroup < Group
     User.natural_order.all.reject { |u| (users.include?(u) || u.ordergroup) }
   end
 
-  def value_of_open_orders(exclude = nil)
-    group_orders.in_open_orders.reject{|go| go == exclude}.collect(&:price).sum
-  end
-  
-  def value_of_finished_orders(exclude = nil)
-    group_orders.in_finished_orders.reject{|go| go == exclude}.collect(&:price).sum
+  # return sum of order values for orders with specified options
+  # e.g. value_of_orders(state: 'open')
+  def value_of_orders(options)
+    exclude = options.delete(:exclude)
+    c = group_orders.in_orders(options)
+    c.reject! {|go| go == exclude} unless exclude.nil?
+    c.collect(&:price).sum
   end
 
   # Returns the available funds for this order group (the account_balance minus price of all non-closed GroupOrders of this group).
-  # * exclude (GroupOrder): exclude this GroupOrder from the calculation
-  def get_available_funds(exclude = nil)
-    account_balance - value_of_open_orders(exclude) - value_of_finished_orders(exclude)
+  def available_funds(exclude = nil)
+    if exclude.nil?
+      @available_funds ||= account_balance - value_of_orders(state: ['open', 'finished'])
+    else
+      account_balance - value_of_orders(state: ['open', 'finished'], exclude: exclude)
+    end
   end
 
   # Creates a new FinancialTransaction for this Ordergroup and updates the account_balance accordingly.
