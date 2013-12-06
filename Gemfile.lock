@@ -316,6 +316,7 @@ GEM
       rspec (>= 2.11.0)
     ruby-prof (0.14.2)
     ruby-rc4 (0.1.5)
+    ruby-units (1.4.4)
     rubyzip (1.1.0)
     sass (3.2.13)
     sass-rails (3.2.6)
@@ -445,6 +446,7 @@ DEPENDENCIES
   rspec-rails
   rspec-rerun
   ruby-prof
+  ruby-units
   sass-rails (~> 3.2.3)
   select2-rails (>= 3.4.0)
   selenium-webdriver
