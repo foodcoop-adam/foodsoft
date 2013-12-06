@@ -1551,6 +1551,24 @@ en:
     please_wait: Please wait...
     save: Save
     show: Show
+  units:
+    kind:
+      angle: angle
+      counting: number
+      current: current
+      currency: currency
+      length: length
+      logarithmic: log number
+      luminosity: luminosity
+      information: data quantity
+      time: time
+      solid_angle: solid angle
+      substance: substance
+      temperature: temperature
+      mass: weight
+    errors:
+      invalid_kind: is not a valid %{kind}
+      invalid_unit: is not a valid unit
   views:
     pagination:
       first: ! '&laquo;'

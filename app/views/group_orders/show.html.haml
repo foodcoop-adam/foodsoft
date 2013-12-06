@@ -43,7 +43,7 @@
                 %td= number_to_currency(oa.price.fc_price)
                 %td
                   = r[:quantity]
-                  = "+ #{r[:tolerance]}" if oa.price.unit_quantity > 1
+                  = "+ #{r[:tolerance]}" if oa.article.has_tolerance?
                 %td= r[:result] > 0 ? r[:result] : "0"
                 %td= number_to_currency(r[:sub_total])
               - unless oa.article.note.blank?

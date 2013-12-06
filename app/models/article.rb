@@ -21,7 +21,13 @@ class Article < ActiveRecord::Base
   validates_numericality_of :unit_quantity, :greater_than => 0
   validates_numericality_of :deposit, :tax
   validates_uniqueness_of :name, :scope => [:supplier_id, :deleted_at, :type, :unit]
-  
+  # unit can be anything, unless unit_divide is entered - then both need to be parsable units
+  with_options :unless => Proc.new { unit_divide.blank? } do |divide|
+    divide.validates :unit, :unit => {:message => I18n.t('units.errors.invalid_unit')}
+    divide.validates :unit_divide, :unit => {:message => I18n.t('units.errors.invalid_unit')}
+    divide.validate :check_units
+  end
+
   # Callbacks
   before_save :update_price_history
   before_destroy :check_article_in_use
@@ -38,6 +44,21 @@ class Article < ActiveRecord::Base
   # The price for the foodcoop-member.
   def fc_price
     (gross_price  * (FoodsoftConfig[:price_markup] / 100 + 1)).round(2)
+  end
+
+  # Fractional unit we subdivide in
+  def unit_divide_fraction
+    if unit_divide.nil? or unit_divide == unit
+      return 1
+    end
+    # TODO cache this
+    unit = ::Unit.new(self.unit)
+    unit_divide = ::Unit.new(self.unit_divide)
+    if not unit =~ unit_divide
+      raise 'Unit and subdivision must be compatible units.'
+    end
+    # return division of units
+    (unit_divide.convert_to(unit.units) / unit).scalar.to_f
   end
   
   # Returns true if article has been updated at least 2 days ago
@@ -59,6 +80,11 @@ class Article < ActiveRecord::Base
     order.order_articles.where(article_id: id).where('quantity > 0').one?
   end
   
+  # If this article uses tolerance
+  def has_tolerance?
+    unit_quantity > 1 || unit_divide_fraction != 1
+  end
+
   # this method checks, if the shared_article has been changed
   # unequal attributes will returned in array
   # if only the timestamps differ and the attributes are equal, 
@@ -182,5 +208,13 @@ class Article < ActiveRecord::Base
 
   def price_changed?
     changed.detect { |attr| attr == 'price' || 'tax' || 'deposit' || 'unit_quantity' } ? true : false
+  end
+
+  def check_units
+    # for now, the unit and subdivision unit must be compatible
+    unit = ::Unit.new(self.unit)
+    if not unit =~ unit_divide
+      errors.add :unit_divide, I18n.t('units.errors.invalid_kind', kind: I18n.t("units.kind.#{unit.kind}"))
+    end
   end
 end

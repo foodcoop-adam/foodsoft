@@ -386,6 +386,9 @@ GEM
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     uniform_notifier (1.4.0)
+    unit_validation (0.0.2)
+      rails (~> 3.2.0)
+      ruby-units
     vegas (0.1.11)
       rack (>= 1.0.0)
     websocket (1.0.7)
@@ -459,4 +462,5 @@ DEPENDENCIES
   thin
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
+  unit_validation
   whenever

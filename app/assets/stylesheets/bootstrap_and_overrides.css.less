@@ -160,7 +160,15 @@ table {
 }
 .order-article {
   .quantity, .tolerance {
+    width: 6.8em;
+    padding-bottom: 1px;
+    padding-top: 1px;
     white-space: nowrap;
+    .total {
+      display: inline-block;
+      text-align: center;
+      width: 2em;
+    }
   }
   .units_all {
     width: 2em;
@@ -185,6 +193,36 @@ table {
         background: inherit;
         text-shadow: none;
       }
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  .order-article {
+    .units_pack { width: 3.5em; }
+    td, th {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .order-article {
+    .quantity, .tolerance {
+      width: 2.5em;
+      button, input[type="button"] { display: none; }
+    }
+  }
+  .edit_group_order, .new_group_order {
+    // truncate headings
+    th {
+      .quantity, .tolerance, .units_pack {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .quantity, .tolerance { width: 2.5em; }
+      .units_pack { width: 4.7em; }
     }
   }
 }
@@ -275,8 +313,11 @@ tr.unavailable {
     border-color: red;
   }
 }
+.input-mini {
+  width: 50px;
+}
 .input-nano {
-  width: 40px;
+  width: 20px;
 }
 .input-fill {
   width: 90%;
@@ -473,6 +514,7 @@ i.package.icon-only {
     }
   }
 }
+
 // allow to have indicator text instead of input with same markup
 .control-text {
   margin-top: 5px;
@@ -482,4 +524,23 @@ i.package.icon-only {
 .input-prepend button.unlocker {
   padding-right: 6px;
   padding-left: 7px;
+}
+
+// inputs that are "in the background" - less visible
+.less-visible {
+  color: #ddd;
+  input {
+    color: #ddd;
+    border-color: #eee;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: rgba(0, 0, 0, 0.05);
+    box-shadow: rgba(0, 0, 0, 0.05);
+  }
+}
+.less-visible:hover {
+  color: @textColor;
+  input {
+    color: @textColor;
+    border-color: @inputBorder;
+  }
 }

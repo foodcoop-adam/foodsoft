@@ -14,6 +14,7 @@ var isStockit = false;          // Wheter the order is from stock oder normal su
 // Article data arrays:
 var price = new Array();
 var unit = new Array();  		// items per order unit
+var unitDivide = new Array();   // members can order in steps of
 var itemTotal = new Array();    // total item price
 var quantityOthers = new Array();
 var toleranceOthers = new Array();
@@ -36,10 +37,11 @@ function setMinimumBalance(amount) {
     minimumBalance = amount;
 }
 
-function addData(orderArticleId, itemPrice, itemUnit, itemSubtotal, itemQuantityOthers, itemToleranceOthers, allocated, available) {
+function addData(orderArticleId, itemPrice, itemUnit, itemDivide, itemSubtotal, itemQuantityOthers, itemToleranceOthers, allocated, available) {
     var i = orderArticleId;
     price[i] = itemPrice;
     unit[i] = itemUnit;
+    unitDivide[i] = itemDivide;
     itemTotal[i] = itemSubtotal;
     quantityOthers[i] = itemQuantityOthers;
     toleranceOthers[i] = itemToleranceOthers;
@@ -47,48 +49,19 @@ function addData(orderArticleId, itemPrice, itemUnit, itemSubtotal, itemQuantity
     quantityAvailable[i] = available;
 }
 
-function increaseQuantity(item) {
-    var value = Number($('#q_' + item).val()) + 1;
-    if (!isStockit || (value <= (quantityAvailable[item] + itemsAllocated[item]))) {
-        update(item, value, $('#t_' + item).val());
-    }
-}
-
-function decreaseQuantity(item) {
-    var value = Number($('#q_' + item).val()) - 1;
-    if (value >= 0) {
-        update(item, value, $('#t_' + item).val());
-    }
-}
-
-function increaseTolerance(item) {
-    var value = Number($('#t_' + item).val()) + 1;
-    update(item, $('#q_' + item).val(), value);
-}
-
-function decreaseTolerance(item) {
-    var value = Number($('#t_' + item).val()) - 1;
-    if (value >= 0) {
-        update(item, $('#q_' + item).val(), value);
-    }
-}
-
 function update(item, quantity, tolerance) {
     // set modification flag
     modified = true
 
-    // update hidden input fields
-    $('#q_' + item).val(quantity);
-    $('#t_' + item).val(tolerance);
-
     // calculate how many units would be ordered in total
     var units = calcUnits(unit[item], quantityOthers[item] + Number(quantity), toleranceOthers[item] + Number(tolerance));
     if (unitCompletedFromTolerance(unit[item], quantityOthers[item] + Number(quantity), toleranceOthers[item] + Number(tolerance))) {
-        $('#units_' + item).html('<span style=\"color:grey\">' + String(units) + '</span>');
+        $('#units_' + item).html('<span style=\"color:grey\">' + truncate_number(units) + '</span>');
     } else {
-        $('#units_' + item).html(String(units));
+        $('#units_' + item).html(truncate_number(units));
     }
 
+    /* WE DON'T USE UNIT COUNTERS AT THIS MOMENT
     // update used/unused quantity
     var available = Math.max(0, units * unit[item] - quantityOthers[item]);
     var q_used = Math.min(available, quantity);
@@ -96,20 +69,19 @@ function update(item, quantity, tolerance) {
     if (quantity >= itemsAllocated[item] && q_used < itemsAllocated[item]) {
         q_used = itemsAllocated[item];
     }
-    $('#q_used_' + item).html(String(q_used));
-    $('#q_unused_' + item).html(String(quantity - q_used));
-    $('#q_grouptotal_' + item).html(String(Number(quantity)));
-    $('#q_total_' + item).html(String(Number(quantity) + quantityOthers[item]));
+    $('#q_used_' + item).html(truncate_number(q_used));
+    $('#q_unused_' + item).html(truncate_number(quantity - q_used));
+    $('#q_grouptotal_' + item).html(truncate_number(quantity));
+    $('#q_total_' + item).html(truncate_number(Number(quantity) + quantityOthers[item]));
 
     // update used/unused tolerance
-    if (unit[item] > 1) {
-        available = Math.max(0, available - q_used - toleranceOthers[item]);
-        t_used = Math.min(available, tolerance);
-        $('#t_used_' + item).html(String(t_used));
-        $('#t_unused_' + item).html(String(tolerance - t_used));
-        $('#t_grouptotal_' + item).html(String(Number(tolerance)));
-        $('#t_total_' + item).html(String(Number(tolerance) + toleranceOthers[item]));
-    }
+    available = Math.max(0, available - q_used - toleranceOthers[item]);
+    t_used = Math.min(available, tolerance);
+    $('#t_used_' + item).html(truncate_number(t_used));
+    $('#t_unused_' + item).html(truncate_number(tolerance - t_used));
+    $('#t_grouptotal_' + item).html(truncate_number(tolerance));
+    $('#t_total_' + item).html(truncate_number(Number(tolerance) + toleranceOthers[item]));
+    */
 
     // update total price
     if(toleranceIsCostly == true) {
@@ -131,7 +103,7 @@ function update(item, quantity, tolerance) {
     var progress_units = total_quantity+total_tolerance - units_to_order*unit[item];
     var progress_pct = Math.floor(Math.min(100, 100*progress_units/unit[item]));
 
-    $('#unit_to_order_'+item).html(String(units_to_order*unit[item]));
+    $('#unit_to_order_'+item).html(truncate_number(units_to_order*unit[item]));
     // progess bar update
     //   update decreasing number first, to make sure that together it's no more than 100%
     //   otherwise one of the numbers in the progress bar may temporarily disappear
@@ -143,11 +115,17 @@ function update(item, quantity, tolerance) {
     $.each(bars, function(i, bar) {
       bar[0]
         .width(String(bar[1])+'%')
-	.html(String(bar[2]));
+        .html(truncate_number(bar[2]));
     });
 
     // update balance
     updateBalance();
+}
+
+// XXX this is also in delta_input
+function truncate_number(s, granularity) {
+  var e = granularity ? 1/granularity : 1000;
+  return Math.round(Number(s)*e) / e;
 }
 
 function calcUnits(unitSize, quantity, tolerance) {
@@ -187,17 +165,9 @@ function updateBalance() {
 }
 
 $(function() {
-    $('input[data-increase_quantity]').on('touchclick', function() {
-        increaseQuantity($(this).data('increase_quantity'));
-    });
-    $('input[data-decrease_quantity]').on('touchclick', function() {
-        decreaseQuantity($(this).data('decrease_quantity'));
-    });
-    $('input[data-increase_tolerance]').on('touchclick', function() {
-        increaseTolerance($(this).data('increase_tolerance'));
-    });
-    $('input[data-decrease_tolerance]').on('touchclick', function() {
-        decreaseTolerance($(this).data('decrease_tolerance'));
+   $('.quantity input[data-delta], .tolerance input[data-delta]').on('changed', function() {
+        var item = $(this).attr('id').replace(/^.*_/,'');
+        update(item, $('#q_'+item).val(), $('#t_'+item).val());
     });
 
     $('a[data-confirm_switch_order]').on('touchclick', function() {

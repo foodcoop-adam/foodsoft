@@ -22,21 +22,21 @@ describe 'product distribution', :type => :feature do
       # gruppe a bestellt 2(3), weil sie auf jeden fall was von x bekommen will
       login user_a
       visit new_group_order_path(:order_id => order.id)
-      2.times { find("[data-increase_quantity='#{oa.id}']").click }
-      3.times { find("[data-increase_tolerance='#{oa.id}']").click }
+      2.times { find("[data-increment='q_#{oa.id}']").click }
+      3.times { find("[data-increment='t_#{oa.id}']").click }
       find('input[type=submit]').click
       expect(page).to have_selector('body')
       # gruppe b bestellt 2(0)
       login user_b
       visit new_group_order_path(:order_id => order.id)
-      2.times { find("[data-increase_quantity='#{oa.id}']").click }
+      2.times { find("[data-increment='q_#{oa.id}']").click }
       find('input[type=submit]').click
       expect(page).to have_selector('body')
       # gruppe a faellt ein dass sie doch noch mehr braucht von x und aendert auf 4(1).
       login user_a
       visit edit_group_order_path(order.group_order(user_a.ordergroup), :order_id => order.id)
-      2.times { find("[data-increase_quantity='#{oa.id}']").click }
-      2.times { find("[data-decrease_tolerance='#{oa.id}']").click }
+      2.times { find("[data-increment='q_#{oa.id}']").click }
+      2.times { find("[data-decrement='t_#{oa.id}']").click }
       find('input[type=submit]').click
       expect(page).to have_selector('body')
       # die zuteilung

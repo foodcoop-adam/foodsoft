@@ -2,5 +2,20 @@
 .fold-line
   = (f_uq rescue f).input :unit_quantity, label: Article.human_attribute_name(:unit),
     input_html: {class: 'input-mini', title: Article.human_attribute_name(:unit_quantity)}
-  = (f_unit rescue f).input :unit, label: '&times;'.html_safe,
-    input_html: {class: 'input-mini', title: Article.human_attribute_name(:unit)}
+  -# there's no space for the hint with three edit boxes, put in title instead
+  = (f_unit rescue f).input :unit, label: '&times;'.html_safe, hint: '',
+    input_html: {class: 'input-mini', title: "#{Article.human_attribute_name(:unit)}. #{t 'simple_form.hints.article.unit'}"}
+  = (f_unit rescue f).input :unit_divide, label: 'per',
+    input_html: {class: 'input-mini', title: "Members can order per this division unit. Use this when you want to divide a supplier's unit into smaller pieces."}
+
+-# do this inline, since it's being used in ajax forms only
+- field = (f_unit rescue f).object.class.model_name.underscore
+:javascript
+  // change unit_divide input visibility
+  $('##{field}_unit_divide').on('change keyup', function() {
+    var form = $(this).closest('form');
+    var unit = $('##{field}_unit', form).val();
+    var divide = $(this).val();
+    var visible = (divide != '');
+    $(this).closest('.control-group').toggleClass('less-visible', !visible);
+  }).change();

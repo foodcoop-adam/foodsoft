@@ -8,9 +8,9 @@ class GroupOrderArticle < ActiveRecord::Base
   has_many   :group_order_article_quantities, :dependent => :destroy
 
   validates_presence_of :group_order, :order_article
-  validates_inclusion_of :quantity, :in => 0..99
-  validates_inclusion_of :result, :in => 0..99, :allow_nil => true
-  validates_inclusion_of :tolerance, :in => 0..99
+  validates :quantity, :numericality => { :greater_than_or_equal_to => 0 }
+  validates :tolerance, :numericality => { :greater_than_or_equal_to => 0 }
+  validates :result, :numericality => { :greater_than_or_equal_to => 0 }, :allow_nil => true
   validates_uniqueness_of :order_article_id, :scope => :group_order_id    # just once an article per group order
 
   scope :ordered, :conditions => 'group_order_articles.result > 0 OR group_order_articles.quantity > 0 OR group_order_articles.tolerance > 0', :include => {:group_order => :ordergroup}, :order => 'groups.name'

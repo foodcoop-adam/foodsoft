@@ -43,9 +43,9 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
 
   create_table "article_prices", :force => true do |t|
     t.integer  "article_id"
-    t.decimal  "price",         :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.decimal  "tax",           :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.decimal  "deposit",       :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.decimal  "price",         :precision => 8, :scale => 2, :default => 0, :null => false
+    t.decimal  "tax",           :precision => 8, :scale => 2, :default => 0, :null => false
+    t.decimal  "deposit",       :precision => 8, :scale => 2, :default => 0, :null => false
     t.integer  "unit_quantity"
     t.datetime "created_at"
   end
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
     t.datetime "shared_updated_on"
     t.decimal  "price",               :precision => 8, :scale => 2
     t.float    "tax"
-    t.decimal  "deposit",             :precision => 8, :scale => 2, :default => 0.0
+    t.decimal  "deposit",             :precision => 8, :scale => 2, :default => 0
     t.integer  "unit_quantity",                                     :default => 1,    :null => false
     t.string   "order_number"
     t.datetime "created_at"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
     t.string   "type"
     t.integer  "quantity",                                          :default => 0
     t.string   "info_url"
+    t.string   "unit_divide"
   end
 
   add_index "articles", ["article_category_id"], :name => "index_articles_on_article_category_id"
@@ -98,20 +99,20 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
   add_index "deliveries", ["supplier_id"], :name => "index_deliveries_on_supplier_id"
 
   create_table "financial_transactions", :force => true do |t|
-    t.integer  "ordergroup_id",                               :default => 0,   :null => false
-    t.decimal  "amount",        :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.text     "note",                                                         :null => false
-    t.integer  "user_id",                                     :default => 0,   :null => false
-    t.datetime "created_on",                                                   :null => false
+    t.integer  "ordergroup_id",                               :default => 0, :null => false
+    t.decimal  "amount",        :precision => 8, :scale => 2, :default => 0, :null => false
+    t.text     "note",                                                       :null => false
+    t.integer  "user_id",                                     :default => 0, :null => false
+    t.datetime "created_on",                                                 :null => false
   end
 
   add_index "financial_transactions", ["ordergroup_id"], :name => "index_financial_transactions_on_ordergroup_id"
 
   create_table "group_order_article_quantities", :force => true do |t|
-    t.integer  "group_order_article_id", :default => 0, :null => false
-    t.integer  "quantity",               :default => 0
-    t.integer  "tolerance",              :default => 0
-    t.datetime "created_on",                            :null => false
+    t.integer  "group_order_article_id",                               :default => 0, :null => false
+    t.decimal  "quantity",               :precision => 8, :scale => 3, :default => 0
+    t.decimal  "tolerance",              :precision => 8, :scale => 3, :default => 0
+    t.datetime "created_on",                                                          :null => false
   end
 
   add_index "group_order_article_quantities", ["group_order_article_id"], :name => "index_group_order_article_quantities_on_group_order_article_id"
@@ -119,8 +120,8 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
   create_table "group_order_articles", :force => true do |t|
     t.integer  "group_order_id",                                 :default => 0, :null => false
     t.integer  "order_article_id",                               :default => 0, :null => false
-    t.integer  "quantity",                                       :default => 0, :null => false
-    t.integer  "tolerance",                                      :default => 0, :null => false
+    t.decimal  "quantity",         :precision => 8, :scale => 3, :default => 0, :null => false
+    t.decimal  "tolerance",        :precision => 8, :scale => 3, :default => 0, :null => false
     t.datetime "updated_on",                                                    :null => false
     t.decimal  "result",           :precision => 8, :scale => 3
     t.decimal  "result_computed",  :precision => 8, :scale => 3
@@ -131,11 +132,11 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
   add_index "group_order_articles", ["order_article_id"], :name => "index_group_order_articles_on_order_article_id"
 
   create_table "group_orders", :force => true do |t|
-    t.integer  "ordergroup_id",                                    :default => 0,   :null => false
-    t.integer  "order_id",                                         :default => 0,   :null => false
-    t.decimal  "price",              :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.integer  "lock_version",                                     :default => 0,   :null => false
-    t.datetime "updated_on",                                                        :null => false
+    t.integer  "ordergroup_id",                                    :default => 0, :null => false
+    t.integer  "order_id",                                         :default => 0, :null => false
+    t.decimal  "price",              :precision => 8, :scale => 2, :default => 0, :null => false
+    t.integer  "lock_version",                                     :default => 0, :null => false
+    t.datetime "updated_on",                                                      :null => false
     t.integer  "updated_by_user_id"
   end
 
@@ -147,7 +148,7 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
     t.string   "type",                                                   :default => "",    :null => false
     t.string   "name",                                                   :default => "",    :null => false
     t.string   "description"
-    t.decimal  "account_balance",          :precision => 8, :scale => 2, :default => 0.0,   :null => false
+    t.decimal  "account_balance",          :precision => 8, :scale => 2, :default => 0,     :null => false
     t.datetime "created_on",                                                                :null => false
     t.boolean  "role_admin",                                             :default => false, :null => false
     t.boolean  "role_suppliers",                                         :default => false, :null => false
@@ -184,9 +185,9 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
     t.date     "date"
     t.date     "paid_on"
     t.text     "note"
-    t.decimal  "amount",         :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.decimal  "deposit",        :precision => 8, :scale => 2, :default => 0.0, :null => false
-    t.decimal  "deposit_credit", :precision => 8, :scale => 2, :default => 0.0, :null => false
+    t.decimal  "amount",         :precision => 8, :scale => 2, :default => 0, :null => false
+    t.decimal  "deposit",        :precision => 8, :scale => 2, :default => 0, :null => false
+    t.decimal  "deposit_credit", :precision => 8, :scale => 2, :default => 0, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -212,12 +213,12 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
   end
 
   create_table "order_articles", :force => true do |t|
-    t.integer "order_id",         :default => 0, :null => false
-    t.integer "article_id",       :default => 0, :null => false
-    t.integer "quantity",         :default => 0, :null => false
-    t.integer "tolerance",        :default => 0, :null => false
-    t.integer "units_to_order",   :default => 0, :null => false
-    t.integer "lock_version",     :default => 0, :null => false
+    t.integer "order_id",                                       :default => 0, :null => false
+    t.integer "article_id",                                     :default => 0, :null => false
+    t.decimal "quantity",         :precision => 8, :scale => 3, :default => 0, :null => false
+    t.decimal "tolerance",        :precision => 8, :scale => 3, :default => 0, :null => false
+    t.integer "units_to_order",                                 :default => 0, :null => false
+    t.integer "lock_version",                                   :default => 0, :null => false
     t.integer "article_price_id"
     t.integer "units_billed"
     t.integer "units_received"
