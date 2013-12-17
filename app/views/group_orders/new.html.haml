@@ -1,1 +1,1 @@
-= render 'form'
+- require 'ruby-prof'- RubyProf.start= render 'form'- result = RubyProf.stop- result.eliminate_methods! [/^(Rack|ActionDispatch|ActiveSupport|ActionController|AbstractController)::/]- RubyProf::MultiPrinter.new(result).print(:path => '/tmp/profile', :profile => 'foo')

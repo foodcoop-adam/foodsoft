@@ -60,16 +60,20 @@
           %th#col_required= heading_helper GroupOrderArticle, :quantity
         %th{style: "width:15px;"}= heading_helper GroupOrderArticle, :total_price
     %tbody.list
-      - @order.articles_grouped_by_category.each do |category, order_articles|
-        %tr.list-heading.article-category
-          %td
-            = category
-            %i.icon-tag
-          %td{colspan: "9"}
-        - order_articles.each do |order_article|
-          - article = order_article.article
-          - goa = @group_order.group_order_articles(order_article: order_article).first
-          - goa or goa = GroupOrderArticle.new(order_article: order_article, quantity: 0, tolerance: 0)
+      - last_category = nil
+      - @order.order_articles.includes([:article_price, :group_order_articles, :article => :article_category]).order('article_categories.name, articles.name').each do |order_article|
+        - article = order_article.article
+        - goa = @group_order.group_order_articles(order_article: order_article).first
+        - goa or goa = GroupOrderArticle.new(order_article: order_article, quantity: 0, tolerance: 0)
+        - if article.article_category.id != last_category
+          - last_category = article.article_category.id
+          %tr.list-heading.article-category
+            %td
+              = article.article_category.name
+              %i.icon-tag
+            %td{colspan: "9"}
+        -# order_articles.each do |order_article|
+        .blah
           - content_for :ordering_data do data_to_js @order, order_article, goa end
           %tr{class: "#{cycle('even', 'odd', name: 'articles')} order-article", valign: "top"}
             %td.name= article.name
