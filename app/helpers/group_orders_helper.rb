@@ -1,10 +1,7 @@
 module GroupOrdersHelper
-  def data_to_js(ordering_data)
-    ordering_data[:order_articles].map { |id, data|
-      [id, data[:price], data[:unit], data[:total_price], data[:others_quantity], data[:others_tolerance], data[:used_quantity], data[:quantity_available]]
-    }.map { |row|
-      "addData(#{row.join(', ')});"
-    }.join("\n")
+  def data_to_js(order, oa, goa)
+    row = [oa.id,oa.article.fc_price, oa.article.unit_quantity, goa.total_price, oa.quantity - goa.quantity, oa.tolerance - goa.tolerance, goa.result(:quantity), (@order.stockit? ? oa.article.quantity_available : 0)]
+    "addData(#{row.join(', ')});"
   end
 
   def link_to_ordering(order, options = {})

@@ -13,7 +13,6 @@ class GroupOrdersController < ApplicationController
 
   def new
     @group_order = @order.group_orders.build(:ordergroup => @ordergroup, :updated_by => current_user)
-    @ordering_data = @group_order.load_data
   end
 
   def create
@@ -31,10 +30,6 @@ class GroupOrdersController < ApplicationController
 
   def show
     @order= @group_order.order
-  end
-
-  def edit
-    @ordering_data = @group_order.load_data
   end
 
   def update

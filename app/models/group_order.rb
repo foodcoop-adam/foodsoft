@@ -21,38 +21,6 @@ class GroupOrder < ActiveRecord::Base
     joins(:order).merge(Order.where(options))
   end
 
-  # Generate some data for the javascript methods in ordering view
-  def load_data
-    data = {}
-
-    # load prices and other stuff....
-    data[:order_articles] = {}
-    order.articles_grouped_by_category.each do |article_category, order_articles|
-      order_articles.each do |order_article|
-        
-        # Get the result of last time ordering, if possible
-        goa = group_order_articles.detect { |goa| goa.order_article_id == order_article.id }
-
-        # Build hash with relevant data
-        data[:order_articles][order_article.id] = {
-            :price => order_article.article.fc_price,
-            :unit => order_article.article.unit_quantity,
-            :quantity => (goa ? goa.quantity : 0),
-            :others_quantity => order_article.quantity - (goa ? goa.quantity : 0),
-            :used_quantity => (goa ? goa.result(:quantity) : 0),
-            :tolerance => (goa ? goa.tolerance : 0),
-            :others_tolerance => order_article.tolerance - (goa ? goa.tolerance : 0),
-            :used_tolerance => (goa ? goa.result(:tolerance) : 0),
-            :total_price => (goa ? goa.total_price : 0),
-            :missing_units => order_article.missing_units,
-            :quantity_available => (order.stockit? ? order_article.article.quantity_available : 0)
-        }
-      end
-    end
-
-    data
-  end
-
   def save_group_order_articles
     for order_article in order.order_articles
       # Find the group_order_article, create a new one if necessary...
