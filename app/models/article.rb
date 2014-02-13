@@ -48,7 +48,7 @@ class Article < ActiveRecord::Base
 
   # Fractional unit we subdivide in
   def unit_divide_fraction
-    if unit_divide.nil? or unit_divide == unit
+    if unit_divide.blank? or unit_divide == unit
       return 1
     end
     # TODO cache this
