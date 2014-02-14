@@ -76,6 +76,7 @@
               %i.icon-tag
             %td{colspan: "10"}
           - order_articles.each do |order_article|
+            - df = order_article.article.display_fraction # note that @order_data fields are already scaled by df
             = fgoa.simple_fields_for order_article.id.to_s do |f|
               %tr{class: "#{cycle('even', 'odd', name: 'articles')} order-article", valign: "top"}
                 %td.name{title: article_info_title(order_article.article)}
@@ -84,17 +85,20 @@
                 - if @order.stockit?
                   %td= truncate order_article.article.supplier.name, length: 15
                 %td= h order_article.article.origin
-                %td= order_article.article.unit
+                %td
+                  = order_article.article.display_unit
+                  -# hidden_field_tag "order_article[#{order_article.id}][display_unit]", order_article.article.display_unit
+                  = f.input_field :display_fraction, as: :hidden, value: df
                 %td= number_to_currency(@ordering_data[:order_articles][order_article.id][:price])
                 %td.units_all
-                  %span{id: "unit_to_order_#{order_article.id}"}= order_article.units_to_order * order_article.price.unit_quantity
+                  %span{id: "unit_to_order_#{order_article.id}"}= order_article.units_to_order * order_article.price.unit_quantity * df
                   %span.plus= order_article.article.has_tolerance? ? '+' : '&nbsp;'.html_safe
                 - if @order.stockit?
                   %td= @ordering_data[:order_articles][order_article.id][:quantity_available]
                 - elsif order_article.article.has_tolerance?
                   %td.units_pack
                     - uq = @ordering_data[:order_articles][order_article.id][:unit]
-                    - progress_units = order_article.quantity+order_article.tolerance - order_article.units_to_order*uq
+                    - progress_units = (order_article.quantity+order_article.tolerance - order_article.units_to_order*uq) * df
                     - progress_pct = [100, 100*progress_units/uq].min.to_i
                     .progress{id: "progress_#{order_article.id}"}
                       .bar{style: "width: #{progress_pct}%;"}
@@ -110,8 +114,8 @@
                   -#%span.used{id: "q_used_#{order_article.id}"}= @ordering_data[:order_articles][order_article.id][:used_quantity]
                   -#+
                   -#%span.unused{id: "q_unused_#{order_article.id}"}= @ordering_data[:order_articles][order_article.id][:quantity] - @ordering_data[:order_articles][order_article.id][:used_quantity]
-                  - data_delta = {min: 0, delta: @ordering_data[:order_articles][order_article.id][:unit_divide], granularity: @ordering_data[:order_articles][order_article.id][:unit_divide]}
-                  - data_delta[:max] = @ordering_data[:order_articles][order_article.id][:quantity_available] if @order.stockit?
+                  - data_delta = {min: 0, delta: @ordering_data[:order_articles][order_article.id][:unit_divide]*df, granularity: @ordering_data[:order_articles][order_article.id][:unit_divide]*df}
+                  - data_delta[:max] = @ordering_data[:order_articles][order_article.id][:quantity_available]*df if @order.stockit?
                   = f.input_field :quantity, as: :delta, data: data_delta, id: "q_#{order_article.id}", class: 'input-nano',
                     value: @ordering_data[:order_articles][order_article.id][:quantity]
 

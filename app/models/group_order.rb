@@ -37,19 +37,20 @@ class GroupOrder < ActiveRecord::Base
         goa = group_order_articles.detect { |goa| goa.order_article_id == order_article.id }
 
         # Build hash with relevant data
+        df = order_article.article.display_fraction
         data[:order_articles][order_article.id] = {
-            :price => order_article.article.fc_price,
-            :unit => order_article.article.unit_quantity,
+            :price => order_article.article.fc_price / df,
+            :unit => order_article.article.unit_quantity * df,
             :unit_divide => (order_article.article.unit_divide_fraction or 1),
-            :quantity => (goa ? goa.quantity : 0),
-            :others_quantity => order_article.quantity - (goa ? goa.quantity : 0),
-            :used_quantity => (goa ? goa.result(:quantity) : 0),
-            :tolerance => (goa ? goa.tolerance : 0),
-            :others_tolerance => order_article.tolerance - (goa ? goa.tolerance : 0),
-            :used_tolerance => (goa ? goa.result(:tolerance) : 0),
+            :quantity => (goa ? goa.quantity : 0) * df,
+            :others_quantity => (order_article.quantity - (goa ? goa.quantity : 0)) * df,
+            :used_quantity => (goa ? goa.result(:quantity) : 0) * df,
+            :tolerance => (goa ? goa.tolerance : 0) * df,
+            :others_tolerance => (order_article.tolerance - (goa ? goa.tolerance : 0)) * df,
+            :used_tolerance => (goa ? goa.result(:tolerance) : 0) * df,
             :total_price => (goa ? goa.total_price : 0),
-            :missing_units => order_article.missing_units,
-            :quantity_available => (order.stockit? ? order_article.article.quantity_available : 0)
+            :missing_units => order_article.missing_units * df,
+            :quantity_available => (order.stockit? ? order_article.article.quantity_available : 0) * df
         }
       end
     end
@@ -64,7 +65,8 @@ class GroupOrder < ActiveRecord::Base
 
       # Get ordered quantities and update group_order_articles/_quantities...
       quantities = group_order_articles_attributes.fetch(order_article.id.to_s, {:quantity => 0, :tolerance => 0})
-      group_order_article.update_quantities(quantities[:quantity].to_f, quantities[:tolerance].to_f)
+      df = (quantities[:display_fraction].blank? ? 1 : quantities[:display_fraction].to_f)
+      group_order_article.update_quantities(quantities[:quantity].to_f / df, quantities[:tolerance].to_f / df)
 
       # Also update results for the order_article
       logger.debug "[save_group_order_articles] update order_article.results!"

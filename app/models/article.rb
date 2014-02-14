@@ -60,7 +60,23 @@ class Article < ActiveRecord::Base
     # return division of units
     (unit_divide.convert_to(unit.units) / unit).scalar.to_f
   end
-  
+
+  def display_unit
+    if unit_divide.blank? or unit_divide == unit
+      unit
+    else
+      ::Unit.new(unit).units
+    end
+  end
+
+  def display_fraction
+    if unit_divide.blank? or unit_divide == unit
+      1
+    else
+      ::Unit.new(unit).scalar
+    end
+  end
+
   # Returns true if article has been updated at least 2 days ago
   def recently_updated
     updated_at > 2.days.ago
