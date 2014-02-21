@@ -48,6 +48,19 @@ class Order < ActiveRecord::Base
     stockit? ? I18n.t('orders.model.stock') : supplier.name
   end
 
+  # returns whether this order meets the criteria for sending it to the supplier
+  # returns true, or a reason
+  def can_send
+    # need articles to order
+    order_articles.ordered.count > 0 or return :result
+    # if we have a number as minimum order quantity, check it
+    min_order_quantity = (Float(supplier.min_order_quantity) rescue nil)
+    if min_order_quantity and min_order_quantity > 0
+      return :min_quantity if sum(:gross) < min_order_quantity
+    end
+    return true
+  end
+
   def articles_for_ordering
     if stockit?
       # make sure to include those articles which are no longer available
@@ -197,6 +210,7 @@ class Order < ActiveRecord::Base
         ordergroups.each(&:update_stats!)
 
         # Notifications
+        Resque.enqueue(SupplierNotifier, FoodsoftConfig.scope, 'finished_order', self.id)
         Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'finished_order', self.id)
       end
     end

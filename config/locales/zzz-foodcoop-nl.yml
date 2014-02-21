@@ -42,6 +42,28 @@ nl:
       open_remaining: ! 'nog %{remaining} open'
       when_finished: ! 'gesloten sinds %{date}'
       when_closed: ! 'afgerekend sinds %{date}'
+  helpers:
+    orders:
+      confirm_end: Wil je de bestelling %{order} werkelijk sluiten? Dit kun je niet ongedaan maken.
+      confirm_end_send: De bestelling wordt vervolgens direct naar de leverancier verzonden.
+      confirm_end_send_not: De bestelling wordt niet verzonden naar de leverancier.
+      confirm_end_reason:
+        result: Er zijn geen artikelen te bestellen.
+        min_quantity: De bestelling haalt de minimum bestelhoeveelheid van %{min_order_quantity} niet.
+  mailer:
+    order_result_supplier:
+      subject: New order
+      text: ! 'Foodcoop %{foodcoop} zou graag een bestelling plaatsen.
+
+        Zie de PDF attachment voor meer informatie.
+
+
+        Vriendelijke groet,
+
+        %{updated_by}
+
+        %{foodcoop}
+'
   home:
     index:
       to_archive: Bekijk je %{archive_link}.

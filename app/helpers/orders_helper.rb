@@ -110,4 +110,19 @@ module OrdersHelper
       link_to(@order.supplier.name, supplier_path(@order.supplier)).html_safe
     end
   end
+
+  def order_close_confirm_msg(order)
+    confirm_msg = [t('helpers.orders.confirm_end', order: order.name)]
+    can_send = order.can_send
+    if can_send == true
+      confirm_msg << t('helpers.orders.confirm_end_send') if order.supplier.order_send_email
+    else
+      order_sum = order.sum(:gross)
+      confirm_msg << t("helpers.orders.confirm_end_reason.#{can_send}",
+                       min_order_quantity: number_to_currency(order.supplier.min_order_quantity),
+                       order_sum: number_to_currency(order_sum))
+      confirm_msg << t('helpers.orders.confirm_end_send_not') if order.supplier.order_send_email
+    end
+    confirm_msg.join("\n\n")
+  end
 end

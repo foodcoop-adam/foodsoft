@@ -95,6 +95,21 @@ class Mailer < ActionMailer::Base
          :subject => "[#{FoodsoftConfig[:name]}] " + I18n.t('mailer.not_enough_users_assigned.subject', :task => task.name)
   end
 
+  # Send message with order to supplier
+  layout nil, only: :order_result_supplier
+  def order_result_supplier(order, to)
+    set_foodcoop_scope
+    @order = order
+    @user = order.updated_by
+
+    attachments['order.pdf'] = OrderFax.new(order).to_pdf
+    # TODO also attach spreadsheet
+    mail :to => to[0],
+         :cc => to[1..-1],
+         :subject => "[#{FoodsoftConfig[:name]}] " + I18n.t('mailer.order_result_supplier.subject')
+  end
+
+
   private
 
   def set_foodcoop_scope(foodcoop = FoodsoftConfig.scope)

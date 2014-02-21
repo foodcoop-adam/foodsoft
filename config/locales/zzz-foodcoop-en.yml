@@ -42,9 +42,31 @@ en:
       open_remaining: ! '%{remaining} remaining'
       when_finished: ! 'closed since %{date}'
       when_closed: ! 'settled since %{date}'
+  helpers:
+    orders:
+      confirm_end: Do you really want to close the order %{order}? There is no going back.
+      confirm_end_send: The order will be sent to the supplier.
+      confirm_end_send_not: The order will not be sent to the supplier.
+      confirm_end_reason:
+        result: There are no articles to be ordered.
+        min_quantity: The order has not reached the minimum order quantity of %{min_order_quantity}.
+  mailer:
+    order_result_supplier:
+      subject: New order
+      text: ! 'Foodcoop %{foodcoop} would like to place an order.
+
+        Please find the PDF attached.
+
+
+        Kind regards,
+
+        %{updated_by}
+
+        %{foodcoop}
+'
   home:
     index:
-      to_archive: See your %{archive_link}.
+      to_archive: View your %{archive_link}.
       to_archive_link: previous orders
   navigation:
     current_orders:
@@ -66,4 +88,9 @@ en:
     other: Other
   orders:
     index:
+      confirm_end_send: The order will be sent to the supplier.
+      confirm_end_send_not: The order will not be sent to the supplier.
+      confirm_end_reason:
+        result: There are no articles to be ordered.
+        min_quantity: The order has not reached the minimum order quantity of %{min_order_quantity}.
       last_order_week: Recent orders

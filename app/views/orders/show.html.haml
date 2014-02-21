@@ -60,7 +60,7 @@
 
     - if @order.open?
       = link_to t('.action_end'), finish_order_path(@order), method: :post, class: 'btn btn-success',
-        confirm: t('.confirm_end', order: @order.name)
+        confirm: order_close_confirm_msg(@order)
       = link_to t('ui.edit'), edit_order_path(@order), class: 'btn'
     - elsif not @order.closed? and not @order.stockit?
       -# TODO btn-success class only if not received before

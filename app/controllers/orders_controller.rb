@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
                end
     end
 
-    @orders = Order.closed.page(params[:page]).per(@per_page).includes(:supplier).reorder(sort)
+    @orders = Order.finished.page(params[:page]).per(@per_page).includes(:supplier).reorder(sort)
   end
 
   # Gives a view for the results to a specific order
@@ -104,7 +104,7 @@ class OrdersController < ApplicationController
   def finish
     order = Order.find(params[:id])
     order.finish!(@current_user)
-    redirect_to order, notice: I18n.t('orders.finish.notice')
+    redirect_to action: 'index', notice: I18n.t('orders.finish.notice')
   rescue => error
     redirect_to orders_url, alert: I18n.t('errors.general_msg', :msg => error.message)
   end
