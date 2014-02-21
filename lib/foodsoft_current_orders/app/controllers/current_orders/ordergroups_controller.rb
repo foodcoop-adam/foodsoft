@@ -24,7 +24,7 @@ class CurrentOrders::OrdergroupsController < ApplicationController
   protected
 
   def find_group_orders
-    @order_ids = Order.finished_not_closed.pluck(:id)
+    @order_ids = Order.finished_not_closed.map(&:id)
     @ordergroup = Ordergroup.find(params[:id]) unless params[:id].nil?
     @goas = GroupOrderArticle.includes(:group_order, :order_article => [:article, :article_price]).
               where(group_orders: {order_id: @order_ids, ordergroup_id: @ordergroup.id}).ordered.all unless @ordergroup.nil?
