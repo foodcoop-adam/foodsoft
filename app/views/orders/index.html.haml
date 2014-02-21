@@ -12,11 +12,12 @@
 .well
   - if not @open_orders.empty?
     %h2= t '.orders_open'
-  - elsif not @finished_orders.empty?
+  -# elsif not @finished_orders.empty?
     %h2= t '.orders_finished'
   - else
     = t '.no_open_or_finished_orders'
-  - unless @open_orders.empty? and @finished_orders.empty?
+  -# unless @open_orders.empty? and @finished_orders.empty?
+  - unless @open_orders.empty?
     %table.table.table-striped
       %thead
         %tr
@@ -33,7 +34,7 @@
               %td= format_time(order.ends) unless order.ends.nil?
               %td= truncate(order.note)
               %td= link_to t('.action_end'), finish_order_path(order),
-                confirm: t('.confirm_end', order: order.name), method: :post,
+                confirm: order_close_confirm_msg(order), method: :post,
                 class: 'btn btn-small btn-success'
 
               %td
@@ -42,7 +43,7 @@
                 = link_to t('ui.delete'), order, confirm: t('.confirm_delete'), method: :delete,
                   class: 'btn btn-small btn-danger'
 
-        - unless @finished_orders.empty?
+        -# unless @finished_orders.empty?
           - unless @open_orders.empty?
             %tr
               %td{colspan: 6}

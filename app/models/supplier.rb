@@ -93,6 +93,14 @@ class Supplier < ActiveRecord::Base
     end
   end
 
+  # email address for sending an order to the supplier
+  # put an email address in order_howto, and this will be returned
+  def order_send_email
+    if order_howto.try {|h| h.match /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}
+      order_howto
+    end
+  end
+
   protected
 
   # Make sure, the name is uniq, add usefull message if uniq group is already deleted

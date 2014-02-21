@@ -64,4 +64,9 @@ nl:
     other: Overig
   orders:
     index:
+      confirm_end_send: De bestelling wordt vervolgens direct naar de leverancier verzonden.
+      confirm_end_send_not: De bestelling wordt niet verzonden naar de leverancier.
+      confirm_end_reason:
+        result: Er zijn geen artikelen te bestellen.
+        min_quantity: De bestelling haalt de minimum bestelhoeveelheid van %{min_order_quantity} niet.
       last_order_week: Recente bestellingen

@@ -64,4 +64,9 @@ en:
     other: Other
   orders:
     index:
+      confirm_end_send: The order will be sent to the supplier.
+      confirm_end_send_not: The order will not be sent to the supplier.
+      confirm_end_reason:
+        result: There are no articles to be ordered.
+        min_quantity: The order has not reached the minimum order quantity of %{min_order_quantity}.
       last_order_week: Recent orders
