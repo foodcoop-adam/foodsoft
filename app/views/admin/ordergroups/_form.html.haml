@@ -5,8 +5,10 @@
     = f.input :contact_person
     = f.input :contact_phone
     = f.input :contact_address
-    - if FoodsoftConfig[:use_apple_points]
-      = f.input :ignore_apple_restriction, :label => false, :inline_label => true
+    -# use .settings to allow checkboxes to be added by plugins and have proper spacing
+    .settings
+      - if FoodsoftConfig[:use_apple_points]
+        = f.input :ignore_apple_restriction, :label => false, :inline_label => true
   .form-actions
     = f.button :submit
     = link_to t('ui.or_cancel'), :back
