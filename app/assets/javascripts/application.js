@@ -192,7 +192,7 @@ function newElementsReady() {
     $('.datepicker').datepicker({format: 'yyyy-mm-dd', language: I18n.locale});
 
     // Use select2 for selects, except those with css class 'plain'
-    $('select').not('.plain').select2({dropdownAutoWidth: true, width: 'off'});
+    $('select:not(.plain)').select2({dropdownAutoWidth: true, width: 'off'});
 
     // Enable client side form validations - cannot be done too early
     //   this needs the 'focusin' event (instead of 'focus') because of
