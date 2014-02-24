@@ -1,0 +1,5 @@
+%span#article_info{style: 'margin-left: 1em'}
+  - if order_article
+    = units_history_line(order_article) + ', '
+    = Article.human_attribute_name(:fc_price)
+    = number_to_currency(order_article.price.fc_price)

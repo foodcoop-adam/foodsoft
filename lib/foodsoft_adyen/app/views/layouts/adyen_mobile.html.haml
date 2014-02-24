@@ -1,0 +1,12 @@
+= render layout: 'layouts/adyen_mobile_header' do
+  %div#foodsoft_adyen_pin{:data => {:role => :page}}
+
+    - if show_title?
+      %div{:data => {:role => :header, :position => :fixed}}
+        %h1= yield(:title)
+
+    %div#messages
+      = bootstrap_flash
+
+    %div{:data => {:role => :content}}
+      = yield

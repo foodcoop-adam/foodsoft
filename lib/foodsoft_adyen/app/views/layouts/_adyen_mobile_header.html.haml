@@ -1,0 +1,25 @@
+!!! 5
+%html(lang='#{I18n.locale}')
+  %head
+    %meta(charset="utf-8")
+    %meta(http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1")
+    %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    %title= [t('layouts.foodsoft'), yield(:title)].join(" - ")
+    = csrf_meta_tags
+
+    = stylesheet_link_tag "payments/adyen_mobile", :media => "all"
+    = yield(:head)
+
+  %body
+    = yield
+
+    /
+      Javascripts
+      \==================================================
+    / Placed at the end of the document so the pages load faster
+    = javascript_include_tag "payments/adyen_mobile"
+    :javascript
+      I18n.defaultLocale = "#{I18n.default_locale}";
+      I18n.locale = "#{I18n.locale}";
+      I18n.fallbacks = true;
+    = yield(:javascript)

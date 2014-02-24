@@ -1,0 +1,64 @@
+.well
+  .btn-group.pull-right
+    = link_to '#', data: {toggle: 'dropdown'}, class: 'btn dropdown-toggle' do
+      = t 'current_orders.orders.combined_pdf'
+      %span.caret
+    %ul.dropdown-menu
+      %li= link_to t('orders.show.download.group_pdf'), current_orders_orders_path(document: :groups, format: :pdf)
+      %li= link_to t('orders.show.download.article_pdf'), current_orders_orders_path(document: :articles, format: :pdf)
+
+  = form_tag current_orders_articles_path, method: :get, remote: true, 'data-submit-onchange' => true, style: 'display: inline-block; margin: 0;' do
+    = select_tag 'order_id',
+        options_for_select([[t('.current_orders'), '']] + @current_orders.includes(:supplier).reorder('suppliers.name').all.map { |g| [ g.name, g.id ] }, (@order.id rescue '')),
+        id: 'supplier_select', style: 'min-width: 250px', 'data-submit-on-change' => :true
+    - article_data = articles_for_select2(@order_articles) {|a| "#{a.article.name} (#{a.article.unit})"}
+    = select_tag 'id',
+        options_for_select(article_data.map {|a| [a[:text], a[:id]]}, (@order_article.id rescue '')),
+        id: 'order_article_select', style: 'min-width: 350px', 'data-submit-on-change' => :true,
+        'data-placeholder' => t('.article_placeholder')
+
+    = render 'article_info', order_article: @order_article
+
+- if @order_article
+  = render 'ordergroups', order_article: @order_article
+- else
+  %i#articles_by_articles= t '.no_selection'
+
+= render 'shared/articles_by/common'
+
+- content_for :javascript do
+  :javascript
+
+    $(function() {
+      // TODO group by ordered / not-ordered
+      $('#supplier_select, #order_article_select').select2();
+
+      // XXX supplier change doesn't work (yet) using ajax - redirect instead
+      $('#supplier_select').on('change', function() {
+        window.location = '#{j current_orders_articles_path}?order_id='+$(this).val()+'&id='+$('#order_article_select').val();
+      });
+
+      // update number of received items - would prefer to do this server-side to
+      // keep working when showing a partial list, but this avoids an extra ajax call
+      $(document).on('GroupOrderArticle#update', function(e) {
+        var count_sum = 0;
+        $('#articles_by_articles input[data-delta]').each(function() {
+          count_sum += Number($(this).val());
+        });
+        $('#single_order_article_total .count_sum').html(count_sum);
+      });
+
+      // add ordergroup
+      $('#group_order_article_ordergroup_id').select2().select2('data', null);
+      $(document).on('GroupOrderArticle#create', function(e) {
+        // reset selection
+        $('#group_order_article_ordergroup_id').select2('data', null);
+        // update table
+        $.ajax({
+          url: '#{show_on_group_order_article_create_current_orders_articles_path}',
+          type: 'get',
+          data: {group_order_article_id: e.group_order_article_id}
+        });
+      });
+    });
+

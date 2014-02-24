@@ -1,0 +1,50 @@
+en:
+  current_orders:
+    articles:
+      form:
+        article_placeholder: Choose an article...
+        current_orders: All current orders
+        no_selection: Choose an article to show who ordered it.
+      index:
+        title: Articles in current orders
+      ordergroups:
+        add_new: Add an ordergroup...
+      show:
+        title: ! 'Article: %{name}'
+    group_orders:
+      index:
+        title: Your current orders
+    ordergroups:
+      articles:
+        add_new: Add an article...
+      form:
+        ordergroup_placeholder: Choose an ordergroup...
+        no_selection: Choose an ordergroup to show the articles.
+      index:
+        title: Articles for ordergroup
+      payment_bar:
+        account_balance: Account balance
+        new_pin: PIN
+        new_transaction: New transaction
+        payment: ! 'Payment:'
+      show:
+        title: Articles for %{name}
+    orders:
+      combined_pdf: Combined PDF
+      receive:
+        title: Receive orders
+        no_finished_orders: There are currently no orders to receive.
+  documents:
+    multiple_orders_by_articles:
+      filename: Current orders sorted by article
+      title: Current orders - by article
+    multiple_orders_by_groups:
+      filename: Current orders sorted by group
+      title: Current orders - by group
+  helpers:
+    current_orders:
+      pay_done: Fully paid
+      pay_none: Nothing to pay
+      pay_amount: To pay %{amount}
+  ui:
+    back: Back

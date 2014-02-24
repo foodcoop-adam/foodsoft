@@ -1,0 +1,2 @@
+/ insert_bottom 'h3:contains(".import.title")'
+%span{style: 'font-size: 75%; font-weight: normal;'} &nbsp; (note that prices may be randomised)

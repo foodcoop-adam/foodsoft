@@ -1,0 +1,6 @@
+.btn-group
+  = link_to url_for(controller: 'mailall', action: 'expand'), data: {toggle: 'dropdown'}, class: 'btn dropdown-toggle', remote: true do
+    Mail members
+    %span.caret
+  %ul.dropdown-menu#mailall_links
+    %li.unavailable= link_to 'loading...', '#'

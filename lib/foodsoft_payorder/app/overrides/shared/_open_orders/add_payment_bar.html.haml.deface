@@ -1,0 +1,16 @@
+/ insert_bottom 'section'
+/ disabled
+- if defined? FoodsoftCurrentOrders
+  - ordergroup = @current_user.ordergroup
+  - if ordergroup and ordergroup.get_available_funds < 0
+    .well
+      .pull-right
+        -# TODO use method to get link, and also support external urls
+        - pay_link = self.send(FoodsoftConfig[:ordergroup_approval_payment], amount: -ordergroup.get_available_funds, title: 'Pay for your current orders')
+        = link_to t('current_orders.group_orders.payment_bar.pay'), pay_link, class: 'btn btn-primary'
+
+      %p.pull-left
+        = link_to t('current_orders.ordergroups.payment_bar.account_balance'), my_ordergroup_path
+        = number_to_currency(ordergroup.account_balance - ordergroup.value_of_finished_orders)
+
+      %p#to_pay_message{style: 'text-align: center'}= to_pay_message(ordergroup)

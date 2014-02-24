@@ -1,0 +1,6 @@
+/ insert_bottom '.pull-right'
+- if FoodsoftConfig[:payorder_payment]
+  - if @articles_grouped_by_category.count > 0 and @ordergroup.get_available_funds < 0
+    -# TODO use method to get link, and also support external urls
+    - pay_link = self.send(FoodsoftConfig[:ordergroup_approval_payment], amount: -@ordergroup.get_available_funds, title: 'Pay for your current orders')
+    = link_to t('.pay'), pay_link, class: 'btn btn-primary'

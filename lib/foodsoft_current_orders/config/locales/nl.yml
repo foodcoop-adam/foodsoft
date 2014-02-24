@@ -1,0 +1,45 @@
+nl:
+  current_orders:
+    articles:
+      form:
+        article_placeholder: Kies een artikel...
+        current_orders: Alle huidige bestellingen
+        no_selection: Kies een artikel om te zien wie het besteld heeft.
+      index:
+        title: Artikelen in huidige bestellingen
+      ordergroups:
+        add_new: Huishouden toevoegen...
+      show:
+        title: ! 'Artikel: %{name}'
+    ordergroups:
+      articles:
+        add_new: Artikel toevoegen...
+      form:
+        ordergroup_placeholder: Kies een huishouden...
+        no_selection: Kies een huishouden om de artikelen te tonen.
+      index:
+        title: Artikelen voor huishouden
+      payment_bar:
+        account_balance: Account balance
+        new_pin: PIN
+        new_transaction: Nieuwe transactie
+        payment: ! 'Betaling:'
+      show:
+        title: Artikelen voor %{name}
+    orders:
+      combined_pdf: Gecombineerde PDF
+      receive:
+        title: Bestellingen ontvangen
+        no_finished_orders: Er zijn momenteel geen bestellingen die ontvangen hoeven te worden.
+  documents:
+    multiple_orders_by_articles:
+      filename: Huidige bestellingen per artikel
+      title: Huidige bestellingen - per artikel
+    multiple_orders_by_groups:
+      filename: Huidige bestellingen per huishouden
+      title: Huidige bestellingen - per huishouden
+  helpers:
+    current_orders:
+      pay_done: Alles betaald
+      pay_none: Niets te betalen
+      pay_amount: Te betalen %{amount}

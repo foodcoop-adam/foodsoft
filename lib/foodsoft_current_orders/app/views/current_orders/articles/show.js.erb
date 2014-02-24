@@ -1,0 +1,3 @@
+$('title, h1').html('<%= j t('.title', name: @order_article.article.name) %>');
+$('#articles_by_articles').replaceWith('<%= j(render('ordergroups', order_article: @order_article)) if @order_article %>');
+$('#article_info').replaceWith('<%= j(render('article_info', order_article: @order_article)) if @order_article %>');

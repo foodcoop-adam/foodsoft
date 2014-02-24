@@ -1,0 +1,19 @@
+en:
+  payments:
+    adyen_hpp:
+      form:
+        amount_pay: Amount to pay
+        submit: Pay at your bank
+      new:
+        title: Credit your account
+      result:
+        cancelled: Payment cancelled.
+        error: An error occured while processing the payment.
+        refused: Payment refused.
+        notice_success: Online payment succeeded, your account will be updated shortly.
+        unknown: ! 'An error occured: payment returned an unknown status.'
+    adyen_pin:
+      index:
+        title: PIN payment
+    navigation:
+      pin: PIN terminal

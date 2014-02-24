@@ -1,0 +1,4 @@
+<!-- surround_contents 'tfooter th.numeric' -->
+<%= link_to current_orders_group_orders_path do %>
+<%=   render_original %>
+<%  end %>

@@ -1,0 +1,8 @@
+%li= link_to "Mail currently ordered (#{@users[:current].count})", @mailto[:current] if @users[:current]
+- if defined? FoodsoftSignup
+  %li= link_to "Mail approved (#{@users[:approved].count})", @mailto[:approved] if @users[:approved]
+  %li= link_to "Mail unapproved (#{@users[:unapproved].count})", @mailto[:unapproved] if @users[:unapproved]
+%li= link_to "Mail all (#{@users[:all].count})", @mailto[:all] if @users[:all]
+- if @users[:csv]
+  %li.divider
+  %li= link_to 'Download CSV', url_for(controller: 'mailall', action: 'show')

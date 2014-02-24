@@ -1,0 +1,28 @@
+%table.table.table-hover#articles_by_articles
+  %thead.list-heading
+    %tr
+      %th{:style => 'width:70%'}= Ordergroup.model_name.human
+      %th.center
+        %acronym{:title => t('shared.articles.ordered_desc')}= t 'shared.articles.ordered'
+      %th.center
+        %acronym{:title => t('shared.articles.received_desc')}= t 'shared.articles.received'
+      %th= t 'shared.articles_by.price'
+
+  = render 'shared/articles_by/article_single', order_article: order_article, heading: false
+
+  %tfoot
+    %tr
+      %td
+        = form_for GroupOrderArticle.new, remote: true, html: {'data-submit-onchange' => true, style: 'margin: 0'} do |f|
+          = f.hidden_field :order_article_id, value: order_article.id
+          = f.select :ordergroup_id,
+              options_for_select(Ordergroup.order(:name).all.map { |g| [ g.name, g.id ] }),
+              {include_blank: true}, {style: 'width: 500px', 'data-placeholder' => t('.add_new')}
+      %td{colspan: 3}
+    %tr#single_order_article_total
+      %th= t 'shared.articles_by.price_sum'
+      %td.center #{order_article.quantity} + #{order_article.tolerance}
+      - sum = order_article.group_orders_sum
+      %th.center.count_sum= sum[:quantity]
+      %th.price_sum{data: {value: sum[:price]}}= number_to_currency sum[:price]
+
