@@ -43,18 +43,19 @@ gem 'protected_attributes'
 gem 'ruby-units'
 
 # we use the git version of acts_as_versioned, and need to include it in this Gemfile
-gem 'acts_as_versioned', git: 'git://github.com/technoweenie/acts_as_versioned.git'
-gem 'foodsoft_wiki', path: 'lib/foodsoft_wiki'
-gem 'foodsoft_messages', path: 'lib/foodsoft_messages'
+#gem 'acts_as_versioned', git: 'git://github.com/technoweenie/acts_as_versioned.git'
+#gem 'foodsoft_wiki', path: 'lib/foodsoft_wiki'
+#gem 'foodsoft_messages', path: 'lib/foodsoft_messages'
 
-#gem 'foodsoft_adyen', path: 'lib/foodsoft_adyen'
-#gem 'foodsoft_current_orders', path: 'lib/foodsoft_current_orders'
-#gem 'foodsoft_mailall', path: 'lib/foodsoft_mailall'
+gem 'foodsoft_adyen', path: 'lib/foodsoft_adyen'
+gem 'foodsoft_current_orders', path: 'lib/foodsoft_current_orders'
+gem 'foodsoft_mailall', path: 'lib/foodsoft_mailall' # currently breaks admin user search
 #gem 'foodsoft_mollie', path: 'lib/foodsoft_mollie'
 #gem 'foodsoft_payorder', path: 'lib/foodsoft_payorder'
 #gem 'foodsoft_protect_shared', path: 'lib/foodsoft_protect_shared'
-#gem 'foodsoft_signup', path: 'lib/foodsoft_signup'
+gem 'foodsoft_signup', path: 'lib/foodsoft_signup'
 #gem 'foodsoft_userinfo', path: 'lib/foodsoft_userinfo'
+#gem 'foodsoft_uservoice', path: 'lib/foodsoft_uservoice'
 #gem 'foodsoft_vokomokum', path: 'lib/foodsoft_vokomokum'
 #gem 'foodsoft_uservoice', path: 'lib/foodsoft_uservoice'
 

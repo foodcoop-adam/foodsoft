@@ -1,0 +1,19 @@
+en:
+  navigation:
+    current_orders:
+      articles: Distribute articles
+      ordergroups: Check member orders
+    balancing: Finalize orders
+    financial_overview: Financial overview
+    receive: Receive delivery
+    stage:
+      prepare: Prepare
+      distribute: Distribute
+      pickup: Pick-up
+      post_admin: Finalize
+    orders:
+      title: Open & close orders
+    suppliers: Suppliers & articles
+    membership: Membership
+    member_payments: Member payments
+    other: Other

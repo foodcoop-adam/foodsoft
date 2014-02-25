@@ -1,19 +1,23 @@
 #
 # Capistrano 3 deployment configuration
+# (with small adaptations for foodcoop-adam)
 #
 #   http://www.capistranorb.com/
 #   https://semaphoreapp.com/blog/2013/11/26/capistrano-3-upgrade-guide.html
 
 # defaults that can be updated from the environment
 set :branch,              ENV["REVISION"] || ENV["BRANCH_NAME"] || "master"
+set :suburi,              ENV["SUBURI"]
 
 # you probably want to change these
 set :application,         'foodsoft'            # application name (whatever you like)
-set :domain,              'order.foodcoop.test' # host
+set :domain,              'order.foodcoop.nl'   # host
 set :user,                'deploy'              # ssh deploy user
+set :run_user,            'foodsoft'            # user app runs as
+set :db_user,             "fs_#{fetch :suburi}"
 set :keep_releases,       10
-set :repo_url,            'git://github.com/foodcoops/foodsoft.git'
-set :deploy_to,            "/www/apps/#{fetch :application}-#{fetch :stage}"
+set :repo_url,            'git://github.com/foodcoop-adam/foodsoft.git'
+set :deploy_to,            "/www/apps/#{fetch :application}_#{fetch :suburi}"
 
 # more settings which are probably ok
 set :log_level,           :info
@@ -24,7 +28,7 @@ set :linked_dirs,         %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundl
 server fetch(:domain), user: fetch(:user), roles: [:web, :app, :resque, :db]
 
 # if you use RVM, uncomment the line in Capfile, and optionally uncomment rvm settings
-# set :rvm_ruby_string,     :local
+set :rvm_ruby_string,     :system
 
 # task hooks
 namespace :deploy do
@@ -42,7 +46,50 @@ namespace :deploy do
   after :finishing, 'deploy:cleanup'
 
   # see lib/capistrano/tasks/plugins.cap
-  #before 'bundler:install', 'enable_plugins:auto'
+  before 'bundler:install', 'enable_plugins:auto'
+
+  # some local hacks
+  after 'deploy:updated', 'deploy:localhacks' do
+    on roles(:app), in: :sequence do
+
+      # use custom rake queue names
+      execute :sed, '-i', "'s|foodsoft_notifier|#{fetch :suburi}_foodsoft_notifier|'",
+        release_path.join('app/workers/user_notifier.rb'), release_path.join('lib/tasks/resque.rake')
+
+      # some instances work without ssl
+      if %w(vokomokum).include?(fetch(:suburi))
+        execute :sed, '-i', '\'s|^\(\s*config\.force_ssl\s*=\s*\).*$|\1false|\'',
+          release_path.join("config/environments/#{fetch :stage}.rb")
+      end
+
+      # test/demo instances use Adyen test infrastructure
+      if %w(test demo).include?(fetch(:suburi))
+        data = 'Adyen.configuration.environment = :test if defined? FoodsoftAdyen'
+        upload! StringIO.new(data), release_path.join('config/initializers/adyen_test.rb')
+        execute :chmod, 'a+r', release_path.join('config/initializers/adyen_test.rb')
+      end
+    end
+  end
+
+  # also grant access to sharedlists when creating a database
+  after 'initial:db:create', 'initial:db:grant_sharedlists' do
+    on roles(:app), in: :sequence do
+      config = capture :cat, shared_path.join("config/database.yml")
+      config = YAML.load(config)[fetch(:rails_env).to_s]
+      execute :mysql, "--execute='GRANT SELECT ON `#{fetch :sharedlists_db}`.`articles` TO \"#{config['username']}\";'"
+      execute :mysql, "--execute='GRANT SELECT ON `#{fetch :sharedlists_db}`.`suppliers` TO \"#{config['username']}\";'"
+    end
+  end
+
+  # include sharedlists in database.yml
+  after 'deploy:initial:db:config', 'initial:db:config:sharedlists' do
+    on roles(:app), in: :sequence do
+      config = capture :cat, shared_path.join("config/database.yml")
+      config.gsub /^(\s*#{fetch :rails_env}:)/, "\\1 &#{fetch :rails_env}"
+      config += "\nsharedlists:\n  <<: *#{fetch :rails_env}\n  database: sharedlists\n"
+      upload! StringIO.new(config), shared_path.join("config/database.yml")
+    end
+  end
 
 end
 
