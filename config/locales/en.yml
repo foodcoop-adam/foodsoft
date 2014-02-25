@@ -1146,6 +1146,7 @@ en:
       number: Number
       to_address: Shipping address
     finish:
+      title: Close %{name}
       notice: The order has been closed.
     form:
       ignore_warnings: Ignore warnings
@@ -1157,7 +1158,6 @@ en:
       action_end: Close
       action_receive: Receive
       confirm_delete: Do you really want to delete the order?
-      confirm_end: Do you really want to close the order %{order}? There is no going back.
       new_order: Create new order
       no_open_or_finished_orders: There are currently no open or closed orders.
       orders_finished: Closed
@@ -1192,9 +1192,6 @@ en:
         title: Comments
       comments_link: Comments
       confirm_delete: Do you really want to delete the order?
-      confirm_end: ! 'Do you really want to close the order %{order}?
-
-        There is no going back.'
       description1: ! '%{state} order from %{supplier} created by %{who}, open from %{starts} until %{ends}.'
       description2: ! '%{ordergroups} ordered %{article_count} articles, with a total value of %{net_sum} / %{gross_sum} (net / gross).'
       download:

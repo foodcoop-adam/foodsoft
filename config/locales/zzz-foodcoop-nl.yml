@@ -44,12 +44,12 @@ nl:
       when_closed: ! 'afgerekend sinds %{date}'
   helpers:
     orders:
-      confirm_end: Wil je de bestelling %{order} werkelijk sluiten? Dit kun je niet ongedaan maken.
-      confirm_end_send: De bestelling wordt vervolgens direct naar de leverancier verzonden.
-      confirm_end_send_not: De bestelling wordt niet verzonden naar de leverancier.
-      confirm_end_reason:
-        result: Er zijn geen artikelen te bestellen.
-        min_quantity: De bestelling haalt de minimum bestelhoeveelheid van %{min_order_quantity} niet.
+      order_checks:
+        none_ordered: Er zijn geen artikelen te bestellen.
+        min_quantity_check: "%{link} dat je de minimum bestelhoeveelheid hebt gehaald: %{text}"
+        min_quantity_check_link: Controleer
+        min_quantity_not_reached: Je hebt het minimum bestelbedrag van %{min_quantity} niet gehaald (totaal %{sum}).
+        min_quantity_reached: Je hebt het minimum bestelbedrag van %{min_quantity} gehaald (totaal %{sum}).
   mailer:
     order_result_supplier:
       subject: New order
@@ -57,6 +57,8 @@ nl:
 
         Zie de PDF attachment voor meer informatie.
 
+'
+      footer: '
 
         Vriendelijke groet,
 
@@ -87,5 +89,14 @@ nl:
     member_payments: Betalingen invoeren
     other: Overig
   orders:
+    finish:
+      confirm_end: Je staat op het punt de bestelling te sluiten. Hierna kun je niet meer terug.
+      confirm_end_send: De bestelling wordt naar de leverancier verstuurd.
+      confirm_end_send_manual: 'Om de bestelling te plaatsen: download de Fax in het volgende scherm en stuur het naar de leverancier.'
+      contact_person: Contact person
+      label_contact: Contactpersoon (+telefoon)
+      label_note: 'Als je wilt, kun je een bericht voor de leverancier toevoegen:'
+      submit_close: Bestelling sluiten
+      submit_send: Bestelling sluiten & versturen
     index:
       last_order_week: Recente bestellingen

@@ -101,6 +101,11 @@ class Supplier < ActiveRecord::Base
     end
   end
 
+  # minimum order quantity as (gross) price, or nil
+  def min_order_quantity_price
+    Float(min_order_quantity) rescue nil
+  end
+
   protected
 
   # Make sure, the name is uniq, add usefull message if uniq group is already deleted

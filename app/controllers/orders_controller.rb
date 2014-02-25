@@ -100,13 +100,20 @@ class OrdersController < ApplicationController
     redirect_to :action => 'index'
   end
   
-  # Finish a current order.
+  # Finish a current order (js-only)
   def finish
-    order = Order.find(params[:id])
-    order.finish!(@current_user)
-    redirect_to action: 'index', notice: I18n.t('orders.finish.notice')
+    @order = Order.find params[:id]
+    if request.post?
+      message = params[:send_order_comment]
+      if params[:send_order_contact]
+        message = "#{I18n.t('orders.finish.contact_person')}: #{params[:send_order_contact]}\n\n" + message
+      end
+      @order.finish!(@current_user, message)
+      flash[:notice] = I18n.t('orders.finish.notice')
+      render :action => 'finished'
+    end
   rescue => error
-    redirect_to orders_url, alert: I18n.t('errors.general_msg', :msg => error.message)
+    flash[:alert] = I18n.t('errors.general_msg', :msg => error.message)
   end
 
   def receive

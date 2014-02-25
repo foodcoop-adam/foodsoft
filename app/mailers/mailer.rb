@@ -97,10 +97,11 @@ class Mailer < ActionMailer::Base
 
   # Send message with order to supplier
   layout nil, only: :order_result_supplier
-  def order_result_supplier(order, to)
+  def order_result_supplier(order, to, message=nil)
     set_foodcoop_scope
     @order = order
     @user = order.updated_by
+    @message = message
 
     attachments['order.pdf'] = OrderFax.new(order).to_pdf
     # TODO also attach spreadsheet

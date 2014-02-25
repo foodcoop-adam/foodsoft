@@ -44,12 +44,12 @@ en:
       when_closed: ! 'settled since %{date}'
   helpers:
     orders:
-      confirm_end: Do you really want to close the order %{order}? There is no going back.
-      confirm_end_send: The order will be sent to the supplier.
-      confirm_end_send_not: The order will not be sent to the supplier.
-      confirm_end_reason:
-        result: There are no articles to be ordered.
-        min_quantity: The order has not reached the minimum order quantity of %{min_order_quantity}.
+      order_checks:
+        none_ordered: There are no articles to be ordered.
+        min_quantity_check: "%{link} that you've reached the minimum order quantity: %{text}"
+        min_quantity_check_link: Please check
+        min_quantity_not_reached: You have not reached the minimum order quantity of %{min_quantity} with a total of %{sum}.
+        min_quantity_reached: You've reached the minimum order quantity of %{min_quantity} with a total of %{sum}.
   mailer:
     order_result_supplier:
       subject: New order
@@ -57,6 +57,8 @@ en:
 
         Please find the PDF attached.
 
+'
+      footer: '
 
         Kind regards,
 
@@ -87,10 +89,20 @@ en:
     member_payments: Member payments
     other: Other
   orders:
-    index:
+    finish:
+      confirm_end: Do you really want to close the order %{order}? There is no going back.
       confirm_end_send: The order will be sent to the supplier.
-      confirm_end_send_not: The order will not be sent to the supplier.
-      confirm_end_reason:
-        result: There are no articles to be ordered.
-        min_quantity: The order has not reached the minimum order quantity of %{min_order_quantity}.
+      confirm_end_send_not: The order will be closed. It will not be sent to the supplier.
+      confirm_end_send_not_manual: The order will be closed. You do not need to send it to the supplier.
+      confirm_end_send_manual: To place the order, download the Fax in the following screen and send it to the supplier.
+      contact_person: Contact person
+      label_contact: Contact person (+phone)
+      label_note: 'If you like, you can enter a note for the supplier:'
+      submit_close: Close order
+      submit_send: Close & send order to supplier
+    index:
       last_order_week: Recent orders
+  simple_form:
+    hints:
+      supplier:
+        min_order_quantity: Minimum gross amount that needs to be ordered.

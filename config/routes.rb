@@ -36,6 +36,7 @@ Foodsoft::Application.routes.draw do
 
     resources :orders do
       member do
+        get :finish
         post :finish
         post :add_comment
 

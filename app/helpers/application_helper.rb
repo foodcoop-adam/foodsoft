@@ -223,5 +223,17 @@ module ApplicationHelper
       text_truncated
     end
   end
+
+  def item_icon_helper(type)
+    if type==true
+      content_tag :i, nil, class: 'icon-ok', style: 'color: green'
+    elsif type==false
+      content_tag :i, nil, class: 'icon-remove', style: 'color: red'
+    elsif type==:warn
+      content_tag :i, nil, class: 'icon-warning-sign', style: 'color: #aa0'
+    else
+      content_tag :i, nil, class: 'icon-cog', style: 'color: #e3e3e3'
+    end.html_safe
+  end
   
 end

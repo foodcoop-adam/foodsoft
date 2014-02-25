@@ -1126,6 +1126,7 @@ nl:
       number: Nummer
       to_address: Verzendadres
     finish:
+      title: '%{name} sluiten'
       notice: De bestelling is gesloten.
     form:
       ignore_warnings: Waarschuwingen negeren
@@ -1137,7 +1138,6 @@ nl:
       action_end: Sluiten
       action_receive: Ontvangen
       confirm_delete: Wil je de bestelling werkelijk verwijderen?
-      confirm_end: Wil je de bestelling %{order} werkelijk sluiten? Dit kun je niet ongedaan maken.
       new_order: Nieuwe bestelling openen
       no_open_or_finished_orders: Er zijn momenteel geen open of gesloten bestellingen.
       orders_finished: Gesloten
@@ -1172,9 +1172,6 @@ nl:
         title: Commentaar
       comments_link: Commentaar
       confirm_delete: Wil je deze bestelling echt verwijderen?
-      confirm_end: ! 'Wil je de bestelling %{order} echt sluiten?
-
-        Hierna kan zij niet opnieuw geopend worden.'
       description1: ! '%{state} bestelling van %{supplier}, geopend door %{who}, open van %{starts} tot %{ends}.'
       description2: ! '%{ordergroups} hebben %{article_count} artikelen besteld met een totale waarden van %{net_sum} / %{gross_sum} (netto / bruto).'
       download:

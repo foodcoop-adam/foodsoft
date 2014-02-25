@@ -1,0 +1,35 @@
+= simple_form_for @order, url: {action: 'finish'}, method: :post, remote: true do |form|
+  .modal-header
+    = link_to t('ui.marks.close').html_safe, '#', class: 'close', data: {dismiss: 'modal'}
+    %h3= t '.title', name: @order.name
+    .modal-body
+      = bootstrap_flash
+      %p= t('.confirm_end', order: @order.name)
+      - order_checks(@order).each do |type, msg|
+        %p
+          = item_icon_helper(type)
+          = raw msg # may contain links
+
+      -# send to supplier if all is fine
+      - will_send = false
+      - if @order.can_send == true
+        - unless @order.supplier.order_send_email 
+          %p= t '.confirm_end_send_manual'
+
+        - else
+          - will_send = true
+          %p
+            %i.icon-ok{style: 'color: green'}
+            = t('.confirm_end_send')
+            %br
+            %span{style: 'margin-top: 0; margin-left: 20px; color: #666; font-size: 80%;'}= @order.order_send_emails.join(', ')
+          %p
+            %label{for: 'send_order_contact'}= t '.label_contact'
+            - contact_info = [@current_user.name, @current_user.phone].reject(&:blank?).join(', ') 
+            = text_field_tag 'send_order_contact', contact_info, style: 'width: 100%', required: true
+          %label{for: 'send_order_comment'}= t '.label_note'
+          = text_area_tag 'send_order_comment', nil, {rows: 5, style: 'width: 100%'}
+
+    .modal-footer
+      = link_to t('ui.cancel'), '#', class: 'btn', data: {dismiss: 'modal'}
+      = form.submit t(will_send ? '.submit_send' : '.submit_close'), class: 'btn btn-primary'

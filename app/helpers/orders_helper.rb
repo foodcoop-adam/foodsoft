@@ -111,18 +111,28 @@ module OrdersHelper
     end
   end
 
-  def order_close_confirm_msg(order)
-    confirm_msg = [t('helpers.orders.confirm_end', order: order.name)]
-    can_send = order.can_send
-    if can_send == true
-      confirm_msg << t('helpers.orders.confirm_end_send') if order.supplier.order_send_email
+  def order_checks(order)
+    result = [] # array of [true/false/:warn/nil, message]
+    # need articles to order
+    if order.order_articles.ordered.count == 0
+      result << [false, I18n.t('helpers.orders.order_checks.none_ordered', count: order.order_articles.ordered.count)]
     else
-      order_sum = order.sum(:gross)
-      confirm_msg << t("helpers.orders.confirm_end_reason.#{can_send}",
-                       min_order_quantity: number_to_currency(order.supplier.min_order_quantity),
-                       order_sum: number_to_currency(order_sum))
-      confirm_msg << t('helpers.orders.confirm_end_send_not') if order.supplier.order_send_email
+      # minimum order quantity
+      case order.min_order_quantity_reached
+      when true # satisfied
+        result << [true, I18n.t('helpers.orders.order_checks.min_quantity_reached', sum: number_to_currency(order.sum(:gross)),
+                                min_quantity: number_to_currency(order.supplier.min_order_quantity_price)) ]
+      when false # present but not satisfied
+        result << [false, I18n.t('helpers.orders.order_checks.min_quantity_not_reached', sum: number_to_currency(order.sum(:gross)),
+                                min_quantity: number_to_currency(order.supplier.min_order_quantity_price)) ]
+      else if not order.supplier.min_order_quantity.blank? # present, but as free-form text
+        result << [:warn, I18n.t('helpers.orders.order_checks.min_quantity_check', text: order.supplier.min_order_quantity,
+                                link: link_to(I18n.t('helpers.orders.order_checks.min_quantity_check_link'), order_path(order)))]
+      else
+        # not filled in for supplier, don't show anything
+      end end
     end
-    confirm_msg.join("\n\n")
+
+    result
   end
 end

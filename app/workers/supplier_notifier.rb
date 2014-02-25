@@ -8,28 +8,18 @@ class SupplierNotifier
     self.send method_name, *args
   end
 
-  def self.finished_order(order_id)
+  def self.finished_order(order_id, message=nil)
     order = Order.find(order_id)
-    to = FoodsoftConfig[:send_order_on_finish] or return
+    unless to = order.order_send_emails and not to.empty?
+      Rails.logger.info "Order #{order_id} finished, not sending because there is no recipient."
+      return
+    end
     # only send mail when there are articles to order
     unless order.can_send == true
       Rails.logger.info "Order #{order_id} finished, not sending because: #{order.can_send}"
       return
     end
-    # gather email addresses to send to
-    to.map! do |a|
-      if a == '%{supplier}'
-        unless order.supplier.order_send_email
-          Rails.logger.warn "Order #{order_id} finished but order_send_email missing, no email sent to supplier"
-        end
-        order.supplier.order_send_email
-      elsif a == '%{contact.email}'
-        FoodsoftConfig[:contact]['email']
-      else
-        a
-      end
-    end.compact!
     # send mail to supplier if order_howto is an email address
-    Mailer.order_result_supplier(order, to).deliver unless to.empty?
+    Mailer.order_result_supplier(order, to, message).deliver
   end
 end

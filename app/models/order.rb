@@ -54,11 +54,36 @@ class Order < ActiveRecord::Base
     # need articles to order
     order_articles.ordered.count > 0 or return :result
     # if we have a number as minimum order quantity, check it
-    min_order_quantity = (Float(supplier.min_order_quantity) rescue nil)
-    if min_order_quantity and min_order_quantity > 0
-      return :min_quantity if sum(:gross) < min_order_quantity
-    end
+    min_order_quantity_reached != false or return :min_quantity
     return true
+  end
+
+  # returns whether the order reaches the minimum order quantity:
+  #   true    if gross order sum reaches minimum order quantity
+  #   false   if not
+  #   nil     if there is no minimum order quantity price (note that
+  #           there may still be a free-form text min_order_quantity)
+  def min_order_quantity_reached
+    min_order_quantity = supplier.min_order_quantity_price or return nil
+    return sum(:gross) >= min_order_quantity
+  end
+
+  # list of email addresses to send the order to when finished
+  # returns nil if there is no supplier email address (at least, for now)
+  # returns nil if `send_order_on_finish` foodcoop config is not set
+  def order_send_emails
+    supplier_email = supplier.order_send_email or return
+    to = FoodsoftConfig[:send_order_on_finish] or return
+    # gather email addresses to send to
+    to.map do |a|
+      if a == '%{supplier}'
+        supplier_email
+      elsif a == '%{contact.email}'
+        (FoodsoftConfig[:contact]['email'] rescue nil)
+      else
+        a
+      end
+    end.compact
   end
 
   def articles_for_ordering
@@ -181,7 +206,8 @@ class Order < ActiveRecord::Base
 
   # Finishes this order. This will set the order state to "finish" and the end property to the current time.
   # Ignored if the order is already finished.
-  def finish!(user)
+  # Any supplied message will be passed on to the supplier notifier.
+  def finish!(user, message=nil)
     unless finished?
       Order.transaction do
         # set new order state (needed by notify_order_finished)
@@ -210,7 +236,7 @@ class Order < ActiveRecord::Base
         ordergroups.each(&:update_stats!)
 
         # Notifications
-        Resque.enqueue(SupplierNotifier, FoodsoftConfig.scope, 'finished_order', self.id)
+        Resque.enqueue(SupplierNotifier, FoodsoftConfig.scope, 'finished_order', self.id, message)
         Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'finished_order', self.id)
       end
     end

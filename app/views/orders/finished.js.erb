@@ -1,0 +1,6 @@
+<% unless @order.can_send == true and not @order.supplier.order_send_email %>
+  window.location.reload();
+<% else %>
+  <%# if need to send order manually, redirect to order page instead %>
+  window.location = '<% j order_path(@order) %>';
+<% end %>
