@@ -10,8 +10,9 @@ before_install:
 before_script:
   - "bundle exec rake foodsoft:setup:stock_config"
   - "mysql -e 'create database foodsoft_test;'"
-  - 'printf "test:\n  adapter: mysql2\n  database: foodsoft_test\n  username: travis\n  encoding: utf8\n" >config/database.yml'
-  - 'bundle exec rake db:schema:load RAILS_ENV=test'
+  - 'printf "test: &test\n  adapter: mysql2\n  database: foodsoft_test\n  username: travis\n  encoding: utf8\n" >config/database.yml'
+  - 'printf "sharedlists:\n  <<: *test\n" >>config/database.yml'
+  - 'bundle exec rake db:schema:load railties:install:migrations db:migrate RAILS_ENV=test'
   # add format to get output with rspec-rerun https://github.com/dblock/rspec-rerun/issues/2
   - 'echo "--color --format progress" >.rspec'
 script: bundle exec rake rspec-rerun:spec
