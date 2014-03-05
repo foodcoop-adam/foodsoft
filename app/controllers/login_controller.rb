@@ -54,7 +54,6 @@ class LoginController < ApplicationController
     elsif request.post?
       User.transaction do
         @user = User.new(params[:user])
-        @user.email = @invite.email
         # enforce group (security!)
         @user.ordergroup = {id: (@invite.group_id or 'new')}
         # save!
