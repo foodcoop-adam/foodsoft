@@ -1,7 +1,13 @@
 - title t '.title'
 
 - content_for :actionbar do
-  = link_to t('.new_user'), new_admin_user_path, class: 'btn btn-primary'
+  .btn-group
+    = link_to t('.new_user'), new_admin_user_path, class: 'btn btn-primary'
+    = link_to '#', data: {toggle: 'dropdown'}, class: 'btn dropdown-toggle' do
+      %span.caret
+    %ul.dropdown-menu
+      %li= link_to t('.new_user'), new_admin_user_path
+      %li= link_to t('.new_user_invite'), new_invite_path, remote: true
 
 - content_for :sidebar do
   %p= t('.first_paragraph', url: link_to(t('.new_users'), new_admin_user_path)).html_safe    

@@ -243,6 +243,7 @@ nl:
       index:
         first_paragraph: Hier kun je gebruikers %{url}, bewerken en wissen.
         new_user: Nieuwe gebruiker
+        new_user_invite: Personen uitnodigen
         new_users: toevoegen
         title: Gebruikers admin
       new:
@@ -837,13 +838,17 @@ nl:
   invites:
     errors:
       already_member: is al lid van de foodcoop.
-    modal_form:
-      body: <p>Hier kun je iemand die nog geen lid is uitnodigen voor de groep<b>%{group}</b>.</p> <p>Na aanmelding is hij of zij automatisch lid van deze groep.</p>
+    form:
       title: Iemand uitnodigen
+      body_into_group: Hier kun je iemand uitnodigen om lid te worden van %{foodcoop} als deel van je %{type} <b>%{group}</b>.
+      body_new_group: Hier kun je iemand uitnodigen om een nieuw lid te worden van %{foodcoop}.
+      email_multiple_hint: Je kunt meerdere emailadressen invoeren, gescheiden door een komma of witruimte.
     new:
       action: Uitnodiging versturen
       body: <p>Hier kun je iemand die nog geen lid is, uitnodigen voor de groep <b>%{group}</b>.</p>
-    success: Persoon is uitgenodigd.
+    success:
+      one: Persoon is uitgenodigd.
+      other: '%{count} personen zijn uitgenodigd.'
   js:
     ordering:
       confirm_change: Als je naar een andere bestelling gaat, gaan je aanpassingen in deze bestelling verloren. Wijzigingen vergeten en naar de andere bestelling gaan?
@@ -872,7 +877,13 @@ nl:
       page: Pagina %{number}
   login:
     accept_invitation:
-      body: <p>Je bent uitgenodigd als lid voor foodcoop %{foodcoop} in de groep <b>%{group}</b>.</p> <p>Als je wilt meedoen, vul dan dit formulier in.</p> <p>Natuurlijk zullen we je informatie niet delen met anderen. Je kunt zelf aangeven, welke informatie voor andere leden beschikbaar is (maar beheerders hebben daar altijd toegang toe).</p>
+      invited_into_group: Je bent uitgenodigd om lid te worden van %{foodcoop} als deel van de groep <b>%{group}</b>.
+      invited_into_group_members:
+        zero: Je zou het eerste lid van deze groep worden.
+        one: Deze groep bestaat momenteel uit %{members}.
+        other: Deze groep bestaat momenteel uit %{members}.
+      invited_new_group: Je bent uitgenodigd om lid te worden van %{foodcoop}.
+      body: <p>Als je wilt meedoen, vul dan dit formulier in.</p> <p>Natuurlijk zullen we je informatie niet delen met anderen. Je kunt zelf aangeven, welke informatie voor andere leden beschikbaar is (maar beheerders hebben daar altijd toegang toe).</p>
       submit: Foodsoft account aanmaken
       title: Uitnodiging voor %{name}
     controller:
@@ -906,12 +917,24 @@ nl:
         Berichtinstellingen: %{profile_url}'
     invite:
       subject: Uitnodiging voor de foodcoop
-      text: ! 'Hallo!
+      text_into_group: ! 'Hallo!
 
 
-        %{user} <%{mail}> heeft je uitgenodigd om deel te worden van de groep "%{group}".
+        %{user} <%{mail}> heeft je uitgenodigd om lid te worden van "%{foodcoop}"
+        als deel van de groep "%{group}".
 
-        Om lid te worden van de foodcoop en de uitnodiging te accepteren, ga naar: %{link}
+        Om de uitnodiging te accepteren, ga naar: %{link}
+
+        Dit kan maar een keer en uiterlijk tot %{expires}.
+
+
+        Groeten van de foodcoop.'
+      text_new_group: ! 'Hallo!
+
+
+        %{user} <%{mail}> heeft je uitgenodigd om lid te worden "%{foodcoop}".
+
+        Om de uitnodiging te accepteren, ga naar: %{link}
 
         Dit kan maar een keer en uiterlijk tot %{expires}.
 

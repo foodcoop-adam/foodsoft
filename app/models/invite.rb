@@ -7,7 +7,6 @@ class Invite < ActiveRecord::Base
 
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
   validates_presence_of :user
-  validates_presence_of :group
   validates_presence_of :token
   validates_presence_of :expires_at
   validate :email_not_already_registered, :on => :create

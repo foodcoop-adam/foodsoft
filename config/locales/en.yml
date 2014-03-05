@@ -245,6 +245,7 @@ en:
       index:
         first_paragraph: Here you can %{url}, edit and delete users.
         new_user: Create new user
+        new_user_invite: Send invitations
         new_users: create new
         title: User admin
       new:
@@ -837,13 +838,14 @@ en:
   invites:
     errors:
       already_member: is already in use. Person is already a member of this Foodcoop.
-    modal_form:
-      body: <p>Here you can invite a person to a group <b>%{group}</b>, who is not yet a member of the foodcoop.</p> <p>After being added for the first time, the person is automatically a member of this group.</p>
+    form:
       title: Invite person
-    new:
-      action: Send invite
-      body: <p>Here you can add a person to the group <b>%{group}</b>, who is not yet a member of the foodcoop.</p>
-    success: User was invited successfully.
+      body_into_group: Here you can invite someone to join %{foodcoop} as a member of your %{type} <b>%{group}</b>.
+      body_new_group: Here you can invite someone to become a new member of %{foodcoop}.
+      email_multiple_hint: You can enter multiple email addresses, separated by commas or whitespace.
+    success:
+      one: User was invited successfully.
+      other: '%{count} users were invited successfully.'
   js:
     ordering:
       confirm_change: Modifications to this order will be lost when you change the order. Do you want to lose the changes you made and continue?
@@ -874,7 +876,13 @@ en:
       page: Page %{number}
   login:
     accept_invitation:
-      body: <p>You are invited to be part of the foodcoop %{foodcoop} as a member of the group <b>%{group}</b>.</p> <p>If you want to participate, please fill in this form.</p> <p>Naturally, your information wll not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>
+      invited_into_group: 'You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.'
+      invited_into_group_members:
+        zero: You would be the first member of this group.
+        one: This group currently consists of %{members}.
+        other: This group currently consists of %{members}.
+      invited_new_group: You are invited to become a member of %{foodcoop}.
+      body: <p>If you want to participate, please fill in this form.</p> <p>Naturally, your information wll not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>
       submit: Create a Foodsoft account
       title: Invitation to %{name}
     controller:
@@ -910,12 +918,26 @@ en:
 '
     invite:
       subject: Invitation to the Foodcoop
-      text: ! 'Hi!
+      text_into_group: ! 'Hi!
 
 
         %{user} <%{mail}> has invited you to join the group "%{group}".
 
         To accept the invitation and to join the foodcoop please follow this link: %{link}
+
+        This link works only once and expires on %{expires}.
+
+
+
+        Greetings, your Foodsoft Team!
+
+'
+      text_new_group: ! 'Hi!
+
+
+        %{user} <%{mail}> has invited you to join "%{foodcoop}".
+
+        To accept the invitation please follow this link: %{link}
 
         This link works only once and expires on %{expires}.
 

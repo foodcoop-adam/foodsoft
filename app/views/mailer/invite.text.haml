@@ -1,6 +1,16 @@
-= t '.text', user: @invite.user.name, mail: @invite.user.email, group: @invite.group.name, link: @link, expires: I18n.l(@invite.expires_at)
+- args = {user: @invite.user.name, mail: @invite.user.email, link: @link, expires: I18n.l(@invite.expires_at), foodcoop: FoodsoftConfig[:name]}
+- if @invite.group
+  = raw t '.text_into_group', args.merge(group: @invite.group.name)
+- else
+  = raw t '.text_new_group', args
+
 -# append english text only if the locale is not english
 - if not I18n.locale.to_s.start_with?('en')
   =======
   \
-  = t '.text', user: @invite.user.name, mail: @invite.user.email, group: @invite.group.name, link: @link, expires: I18n.l(@invite.expires_at, locale: :en), locale: :en
+  -# TODO use link with 'locale=en' so that the English form is displayed
+  - args[:expires] = I18n.l(@invite.expires_at, locale: :en)
+  - if @invite.group
+    = raw t '.text_into_group', args.merge(group: @invite.group.name, locale: :en)
+  - else
+    = raw t '.text_new_group', args.merge(locale: :en)

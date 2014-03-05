@@ -1,7 +1,6 @@
-= t('.body', group: @invite.group.name).html_safe
+- title t('invites.form.title')
+
 = simple_form_for @invite do |form|
-  = form.hidden_field :user_id
-  = form.hidden_field :group_id
-  = form.input :email
-  = form.submit t('.action')
+  = render 'form', invite: @invite, form: form
+  = form.submit class: 'btn btn-primary'
   = link_to t('ui.or_cancel'), :back

@@ -1,0 +1,12 @@
+- if invite.group
+  %p= raw t '.body_into_group', group: h(invite.group.name), type: h(invite.group.class.model_name.human), foodcoop: h(FoodsoftConfig[:name])
+- else
+  %p= raw t '.body_new_group', foodcoop: h(FoodsoftConfig[:name])
+= form.hidden_field :group_id
+= form.hidden_field :user_id
+- if @current_user.role_admin?
+  .control-group
+    = form.input_field :email, as: :text, style: 'width: 98%', required: true
+    .help-block= t '.email_multiple_hint'
+- else
+  = form.input :email, required: true

@@ -8,19 +8,36 @@ class InvitesController < ApplicationController
   
   def create
     authenticate_membership_or_admin params[:invite][:group_id]
-    @invite = Invite.new(params[:invite])
-    if @invite.save
-      Mailer.invite(@invite).deliver
+    # admins may send invites to multiple email addresses at once
+    emails = params[:invite][:email]
+    emails = emails.split(/\s*(,|\s)\s*/).reject{|e| e.blank? or e==','} if @current_user.role_admin?
+    emails.is_a? Array or emails = [emails]
 
-      respond_to do |format|
-        format.html do
-          redirect_to root_path, notice: I18n.t('invites.success')
+    Invite.transaction do
+      begin
+        invites = emails.map do |email|
+          invite = Invite.new(params[:invite].merge(email: email))
+          invite.save!
+          invite
         end
-        format.js { render layout: false }
-      end
+        # only send them when all invites were valid
+        # TODO move sending to Resque queue
+        invites.each do |invite|
+          Mailer.invite(invite).deliver
+        end
 
-    else
-      render action: :new
+        respond_to do |format|
+          format.html do
+            redirect_to root_path, notice: I18n.t('invites.success', count: emails.count)
+          end
+          format.js { render layout: false }
+        end
+
+      rescue ActiveRecord::RecordInvalid => e
+        flash[:error] = "#{e.message}: #{e.record.email}"
+        @invite = Invite.new(params[:invite])
+        render action: :new
+      end
     end
   end
 
