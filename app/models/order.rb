@@ -69,15 +69,13 @@ class Order < ActiveRecord::Base
   end
 
   # list of email addresses to send the order to when finished
-  # returns nil if there is no supplier email address (at least, for now)
   # returns nil if `send_order_on_finish` foodcoop config is not set
   def order_send_emails
-    supplier_email = supplier.order_send_email or return
     to = FoodsoftConfig[:send_order_on_finish] or return
     # gather email addresses to send to
     to.map do |a|
       if a == '%{supplier}'
-        supplier_email
+        supplier.order_send_email
       elsif a == '%{contact.email}'
         (FoodsoftConfig[:contact]['email'] rescue nil)
       else

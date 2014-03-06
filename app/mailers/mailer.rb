@@ -104,6 +104,7 @@ class Mailer < ActionMailer::Base
     @message = message
 
     attachments['order.pdf'] = OrderFax.new(order).to_pdf
+    attachments['order.csv'] = OrderCsv.new(order).to_csv
     # TODO also attach spreadsheet
     mail :to => to[0],
          :cc => to[1..-1],

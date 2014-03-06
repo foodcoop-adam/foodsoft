@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe 'the supplier mailer plugin' do
+describe 'the supplier mailer' do
 
   let(:supplier) { create :supplier, article_count: 1 }
   let(:order)    { create :order, supplier: supplier }
@@ -84,11 +84,11 @@ describe 'the supplier mailer plugin' do
       expect(email.to[0]).to eq FoodsoftConfig[:contact]['email']
     end
 
-    it 'has an attachment' do
+    it 'has two attachments' do
       FoodsoftConfig.config[:send_order_on_finish] = [mailto]
       order.finish!(user)
       email = ActionMailer::Base.deliveries.first
-      expect(email.attachments.count).to_not eq 0
+      expect(email.attachments.count).to eq 2
     end
   end
 
