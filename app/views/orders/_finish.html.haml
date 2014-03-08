@@ -19,16 +19,20 @@
         - else
           - will_send = true
           %p
-            %i.icon-ok{style: 'color: green'}
+            %label{for: 'send_order_contact'}= t '.label_contact'
+            - contact_info = (params[:send_order_contact] or [@current_user.name, @current_user.phone].reject(&:blank?).join(', '))
+            = text_field_tag 'send_order_contact', contact_info, style: 'width: 100%', required: true
+          %p
+            %label{for: 'send_delivered_on'}= t '.label_delivered_on'
+            - delivered_on = params[:delivered_on]
+            - delivered_on ||= format_date(@order.pickup) if @order.pickup
+            = text_field_tag 'send_delivered_on', delivered_on, style: 'width: 100%', required: true
+          %label{for: 'send_order_comment'}= t '.label_note'
+          = text_area_tag 'send_order_comment', nil, {rows: 5, style: 'width: 100%; margin-bottom: 0.5em'}
+          %p
             = t('.confirm_end_send')
             %br
-            %span{style: 'margin-top: 0; margin-left: 20px; color: #666; font-size: 80%;'}= @order.order_send_emails.join(', ')
-          %p
-            %label{for: 'send_order_contact'}= t '.label_contact'
-            - contact_info = [@current_user.name, @current_user.phone].reject(&:blank?).join(', ') 
-            = text_field_tag 'send_order_contact', contact_info, style: 'width: 100%', required: true
-          %label{for: 'send_order_comment'}= t '.label_note'
-          = text_area_tag 'send_order_comment', nil, {rows: 5, style: 'width: 100%'}
+            %span{style: 'margin-top: 0; color: #666; font-size: 80%;'}= @order.order_send_emails.join(', ')
 
     .modal-footer
       = link_to t('ui.cancel'), '#', class: 'btn', data: {dismiss: 'modal'}

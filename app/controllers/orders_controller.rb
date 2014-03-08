@@ -106,10 +106,15 @@ class OrdersController < ApplicationController
   def finish
     @order = Order.find params[:id]
     if request.post?
-      message = params[:send_order_comment]
+      messages = []
       if params[:send_order_contact]
-        message = "#{I18n.t('orders.finish.contact_person')}: #{params[:send_order_contact]}\n\n" + message
+        messages << "#{I18n.t('orders.finish.contact_person')}: #{params[:send_order_contact]}"
       end
+      if params[:send_delivered_on]
+        messages << "#{I18n.t('orders.finish.label_delivered_on')}: #{params[:send_delivered_on]}"
+      end
+      message = params[:send_order_comment]
+      message = messages.join("\n") + "\n" + message if messages
       @order.finish!(@current_user, message)
       flash[:notice] = I18n.t('orders.finish.notice')
       render :action => 'finished'

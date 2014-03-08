@@ -90,13 +90,14 @@ en:
     other: Other
   orders:
     finish:
-      confirm_end: Do you really want to close the order %{order}? There is no going back.
+      confirm_end: Do you really want to close the order? There is no going back.
       confirm_end_send: The order will be sent to the supplier.
       confirm_end_send_not: The order will be closed. It will not be sent to the supplier.
       confirm_end_send_not_manual: The order will be closed. You do not need to send it to the supplier.
       confirm_end_send_manual: To place the order, download the Fax in the following screen and send it to the supplier.
       contact_person: Contact person
       label_contact: Contact person (+phone)
+      label_delivered_on: Delivery day
       label_note: 'If you like, you can enter a note for the supplier:'
       submit_close: Close order
       submit_send: Close & send order to supplier
