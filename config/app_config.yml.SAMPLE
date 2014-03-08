@@ -75,6 +75,18 @@ default: &defaults
   # Members of a user's groups and administrators can still see full names.
   use_nick: false
 
+  # default order schedule, used to provide initial dates for new orders
+  # (recurring dates in ical format; no spaces!)
+  #order_schedule:
+  #  # reference point, this is generally the first pickup day; leave empty to guess
+  #  #initial:
+  #  ends:
+  #    recurr: FREQ=WEEKLY;INTERVAL=2;BYDAY=MO
+  #    time: '9:00'
+  #  pickup:
+  #    recurr: FREQ=WEEKLY;INTERVAL=2;BYDAY=WE
+  #    time: '18:00'
+
   # membership fee substracted from balance when a new ordergroup is created
   membership_fee: 35
 

@@ -1,5 +1,6 @@
 = simple_form_for @order do |f|
   = f.hidden_field :supplier_id
+  = f.input :pickup, as: :date_picker_time
   .fold-line
     = f.input :starts, as: :date_picker_time
     = f.input :ends, as: :date_picker_time

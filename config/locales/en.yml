@@ -76,6 +76,7 @@ en:
         ends: Ends at
         name: Supplier
         note: Note
+        pickup: Pickup at
         starts: Starts at
         status: Status
         supplier: Supplier
@@ -1167,6 +1168,8 @@ en:
     model:
       error_closed: Order was already settled
       error_nosel: At least one article must be selected
+      error_pickup_before_ends: must be after the end date (or remain empty)
+      error_pickup_before_starts: must be after the start date (or remain empty)
       error_starts_before_ends: must be after the start date (or remain empty)
       notice_close: ! 'Order: %{name}, until %{ends}'
       stock: Stock

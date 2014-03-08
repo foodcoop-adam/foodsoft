@@ -245,6 +245,7 @@ ActiveRecord::Schema.define(:version => 20140102170431) do
     t.integer  "updated_by_user_id"
     t.decimal  "foodcoop_result",    :precision => 8, :scale => 2
     t.integer  "created_by_user_id"
+    t.datetime "pickup"
   end
 
   add_index "orders", ["state"], :name => "index_orders_on_state"

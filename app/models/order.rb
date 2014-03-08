@@ -17,7 +17,7 @@ class Order < ActiveRecord::Base
 
   # Validations
   validates_presence_of :starts
-  validate :starts_before_ends, :include_articles
+  validate :starts_before_ends, :starts_and_ends_before_pickup, :include_articles
   validate :keep_ordered_articles
 
   # Callbacks
@@ -38,7 +38,7 @@ class Order < ActiveRecord::Base
 
   # Allow separate inputs for date and time
   include DateTimeAttribute
-  date_time_attribute :starts, :ends
+  date_time_attribute :starts, :ends, :pickup
 
   def stockit?
     supplier_id == 0
@@ -133,6 +133,24 @@ class Order < ActiveRecord::Base
 
   def expired?
     !ends.nil? && ends < Time.now
+  end
+
+  # sets up first guess of dates when initializing a new object
+  # I guess `def initialize` would work, but it's tricky http://stackoverflow.com/questions/1186400
+  def init_dates
+    self.starts ||= Time.now
+    if FoodsoftConfig[:order_schedule]
+      # try to be smart when picking a reference day
+      last = FoodsoftConfig[:order_schedule]['initial'].try(:to_time)
+      last ||= Order.finished.reorder(:pickup).where.not(pickup: nil).first.try(:pickup)
+      last ||= self.starts
+      # adjust end and pickup dates
+      self.ends   ||= FoodsoftDateUtil.next_occurrence last, self.starts,
+                        FoodsoftConfig[:order_schedule]['ends'].symbolize_keys
+      self.pickup ||= FoodsoftDateUtil.next_occurrence last, self.starts,
+                        FoodsoftConfig[:order_schedule]['pickup'].symbolize_keys
+    end
+    self
   end
 
   # search GroupOrder of given Ordergroup
@@ -275,7 +293,16 @@ class Order < ActiveRecord::Base
   protected
 
   def starts_before_ends
-    errors.add(:ends, I18n.t('orders.model.error_starts_before_ends')) if (ends && starts && ends <= starts)
+    return unless ends and starts
+    errors.add(:ends, I18n.t('orders.model.error_starts_before_ends')) if ends <= starts
+  end
+  def starts_and_ends_before_pickup
+    return unless pickup
+    if ends
+      errors.add(:pickup, I18n.t('orders.model.error_ends_before_pickup')) if pickup <= ends
+    elsif starts
+      errors.add(:pickup, I18n.t('orders.model.error_starts_before_pickup')) if pickup <= starts
+    end
   end
 
   def include_articles

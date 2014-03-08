@@ -15,8 +15,10 @@ class OrdersController < ApplicationController
       sort = case params['sort']
                when "supplier"         then "suppliers.name, ends DESC"
                when "ends"             then "ends DESC"
+               when "pickup"           then "pickup DESC"
                when "supplier_reverse" then "suppliers.name DESC"
                when "ends_reverse"     then "ends"
+               when "pickup_reverse"   then "pickup"
                end
     end
 
@@ -60,7 +62,7 @@ class OrdersController < ApplicationController
 
   # Page to create a new order.
   def new
-    @order = Order.new starts: Time.now, ends: 4.days.from_now, supplier_id: params[:supplier_id]
+    @order = Order.new(supplier_id: params[:supplier_id]).init_dates
   end
 
   # Save a new order.

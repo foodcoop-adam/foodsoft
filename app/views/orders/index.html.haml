@@ -23,6 +23,7 @@
         %tr
           %th= heading_helper Order, :name
           %th= heading_helper Order, :ends
+          %th= heading_helper Order, :pickup
           %th= heading_helper Order, :note
           %th{colspan: "2"}
       %tbody
@@ -31,7 +32,8 @@
             - tr_class = " active" if order.expired?
             %tr{class: tr_class}
               %td= order.name
-              %td= format_time(order.ends) unless order.ends.nil?
+              %td= format_time(order.ends) if order.ends
+              %td= format_time(order.pickup) if order.pickup
               %td= truncate(order.note)
               %td= link_to t('.action_end'), finish_order_path(order), remote: true, class: 'btn btn-small btn-success'
               %td
@@ -49,6 +51,7 @@
             %tr
               %td= order.name
               %td= format_time(order.ends)
+              %td= format_time(order.pickup) if order.pickup
               %td= truncate(order.note)
               %td
                 - unless order.stockit?

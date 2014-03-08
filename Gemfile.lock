@@ -19,6 +19,13 @@ GIT
     i18n-js (2.1.2)
       i18n
 
+GIT
+  remote: git://github.com/greenriver/ice_cube.git
+  revision: eb033d31ecfff3221f99118beb8f6446e01940b1
+  branch: issues/50-from_ical
+  specs:
+    ice_cube (0.10.1)
+
 PATH
   remote: lib/foodsoft_adyen
   specs:
@@ -429,6 +436,7 @@ DEPENDENCIES
   haml-rails
   i18n-js!
   i18n-spec
+  ice_cube!
   inherited_resources
   jquery-rails
   kaminari
