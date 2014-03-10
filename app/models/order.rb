@@ -40,10 +40,6 @@ class Order < ActiveRecord::Base
   include DateTimeAttribute
   date_time_attribute :starts, :ends
 
-  # Allow separate inputs for date and time
-  include DateTimeAttribute
-  date_time_attribute :starts, :ends
-
   def stockit?
     supplier_id == 0
   end
