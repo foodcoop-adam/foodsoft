@@ -1,3 +1,39 @@
+# Foodsoft foodcoop-adam 3.3.0
+(10 Mar 2014)
+
+* Hide deleted ordergroups in "Check member orders"
+* Allow foodcoop to configure a default language (e.g. for the signup form)
+* Remove invoices menu item, which wasn't used anyway
+* Allow new members to specify a different email address on invitations
+* Cleanup email footer
+* Allow to synchronise article from shared database using a button in the edit article dialog
+* Add fax spreadsheet (csv) to order
+* Make installing foodsoft work better when installing on a suburi
+* Make sorting orders work again in the orders overview screen
+* [signup plugin] Allow the signup form to be protected by a key in the url
+* [mailall plugin] Fix mailall plugin breaking admin user search
+* [mollie plugin] Leep payment details on return page when payment fails
+
+# Foodsoft foodcoop-adam 3.2.0 (post-factum release)
+(24 Feb 2014)
+
+This is the first official foodcoop-adam release. There are too many changes to
+document here, but the gist is that we
+* removed many elements that we don't use from the user-interface;
+* made a task-based navigation menu;
+* added online payment features (mollie and adyen plugins);
+* made the financial transactions screen more details, pre-filling the amount, providing often-used notes;
+* use a more fancy listbox (select2);
+* allow to lists in pages of 500 items;
+* redesigned the member ordering screen;
+* add url to articles;
+* allow members to signup and pay a membership fee (signup plugin);
+* allow to work with all current orders at once (current\_orders plugin);
+* allow to edit article result from orders screen;
+* allow to integrate other software with foodsoft login (userinfo plugin);
+* add support for uservoice (uservoice plugin);
+* allow to configure a default language, e.g. for the signup form.
+
 # Foodsoft 3.3.0
 (24 Feb 2014)
 
