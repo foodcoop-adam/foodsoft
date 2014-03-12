@@ -1,8 +1,20 @@
 class OrderArticlesController < ApplicationController
 
-  before_filter :authenticate_finance_or_orders
+  before_filter :authenticate_finance_or_orders, only: [:create, :edit, :update, :destroy]
 
-  layout false  # We only use this controller to serve js snippets, no need for layout rendering
+  #layout false  # We only use this controller to serve js snippets, no need for layout rendering
+
+  def index
+    @order_articles = OrderArticle.includes(:order, :article).merge(Order.open)
+    @article_categories = ArticleCategory.find(@order_articles.group(:article_category_id).pluck(:article_category_id))
+
+    @order_articles = @order_articles.includes({:article => :supplier}, :article_price)
+    @order_articles = @order_articles.where(articles: {article_category_id: params[:article_category_id]}) if params[:article_category_id]
+    @order_articles = @order_articles.page(params[:page]).per(@per_page)
+
+    @has_stock = !@order_articles.select {|oa| oa.order.stockit? }.empty?
+    @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
+  end
 
   # currently used to for order article autocompletion
   def index

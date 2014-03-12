@@ -254,66 +254,30 @@ th.price_markup_note {
   }
 }
 
-#order-footer, .article-info {
-  text-align: left;
-  z-index: 1;
-  position: fixed;
-  bottom: 0;
-  background-color: #E4EED6;
-  border-top: 2px solid #78B74E;
-
-  #total-sum {
-    margin: .5em 2em 0 0;
-    float: right;
-    #order-button {
-      margin: .5em 0;
-
-      input:disabled {
-        background-color: red; }
-    }
-    .currency {
-      min-width: 5em;
-    }
-  }
-}
-
-.new_group_order, .edit_group_order {
-  // extra margin below to make sure all rows are visible
-  margin-bottom: 140px;
-}
-
-#order-footer {
-  width: 100%;
-  right: 0;
-  left: 0;
-}
-
 .article-info {
-  z-index: 2;
-  width: 40em;
-  height: 8em;
-  border: none;
-  left: 30px;
 
-  .article-name {
-    text-align: center;
-    margin: 2px 0;
-    margin-bottom: 5px;
-    width: 100%;
+  position: fixed;
+  top: 0;
+  left: 20px;
+  height: 100%;
+
+  h3 {
+    font-size: 12pt;
     font-weight: bold;
+    margin-top: 0;
   }
-  .pull-right {
-    width: 35%;
+  dt {
+    display: inline-block;
+    width: 8em;
   }
-  .pull-left {
-    width: 60%;
+  dd {
+    display: inline-block;
   }
 }
 
 tr.order-article .article-info {
   display: none;
 }
-
 tr.order-article:hover .article-info {
   display: block;
 }
@@ -321,7 +285,6 @@ tr.order-article:hover .article-info {
 td.name > .icon-info-sign {
   color: #ddd;
 }
-
 
 // ********* Articles
 
