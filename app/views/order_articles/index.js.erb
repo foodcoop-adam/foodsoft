@@ -1,0 +1,5 @@
+$('#articles_table').html('<%= j render("order_articles") %>');
+<% if params[:article_category_id] %>
+  $('.facets li[data-category]').removeClass('active');
+  $('.facets li[data-category="<%= j params[:article_category_id] %>"]').addClass('active');
+<% end %>

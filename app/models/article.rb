@@ -10,6 +10,7 @@ class Article < ActiveRecord::Base
   belongs_to :supplier
   belongs_to :article_category
   has_many :article_prices, :order => "created_at DESC"
+  has_many :order_articles
 
   scope :undeleted, -> { where(deleted_at: nil) }
   scope :available, -> { undeleted.where(availability: true) }

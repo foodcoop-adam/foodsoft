@@ -1,0 +1,30 @@
+- cur_has_stock = order_article.order.stockit?
+- cur_has_tolerance = (order_article.price.unit_quantity > 1)
+- group_order_article = @current_user.ordergroup.group_orders.where(order_id: order_article.order_id).first
+-#%tr{class: "#{cycle('even', 'odd', name: 'order_articles')} order-article", data: { toggle: 'popover', trigger: 'hover click', content: render('order_article_info', order_article: order_article), 'original-title' => order_article.article.name}}
+%tr{class: "#{cycle('even', 'odd', name: 'order_articles')} order-article"}
+  %td.name= order_article.article.name
+  %td= order_article.article.origin
+  %td= number_to_currency(order_article.price.fc_price)
+  %td= order_article.article.unit
+  - if @has_stock
+    %td= order_article.article.quantity_available if cur_has_stock
+  - if @has_tolerance
+    %td{id: "missing_units_#{order_article.id}"}= order_article.missing_units if cur_has_tolerance
+  %td.center.quantity
+    = simple_fields_for :group_order_article do |f|
+      - data_delta = {min: 0, granularity: 1}.merge(cur_has_stock ? {max: order_article.article.quantity_available} : {})
+      = f.input_field :quantity, as: :delta, class: 'input-nano', data: data_delta, id: "q_#{order_article.id}"
+  - if @has_tolerance
+    %td.center.tolerance
+      = simple_fields_for :group_order_article do |f|
+        - if cur_has_tolerance
+          - data_delta = {min: 0, granularity: 1, max: order_article.price.unit_quantity-1}
+          = f.input_field :tolerance, as: :delta, class: 'input-nano', data: data_delta, id: "t_#{order_article.id}"
+        - else
+          = f.input_field :tolerance, as: :hidden, id: "t_#{order_article.id}", value: 0
+  %td{id: "td_price_#{order_article.id}"}
+    %span{id: "price_#{order_article.id}_display"}= number_to_currency((group_order_article.total_price rescue 0))
+    .article-info
+      = render 'order_article_info', order_article: order_article
+

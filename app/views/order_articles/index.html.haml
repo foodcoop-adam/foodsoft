@@ -1,0 +1,13 @@
+- title 'Order articles', false
+
+- content_for :sidebar do
+  .facets.well
+    %ul.nav.nav-list
+      %li.nav-header= ArticleCategory.model_name.human
+      - @article_categories.each do |article_category|
+        %li{data: {category: article_category.id}, class: ('active' if article_category.id==params[:article_category_id].to_i)}
+          = link_to article_category.name, order_articles_path(article_category_id: article_category.id), remote: true
+
+#articles_table
+  = render 'order_articles'
+

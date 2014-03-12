@@ -170,6 +170,14 @@ $(function() {
     $(document).tooltip({
       selector: '[data-toggle~="tooltip"]',
     });
+    $.extend($.fn.popover.defaults, {
+      html: true,
+      animation: false,
+      placement: 'left'
+    });
+    $(document).popover({
+      selector: '[data-toggle~="popover"]'
+    });
     
     // See stupidtable.js for initialization of local table sorting
 
