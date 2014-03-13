@@ -1,29 +1,49 @@
-.article-info.row-fluid.well.span3
+.article-info
+  -#.row-fluid.well.span3
   %h3= order_article.article.name
 
-  %dl
+  %table{style: 'width: 100%'}
+    %tbody
+      %tr
+        %th= Article.human_attribute_name(:supplier) + ':'
+        %td= order_article.article.supplier.name
 
-    %dt= Article.human_attribute_name(:supplier) + ':'
-    %dl= order_article.article.supplier.name
+      - unless order_article.article.manufacturer.blank?
+        %tr
+          %th= Article.human_attribute_name(:manufacturer) + ':'
+          %td= order_article.article.manufacturer
 
-    - if order_article.article.manufacturer
-      %dt= Article.human_attribute_name(:manufacturer) + ':'
-      %dl= order_article.article.manufacturer
+      - unless order_article.article.note.blank?
+        %tr
+          %th= Article.human_attribute_name(:note) + ':'
+          %td= order_article.article.note
 
-    - if order_article.article.note
-      %dt= Article.human_attribute_name(:note) + ':'
-      %dl= order_article.article.note
+      - unless order_article.article.origin.blank?
+        %tr
+          %th= Article.human_attribute_name(:origin) + ':'
+          %td= order_article.article.origin
 
-    %dt= t('.units_full') + ':'
-    %dl= order_article.units_to_order
+      %tr
+        %th= t('.units_full') + ':'
+        %td= order_article.units_to_order
 
-    %dt= t('.units_total') + ':'
-    %dl= "#{order_article.quantity} + #{order_article.tolerance}"
+      %tr
+        %th= t('.units_total') + ':'
+        %td= "#{order_article.quantity} + #{order_article.tolerance}"
 
-    %dt= Article.human_attribute_name(:units) + ':'
-    %dl
-      - if order_article.article.is_a? StockArticle
-        = order_article.article.quantity_available
-      - else
-        = order_article.price.unit_quantity
-      * #{order_article.article.unit}
+      %tr
+        %th= Article.human_attribute_name(:units) + ':'
+        - if order_article.article.is_a? StockArticle
+          %td 
+            = order_article.article.quantity_available
+            &times;
+            = order_article.article.unit
+        - else
+          %td
+            = order_article.article.unit
+            - if order_article.price.unit_quantity > 1
+              %span.package
+                &times;
+                = order_article.price.unit_quantity 
+                = pkg_helper_icon
+
