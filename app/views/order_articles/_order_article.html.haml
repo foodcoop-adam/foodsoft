@@ -25,6 +25,5 @@
           = f.input_field :tolerance, as: :hidden, id: "t_#{order_article.id}", value: 0
   %td{id: "td_price_#{order_article.id}"}
     %span{id: "price_#{order_article.id}_display"}= number_to_currency((group_order_article.total_price rescue 0))
-    .article-info
-      = render 'order_article_info', order_article: order_article
+    = render 'order_article_info', order_article: order_article
 
