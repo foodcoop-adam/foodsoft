@@ -1,5 +1,9 @@
 $('#articles_table').html('<%= j render("order_articles") %>');
-<% if params[:article_category_id] %>
+<% if params[:q] %>
+  <% unless params[:q][:article_name_cont] %>
+    // reset name when not specified
+    $('#q_article_name_cont').val('');
+  <% end %>
   $('.facets li[data-category]').removeClass('active');
-  $('.facets li[data-category="<%= j params[:article_category_id] %>"]').addClass('active');
+  $('.facets li[data-category="<%= j params[:q][:article_article_category_id_eq] %>"]').addClass('active');
 <% end %>
