@@ -8,6 +8,14 @@ class OrderArticlesController < ApplicationController
     @order_articles = OrderArticle.includes(:order, :article).merge(Order.open)
     @article_categories = ArticleCategory.find(@order_articles.group(:article_category_id).pluck(:article_category_id))
 
+    @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
+                        .where(group_orders: {ordergroup_id: [@current_user.ordergroup.id, nil]})
+
+    unless params[:article_category_id]
+      # if no category given, only show currently ordered items
+      @order_articles = @order_articles.where('group_order_articles.result > 0 OR group_order_articles.quantity > 0 OR group_order_articles.tolerance > 0')
+    end
+
     @order_articles = @order_articles.includes({:article => :supplier}, :article_price)
     @order_articles = @order_articles.where(articles: {article_category_id: params[:article_category_id]}) if params[:article_category_id]
     @order_articles = @order_articles.page(params[:page]).per(@per_page)
