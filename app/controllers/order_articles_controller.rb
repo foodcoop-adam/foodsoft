@@ -11,8 +11,11 @@ class OrderArticlesController < ApplicationController
     @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
                         .where(group_orders: {ordergroup_id: [@current_user.ordergroup.id, nil]})
 
-    unless params[:article_category_id]
-      # if no category given, only show currently ordered items
+    @q = OrderArticle.search(params[:q])
+    @order_articles = @order_articles.merge(@q.result(distinct: true))
+
+    if params[:q].blank? or params[:q].values.compact.empty?
+      # if no search given, only show currently ordered items
       @order_articles = @order_articles.where('group_order_articles.result > 0 OR group_order_articles.quantity > 0 OR group_order_articles.tolerance > 0')
     end
 

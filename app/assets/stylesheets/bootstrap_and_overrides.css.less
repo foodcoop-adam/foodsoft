@@ -275,16 +275,25 @@ th.price_markup_note {
   }
 }
 
-.article-info-container        { display: none; }
-.article-info-container.affix  { top: 20px; }
-.article-info {
+.article-info-container        {
+  display: none;
+  position: absolute;
+  top: 0;
+  z-index: 5; // to be above search box
+}
 
+.article-info-container.affix  {
+  position: fixed;
+  top: 20px;
+}
+.article-info {
   h3 {
-    font-size: 12pt;
-    line-height: 12pt;
+    font-size: 11pt;
+    line-height: 11pt;
     font-weight: bold;
     margin-top: 0;
   }
+  font-size: 10pt;
 }
 
 tr.order-article .article-info { display: none; }

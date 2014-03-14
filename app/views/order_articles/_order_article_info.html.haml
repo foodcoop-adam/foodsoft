@@ -1,8 +1,7 @@
 .article-info
-  -#.row-fluid.well.span3
   %h3= order_article.article.name
 
-  %table{style: 'width: 100%'}
+  %table.table
     %tbody
       %tr
         %th= Article.human_attribute_name(:supplier) + ':'
@@ -13,23 +12,10 @@
           %th= Article.human_attribute_name(:manufacturer) + ':'
           %td= order_article.article.manufacturer
 
-      - unless order_article.article.note.blank?
-        %tr
-          %th= Article.human_attribute_name(:note) + ':'
-          %td= order_article.article.note
-
       - unless order_article.article.origin.blank?
         %tr
           %th= Article.human_attribute_name(:origin) + ':'
           %td= order_article.article.origin
-
-      %tr
-        %th= t('.units_full') + ':'
-        %td= order_article.units_to_order
-
-      %tr
-        %th= t('.units_total') + ':'
-        %td= "#{order_article.quantity} + #{order_article.tolerance}"
 
       %tr
         %th= Article.human_attribute_name(:units) + ':'
@@ -46,4 +32,17 @@
                 &times;
                 = order_article.price.unit_quantity 
                 = pkg_helper_icon
+
+      - unless order_article.article.note.blank?
+        %tr
+          %th= Article.human_attribute_name(:note) + ':'
+          %td= order_article.article.note
+
+      %tr
+        %th= t('.units_full') + ':'
+        %td= order_article.units_to_order
+
+      %tr
+        %th= t('.units_total') + ':'
+        %td= "#{order_article.quantity} + #{order_article.tolerance}"
 

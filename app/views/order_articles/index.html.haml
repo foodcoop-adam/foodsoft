@@ -1,14 +1,21 @@
 - title 'Order articles', false
 
 - content_for :sidebar do
-  .sidebar-container
+  .sidebar-container{style: 'position: relative'}
     .well.article-info-container.article-info{data: {spy: 'affix', 'offset-top' => 100}}
     .well.facets
       %ul.nav.nav-list
+        %li
+          = search_form_for @q, data: {'submit-onchange' => true}, class: 'form-search', remote: true do |f|
+            .input-append
+              = f.text_field :article_name_cont, placeholder: t('group_orders.form.search_article'), class: 'search-query input-block-level resettable'
+              %button.add-on.btn.reset-search{:type => :button, :title => t('group_orders.form.reset_article_search')}
+                %i.icon.icon-remove
         %li.nav-header= ArticleCategory.model_name.human
         - @article_categories.each do |article_category|
-          %li{data: {category: article_category.id}, class: ('active' if article_category.id==params[:article_category_id].to_i)}
-            = link_to article_category.name, order_articles_path(article_category_id: article_category.id), remote: true
+          - classes = ('active' if article_category.id==(params[:q][:article_article_category_id_eq].to_i rescue nil))
+          %li{data: {category: article_category.id}, class: classes}
+            = link_to article_category.name, order_articles_path(q: {article_article_category_id_eq: article_category.id}), remote: true
 
 #articles_table
   = render 'order_articles'
@@ -20,16 +27,20 @@
         // TODO support touchclick
         if (e.type=='mouseenter') {
           $('.article-info-container').
-            html($('.article-info', this).html()).
+            append($('.article-info', this).clone()).
             css('width', $('.facets').width()).
             show();
-          $('.facets').hide();
+          $('.facets').fadeTo(0, 0.75);
         } else {
           $('.article-info-container').
             hide().
-            html('');
-          $('.facets').show();
+            empty();
+          $('.facets').fadeTo(0, 1);
         }
+      });
+
+      $(document).on('touchclick', '.reset-search', function() {
+        $('.resettable', $(this).closest('form')).val('').trigger('changed');
       });
 
     });
