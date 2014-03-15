@@ -105,17 +105,16 @@ class OrdersController < ApplicationController
   # Finish a current order (js-only)
   def finish
     @order = Order.find params[:id]
+    @order_info = params[:order_info] || {}
+    @order_info[:sender_name] ||= @current_user.name
+    @order_info[:order_contact_name] ||= @current_user.name
+    @order_info[:order_contact_phone] ||= @current_user.phone
+    @order_info[:delivered_before] ||= view_context.format_date(@order.pickup) if @order.pickup
+    @order_info[:message] ||= Mailer.order_result_supplier(@order, [],
+                                @order_info.merge({skip_attachments: true, skip_extra: true})).body
+
     if request.post?
-      messages = []
-      if params[:send_order_contact]
-        messages << "#{I18n.t('orders.finish.contact_person')}: #{params[:send_order_contact]}"
-      end
-      if params[:send_delivered_on]
-        messages << "#{I18n.t('orders.finish.label_delivered_on')}: #{params[:send_delivered_on]}"
-      end
-      message = params[:send_order_comment]
-      message = messages.join("\n") + "\n" + message if messages
-      @order.finish!(@current_user, message)
+      @order.finish!(@current_user, @order_info)
       flash[:notice] = I18n.t('orders.finish.notice')
       render :action => 'finished'
     end

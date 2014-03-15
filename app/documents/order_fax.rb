@@ -48,10 +48,23 @@ class OrderFax < OrderPdf
     text Date.today.strftime(I18n.t('date.formats.default')), align: :right
 
     move_down 10
-    text "#{Delivery.human_attribute_name :delivered_on}:"
+    text I18n.t('mailer.order_result_supplier.line_delivered_before', when: @options[:delivered_before])
     move_down 10
-    unless @order.supplier.try(:contact_person).blank?
+
+    contact = @order.supplier.try(:contact_person)
+    unless contact.blank?
       text "#{Supplier.human_attribute_name :contact_person}: #{@order.supplier[:contact_person]}"
+      move_down 10
+    end
+
+    contact = @options[:order_contact_name]
+    unless contact.blank?
+      text I18n.t('mailer.order_result_supplier.line_order_contact', name: contact, phone: @options[:order_contact_phone])
+      move_down 10
+    end
+    contact = @options[:delivery_contact_name]
+    unless contact.blank?
+      text I18n.t('mailer.order_result_supplier.line_delivery_contact', name: contact, phone: @options[:delivery_contact_phone])
       move_down 10
     end
 

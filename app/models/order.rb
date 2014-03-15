@@ -222,8 +222,8 @@ class Order < ActiveRecord::Base
 
   # Finishes this order. This will set the order state to "finish" and the end property to the current time.
   # Ignored if the order is already finished.
-  # Any supplied message will be passed on to the supplier notifier.
-  def finish!(user, message=nil)
+  # Any supplied options will be passed on to the supplier notifier.
+  def finish!(user, options={})
     unless finished?
       Order.transaction do
         # set new order state (needed by notify_order_finished)
@@ -252,7 +252,7 @@ class Order < ActiveRecord::Base
         ordergroups.each(&:update_stats!)
 
         # Notifications
-        Resque.enqueue(SupplierNotifier, FoodsoftConfig.scope, 'finished_order', self.id, message)
+        Resque.enqueue(SupplierNotifier, FoodsoftConfig.scope, 'finished_order', self.id, options)
         Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'finished_order', self.id)
       end
     end

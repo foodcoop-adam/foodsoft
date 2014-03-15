@@ -97,18 +97,22 @@ class Mailer < ActionMailer::Base
 
   # Send message with order to supplier
   layout nil, only: :order_result_supplier
-  def order_result_supplier(order, to, message=nil)
+  def order_result_supplier(order, to, options={})
     set_foodcoop_scope
     @order = order
-    @user = order.updated_by
-    @message = message
+    @options = options
 
-    attachments['order.pdf'] = OrderFax.new(order).to_pdf
-    attachments['order.csv'] = OrderCsv.new(order).to_csv
-    # TODO also attach spreadsheet
+    unless options[:skip_attachments]
+      attachments['order.pdf'] = OrderFax.new(order, options).to_pdf
+      attachments['order.csv'] = OrderCsv.new(order, options).to_csv
+    end
+
+    subject = I18n.t("mailer.order_result_supplier.subject#{options[:delivered_before] and '_with_date'}",
+                    delivered_before: options[:delivered_before])
+
     mail :to => to[0],
          :cc => to[1..-1],
-         :subject => "[#{FoodsoftConfig[:name]}] " + I18n.t('mailer.order_result_supplier.subject')
+         :subject => "[#{FoodsoftConfig[:name]}] #{subject}"
   end
 
 

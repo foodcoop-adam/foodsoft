@@ -13,26 +13,39 @@
       -# send to supplier if all is fine
       - will_send = false
       - if @order.can_send == true
-        - unless @order.supplier.order_send_email 
+        - unless @order.supplier.order_send_email
           %p= t '.confirm_end_send_manual'
 
         - else
           - will_send = true
-          %p
-            %label{for: 'send_order_contact'}= t '.label_contact'
-            - contact_info = (params[:send_order_contact] or [@current_user.name, @current_user.phone].reject(&:blank?).join(', '))
-            = text_field_tag 'send_order_contact', contact_info, style: 'width: 100%', required: true
-          %p
-            %label{for: 'send_delivered_on'}= t '.label_delivered_on'
-            - delivered_on = params[:delivered_on]
-            - delivered_on ||= format_date(@order.pickup) if @order.pickup
-            = text_field_tag 'send_delivered_on', delivered_on, style: 'width: 100%', required: true
-          %label{for: 'send_order_comment'}= t '.label_note'
-          = text_area_tag 'send_order_comment', nil, {rows: 5, style: 'width: 100%; margin-bottom: 0.5em'}
-          %p
+          .control-group.row-fluid
+            .span6
+              %label{for: 'order_info_order_contact_name'}= t '.contact_order'
+              = text_field_tag 'order_info[order_contact_name]', @order_info[:order_contact_name],
+                  class: 'input-block-level', required: true, placeholder: User.human_attribute_name(:name)
+              = text_field_tag 'order_info[order_contact_phone]', @order_info[:order_contact_phone],
+                  class: 'input-block-level', required: true, placeholder: User.human_attribute_name(:phone)
+            .span6
+              %label{for: 'order_info_delivery_contact_name'}= t '.contact_delivery'
+              = text_field_tag 'order_info[delivery_contact_name]', @order_info[:delivery_contact_name],
+                  class: 'input-block-level', required: true, placeholder: User.human_attribute_name(:name)
+              = text_field_tag 'order_info[delivery_contact_phone]', @order_info[:delivery_contact_phone],
+                  class: 'input-block-level', required: true, placeholder: User.human_attribute_name(:phone)
+
+          .control-group
+            %label{for: 'order_info_delivered_before'}= t '.delivered_before'
+            = text_field_tag 'order_info[delivered_before]', @order_info[:delivered_before],
+                class: 'input-block-level', required: true
+
+          .control-group
+            .pull-right
+              = link_to '#', data: {toggle: 'collapse', target: '#send_comment_container'} do
+                %label{for: 'order_info_message', style: 'display: inline'}= '(' + t('.edit_message') + ')'
             = t('.confirm_end_send')
             %br
-            %span{style: 'margin-top: 0; color: #666; font-size: 80%;'}= @order.order_send_emails.join(', ')
+            %span{style: 'margin-top: 0; color: #666; font-size: 80%;'}= 'to: ' + @order.order_send_emails.join(', ')
+            .collapse#send_comment_container
+              = text_area_tag 'order_info[message]', @order_info[:message], {rows: 6, class: 'input-block-level'}
 
     .modal-footer
       = link_to t('ui.cancel'), '#', class: 'btn', data: {dismiss: 'modal'}

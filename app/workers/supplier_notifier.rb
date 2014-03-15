@@ -8,7 +8,8 @@ class SupplierNotifier
     self.send method_name, *args
   end
 
-  def self.finished_order(order_id, message=nil)
+  def self.finished_order(order_id, options={})
+    options.symbolize_keys!
     order = Order.find(order_id)
     unless to = order.order_send_emails and not to.empty?
       Rails.logger.info "Order #{order_id} finished, not sending because there is no recipient."
@@ -20,6 +21,6 @@ class SupplierNotifier
       return
     end
     # send mail to supplier if order_howto is an email address
-    Mailer.order_result_supplier(order, to, message).deliver
+    Mailer.order_result_supplier(order, to, options).deliver
   end
 end

@@ -1,3 +1,14 @@
-~ t '.text', foodcoop: FoodsoftConfig[:name], updated_by: show_user(@order.updated_by)
-~ @message if @message
-~ t '.footer', foodcoop: FoodsoftConfig[:name], updated_by: show_user(@order.updated_by)
+- if @options[:message]
+  ~ @options[:message]
+- else
+  ~ t '.text', foodcoop: FoodsoftConfig[:name], name: @options[:sender_name] || @order.updated_by.try(:name)
+  ~ t '.footer', foodcoop: FoodsoftConfig[:name], name: @options[:sender_name] || @order.updated_by.try(:name)
+
+- unless @options[:skip_extra]
+  ~ "\n"
+  - if @options[:delivered_before]
+    ~ t '.line_delivered_before',  when: @options[:delivered_before]
+  - if @options[:order_contact_name]
+    ~ t '.line_order_contact', name: @options[:order_contact_name], phone: @options[:order_contact_phone]
+  - if @options[:delivery_contact_name]
+    ~ t '.line_delivery_contact', name: @options[:delivery_contact_name], phone: @options[:delivery_contact_phone]
