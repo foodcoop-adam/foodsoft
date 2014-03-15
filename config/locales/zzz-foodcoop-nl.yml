@@ -52,17 +52,21 @@ nl:
         min_quantity_reached: Je hebt het minimum bestelbedrag van %{min_quantity} gehaald (totaal %{sum}).
   mailer:
     order_result_supplier:
-      subject: New order
+      line_delivered_before: 'Leverdatum: %{when}'
+      line_order_contact: 'Contactpersoon bestelling: %{name}, %{phone}'
+      line_delivery_contact: 'Contactpersoon levering: %{name}, %{phone}'
+      subject: Nieuwe bestelling
+      subject_with_date: Nieuwe bestelling voor %{delivered_before}
       text: ! 'Foodcoop %{foodcoop} zou graag een bestelling plaatsen.
 
-        Zie de PDF attachment voor meer informatie.
+        Zie de PDF en spreadsheet attachment voor meer informatie.
 
 '
       footer: '
 
         Vriendelijke groet,
 
-        %{updated_by}
+        %{name}
 
         %{foodcoop}
 '
@@ -92,11 +96,18 @@ nl:
     finish:
       confirm_end: Je staat op het punt de bestelling te sluiten. Hierna kun je niet meer terug.
       confirm_end_send: De bestelling wordt naar de leverancier verstuurd.
+      confirm_end_send_not: De bestelling wordt gesloten. Zij wordt niet naar de leverancier verstuurd.
+      confirm_end_send_not_manual: De bestelling wordt gesloten. Zij hoeft niet naar de leverancier verstuurd te worden.
       confirm_end_send_manual: 'Om de bestelling te plaatsen: download de Fax in het volgende scherm en stuur het naar de leverancier.'
-      contact_person: Contact person
-      label_contact: Contactpersoon (+telefoon)
-      label_note: 'Als je wilt, kun je een bericht voor de leverancier toevoegen:'
+      contact_order: Contactpersoon bestelling
+      contact_delivery: Contactpersoon levering
+      delivered_before: Leverdatum
+      edit_message: bericht bewerken
       submit_close: Bestelling sluiten
       submit_send: Bestelling sluiten & versturen
     index:
       last_order_week: Recente bestellingen
+  simple_form:
+    hints:
+      supplier:
+        min_order_quantity: Minimaal bruto bestelbedrag.
