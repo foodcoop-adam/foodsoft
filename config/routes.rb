@@ -184,6 +184,10 @@ Foodsoft::Application.routes.draw do
       resources :ordergroups do
         get :memberships, :on => :member
       end
+
+      resource :config, :only => [:show, :update] do
+        get :list
+      end
     end
 
     ############## Feedback

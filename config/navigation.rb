@@ -56,6 +56,7 @@ SimpleNavigation::Configuration.run do |navigation|
                 if: -> { current_user.role_finance? or current_user.role_article_meta? or defined? FoodsoftAdyen } do |subnav|
       subnav.item :categories, I18n.t('navigation.articles.categories'), article_categories_path, if: -> { current_user.role_article_meta? }
       subnav.item :workgroups, I18n.t('navigation.admin.workgroups'), admin_workgroups_path
+      subnav.item :config, I18n.t('navigation.admin.config'), admin_config_path
     end
 
     engines.each { |e| e.navigation(primary, self) }
