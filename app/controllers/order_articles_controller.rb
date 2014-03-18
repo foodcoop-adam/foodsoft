@@ -5,7 +5,7 @@ class OrderArticlesController < ApplicationController
   #layout false  # We only use this controller to serve js snippets, no need for layout rendering
 
   def index
-    @order_articles = OrderArticle.includes(:order, :article).merge(Order.open)
+    @order_articles = OrderArticle.includes(:order, :article).merge(Order.open).references(:order)
     @article_categories = ArticleCategory.find(@order_articles.group(:article_category_id).pluck(:article_category_id))
 
     @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
@@ -13,18 +13,19 @@ class OrderArticlesController < ApplicationController
 
     @q = OrderArticle.search(params[:q])
     @order_articles = @order_articles.merge(@q.result(distinct: true))
+    @order_articles = @order_articles.includes({:article => :supplier}, :article_price)
 
     if params[:q].blank? or params[:q].values.compact.empty?
-      # if no search given, only show currently ordered items
-      @order_articles = @order_articles.where('group_order_articles.result > 0 OR group_order_articles.quantity > 0 OR group_order_articles.tolerance > 0')
+      # if no search given, show shopping cart = only OrderArticles with a GroupOrderArticle
+      @order_articles = @order_articles.joins(:group_order_articles)
     end
 
-    @order_articles = @order_articles.includes({:article => :supplier}, :article_price)
-    @order_articles = @order_articles.where(articles: {article_category_id: params[:article_category_id]}) if params[:article_category_id]
     @order_articles = @order_articles.page(params[:page]).per(@per_page)
 
     @has_stock = !@order_articles.select {|oa| oa.order.stockit? }.empty?
     @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
+    @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
+    @group_orders_sum = GroupOrder.includes(:order).merge(Order.open).references(:order).sum(:price)
   end
 
   # currently used to for order article autocompletion
