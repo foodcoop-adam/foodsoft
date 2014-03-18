@@ -1,32 +1,8 @@
 class OrderArticlesController < ApplicationController
 
-  before_filter :authenticate_finance_or_orders, only: [:create, :edit, :update, :destroy]
+  before_filter :authenticate_finance_or_orders
 
-  #layout false  # We only use this controller to serve js snippets, no need for layout rendering
-
-  def index
-    @order_articles = OrderArticle.includes(:order, :article).merge(Order.open).references(:order)
-    @article_categories = ArticleCategory.find(@order_articles.group(:article_category_id).pluck(:article_category_id))
-
-    @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
-                        .where(group_orders: {ordergroup_id: [@current_user.ordergroup.id, nil]})
-
-    @q = OrderArticle.search(params[:q])
-    @order_articles = @order_articles.merge(@q.result(distinct: true))
-    @order_articles = @order_articles.includes({:article => :supplier}, :article_price)
-
-    if params[:q].blank? or params[:q].values.compact.empty?
-      # if no search given, show shopping cart = only OrderArticles with a GroupOrderArticle
-      @order_articles = @order_articles.joins(:group_order_articles)
-    end
-
-    @order_articles = @order_articles.page(params[:page]).per(@per_page)
-
-    @has_stock = !@order_articles.select {|oa| oa.order.stockit? }.empty?
-    @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
-    @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
-    @group_orders_sum = GroupOrder.includes(:order).merge(Order.open).references(:order).sum(:price)
-  end
+  layout false  # We only use this controller to serve js snippets, no need for layout rendering
 
   # currently used to for order article autocompletion
   def index

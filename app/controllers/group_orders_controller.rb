@@ -3,17 +3,50 @@
 class GroupOrdersController < ApplicationController
   # Security
   before_filter :ensure_ordergroup_member
-  before_filter :ensure_open_order, :only => [:new, :create, :edit, :update, :order, :stock_order, :saveOrder]
-  before_filter :ensure_my_group_order, only: [:show, :edit, :update]
-  before_filter :enough_apples?, only: [:new, :create]
+  before_filter :parse_order_specifier, :only => [:show]
+  #before_filter :ensure_open_order, :only => [:new, :create, :edit, :update, :order, :stock_order, :saveOrder]
+  #before_filter :ensure_my_group_order, only: [:show, :edit, :update]
+  #before_filter :enough_apples?, only: [:new, :create]
 
-  # Index page.
-  def index
+  def show
+    if @orders
+      @all_order_articles = OrderArticle.includes(:order, :article).merge(@orders).references(:order)
+      @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
+      @order_articles = @order_articles.page(params[:page]).per(@per_page)
+    end
+
+    if @order_date == 'current'
+      current
+
+    else
+      @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:orders).
+                              select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price).
+                              map {|(ends,price)| [ends.to_date, price]}
+
+      @order_articles = @order_articles.joins(:group_order_articles)
+      compute_order_article_details
+    end
   end
 
-  def new
-    @group_order = @order.group_orders.build(:ordergroup => @ordergroup, :updated_by => current_user)
-    @ordering_data = @group_order.load_data
+  def current
+    @article_categories = ArticleCategory.find(@all_order_articles.group(:article_category_id).pluck(:article_category_id))
+    @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
+
+    @q = OrderArticle.search(params[:q])
+    @order_articles = @order_articles.merge(@q.result(distinct: true))
+
+    @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
+    #                    .where(group_orders: {ordergroup_id: [@ordergroup.id, nil]})
+
+    if params[:q].blank? or params[:q].values.compact.empty?
+      # if no search given, show shopping cart = only OrderArticles with a GroupOrderArticle
+      @order_articles = @order_articles.joins(:group_order_articles)
+    end
+
+    compute_order_article_details
+    @group_orders_sum = GroupOrder.includes(:order).merge(Order.open).references(:order).sum(:price)
+
+    render 'current'
   end
 
   def create
@@ -27,19 +60,6 @@ class GroupOrdersController < ApplicationController
       logger.error('Failed to update order: ' + exception.message)
       redirect_to group_orders_url, :alert => I18n.t('group_orders.create.error_general')
     end
-  end
-
-  def show
-    @order= @group_order.order
-    @articles_grouped_by_category = @group_order.group_order_articles.ordered.
-        includes(:group_order, :order_article => {:article => :article_category}).
-        order('articles.name').
-        group_by { |a| a.order_article.article.article_category.name }.
-        sort { |a, b| a[0] <=> b[0] }
-  end
-
-  def edit
-    @ordering_data = @group_order.load_data
   end
 
   def update
@@ -99,6 +119,34 @@ class GroupOrdersController < ApplicationController
                   alert: t('not_enough_apples', scope: 'group_orders.messages', apples: @ordergroup.apples,
                            stop_ordering_under: FoodsoftConfig[:stop_ordering_under])
     end
+  end
+
+  # either 'current', an order end date, or a group_order id
+  def parse_order_specifier
+    @order_date = params[:id]
+    if @order_date == 'current'
+      @orders = Order.open
+    elsif @order_date
+      begin
+        # parsing integer group_orders is legacy - dates are used nowadays
+        @order_date = Integer(@order_date)
+        @order_date = Order.joins(:group_orders).where(group_orders: {id: @order_date}).first.ends.to_date
+      rescue ArgumentError
+        # this is the main flow
+        @order_date = @order_date.to_date
+      end
+      @orders = Order.finished.where('DATE(orders.ends) = ?', @order_date)
+    end
+  rescue ArgumentError
+    @order_date = nil
+    @orders = nil
+  end
+
+  # some shared order_article details that need to be done on the final query
+  def compute_order_article_details
+    @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty?
+    @has_stock = !@order_articles.select {|oa| oa.order.stockit?}.empty?
+    @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
   end
 
 end

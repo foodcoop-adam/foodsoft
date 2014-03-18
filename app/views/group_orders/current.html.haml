@@ -3,16 +3,11 @@
 - content_for :sidebar do
   .sidebar-container{style: 'position: relative'}
     .well.article-info-container.article-info{data: {spy: 'affix', 'offset-top' => 100}}
-    = link_to order_articles_path do
-      .well.facets{style: 'padding-bottom: 12px; padding-top: 12px'}
-        %i.icon-shopping-cart
-        My order
-        .pull-right#group_orders_sum
-          = number_to_currency @group_orders_sum unless @group_orders_sum == 0
+    = render 'current_order_sidebar', sum: @group_orders_sum
     .well.facets
       %ul.nav.nav-list
         %li
-          = search_form_for @q, data: {'submit-onchange' => true}, class: 'form-search', remote: true do |f|
+          = search_form_for @q, url: url_for, data: {'submit-onchange' => true}, class: 'form-search', remote: true do |f|
             .input-append
               = f.text_field :article_name_cont, placeholder: t('group_orders.form.search_article'), class: 'search-query input-block-level resettable'
               %button.add-on.btn.reset-search{:type => :button, :title => t('group_orders.form.reset_article_search')}
@@ -21,7 +16,7 @@
         - @article_categories.each do |article_category|
           - classes = ('active' if article_category.id==@current_category)
           %li{data: {category: article_category.id}, class: classes}
-            = link_to article_category.name, order_articles_path(q: {article_article_category_id_eq: article_category.id}), remote: true
+            = link_to article_category.name, url_for(q: {article_article_category_id_eq: article_category.id}), remote: true
 
 #articles_table
   = render 'order_articles'
