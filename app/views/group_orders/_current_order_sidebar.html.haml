@@ -1,0 +1,12 @@
+- if Order.where(state: ['open', 'finished']).exists?
+  = link_to group_order_path(:current) do
+    .well.well-link
+      %i.icon-shopping-cart
+      My current order
+      - if (sum rescue nil)
+        .pull-right#group_orders_sum
+          = number_to_currency sum unless sum == 0
+- else
+  .well.well-link
+    %i.icon-shopping-cart
+    No currently open orders
