@@ -13,5 +13,8 @@
               = number_to_currency price
 
 #articles_table
-  = render 'order_articles'
+  - if @order_articles and !@order_articles.empty?
+    = render 'order_articles'
+  - else
+    You have no articles in this order.
 

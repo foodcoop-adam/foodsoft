@@ -4,5 +4,8 @@
   = render 'edit_sidebar'
 
 #articles_table
-  = render 'order_articles'
+  - if @order_articles and !@order_articles.empty?
+    = render 'order_articles'
+  - else
+    You haven't ordered anything yet. Select one of the categories to get started.
 
