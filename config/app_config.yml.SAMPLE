@@ -62,11 +62,12 @@ default: &defaults
   # not fully enforced right now, since the check is only client-side
   minimum_balance: -2000
 
-  # when an order is closed, send it to these email addresses
-  # '%{supplier}', '%{contact.email}' are replaced by their values
-  # be sure to remove this on demo and test installations!
-  send_order_on_finish:
-  - '%{supplier}'
+  # When an order is closed, send it to the supplier (if order_howto is an email address).
+  # Be sure to remove this on demo and test installations!
+  # As a special case, when this is 'cc_only', only send it to the Cc address.
+  send_order_on_finish: true
+  # also send this mail to ('%{contact.email}' is replaced by the foodcoop contact)
+  send_order_on_finish_cc: 
   - '%{contact.email}'
   - foodcoopbestel@foodcoop.nl
 

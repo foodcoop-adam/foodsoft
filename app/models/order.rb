@@ -71,17 +71,16 @@ class Order < ActiveRecord::Base
   # list of email addresses to send the order to when finished
   # returns nil if `send_order_on_finish` foodcoop config is not set
   def order_send_emails
-    to = FoodsoftConfig[:send_order_on_finish] or return
-    # gather email addresses to send to
-    to.map do |a|
-      if a == '%{supplier}'
-        supplier.order_send_email
-      elsif a == '%{contact.email}'
+    return unless FoodsoftConfig[:send_order_on_finish]
+    return unless supplier.order_send_email or FoodsoftConfig[:send_order_on_finish] == 'cc_only'
+    cc = FoodsoftConfig[:send_order_on_finish_cc] || []
+    ([supplier.order_send_email] + cc.map do |a|
+      if a == '%{contact.email}'
         (FoodsoftConfig[:contact]['email'] rescue nil)
       else
         a
       end
-    end.compact
+    end).compact
   end
 
   def articles_for_ordering

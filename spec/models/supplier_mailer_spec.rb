@@ -53,16 +53,17 @@ describe 'the supplier mailer' do
     end
 
     it 'to a specified addres' do
-      FoodsoftConfig.config[:send_order_on_finish] = [mailto]
+      FoodsoftConfig.config[:send_order_on_finish] = 'cc_only'
+      FoodsoftConfig.config[:send_order_on_finish_cc] = [mailto]
       order.finish!(user)
       email = ActionMailer::Base.deliveries.first
-      expect(email.to[0]).to eq mailto
+      expect(email.to).to include mailto
     end
 
     it 'to supplier' do
       supplier.order_howto = mailto
       supplier.save!
-      FoodsoftConfig.config[:send_order_on_finish] = ['%{supplier}']
+      FoodsoftConfig.config[:send_order_on_finish] = true
       order.finish!(user)
       email = ActionMailer::Base.deliveries.first
       expect(email.to[0]).to eq supplier.order_howto
@@ -71,21 +72,23 @@ describe 'the supplier mailer' do
     it 'not to supplier when it is empty' do
       supplier.order_howto = nil
       supplier.save!
-      FoodsoftConfig.config[:send_order_on_finish] = ['%{supplier}']
+      FoodsoftConfig.config[:send_order_on_finish] = true
       order.finish!(user)
       email = ActionMailer::Base.deliveries.first
-      expect((email.to[0] rescue nil)).to_not eq mailto
+      expect((email.to rescue [])).to_not include mailto
     end
 
     it 'to foodcoop email' do
-      FoodsoftConfig.config[:send_order_on_finish] = ['%{contact.email}']
+      FoodsoftConfig.config[:send_order_on_finish] = 'cc_only'
+      FoodsoftConfig.config[:send_order_on_finish_cc] = ['%{contact.email}']
       order.finish!(user)
       email = ActionMailer::Base.deliveries.first
-      expect(email.to[0]).to eq FoodsoftConfig[:contact]['email']
+      expect(email.to).to include FoodsoftConfig[:contact]['email']
     end
 
     it 'has two attachments' do
-      FoodsoftConfig.config[:send_order_on_finish] = [mailto]
+      FoodsoftConfig.config[:send_order_on_finish] = 'cc_only'
+      FoodsoftConfig.config[:send_order_on_finish_cc] = [mailto]
       order.finish!(user)
       email = ActionMailer::Base.deliveries.first
       expect(email.attachments.count).to eq 2
