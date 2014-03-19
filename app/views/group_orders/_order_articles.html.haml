@@ -2,22 +2,30 @@
   %table#articles_table.table.table-hover
     %thead
       %tr
+        - cols = 6
         %th= heading_helper Article, :name
         %th{style: 'width:13px'}
         %th{style: 'width:4.5em'}= t 'group_orders.form.price'
         %th{style: 'width:4.5em'}= heading_helper Article, :unit
         - if @has_stock and @has_open_orders
+          - cols += 1
           %th{style: 'width:20px'}= heading_helper StockArticle, :available
         - if @has_tolerance and @has_open_orders
+          - cols += 1
           %th{style: 'width:70px'}= heading_helper OrderArticle, :missing_units, short: true
         %th#col_required.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :quantity
         - if @has_tolerance
+          - cols += 1
           %th#col_tolerance.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :tolerance
         - unless @has_open_orders
+          - cols += 1
           %th.center Received
         %th= heading_helper GroupOrderArticle, :total_price
     %tbody.list
       - @order_articles.each do |order_article|
         = render 'order_article', order_article: order_article
+    - if @render_totals
+      %tfoot
+        = render 'group_order_totals', cols: cols
 
-  = pagination_links_remote @order_articles
+= pagination_links_remote @order_articles

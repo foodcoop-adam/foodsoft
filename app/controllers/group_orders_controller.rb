@@ -3,50 +3,38 @@
 class GroupOrdersController < ApplicationController
   # Security
   before_filter :ensure_ordergroup_member
-  before_filter :parse_order_specifier, :only => [:show]
+  before_filter :parse_order_specifier, :only => [:show, :edit]
+  before_filter :get_order_articles, :only => [:show, :edit]
+  before_filter :get_article_categories, :only => [:show, :edit]
   #before_filter :ensure_open_order, :only => [:new, :create, :edit, :update, :order, :stock_order, :saveOrder]
   #before_filter :ensure_my_group_order, only: [:show, :edit, :update]
   #before_filter :enough_apples?, only: [:new, :create]
 
   def show
-    if @orders
-      @all_order_articles = OrderArticle.includes(:order, :article).merge(@orders).references(:order)
-      @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
-      @order_articles = @order_articles.page(params[:page]).per(@per_page)
-    end
+    @render_totals = true
+    @order_articles = @order_articles.joins(:group_order_articles)
+    unless @order_date == 'current'
+      @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:orders)
+                               .select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price)
+                               .map {|(ends,price)| [ends.to_date, price]}
 
-    if @order_date == 'current'
-      current
-
-    else
-      @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:orders).
-                              select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price).
-                              map {|(ends,price)| [ends.to_date, price]}
-
-      @order_articles = @order_articles.joins(:group_order_articles)
       compute_order_article_details
+    else
+      # set all variables used in edit, but render a different template
+      edit
+      render 'show_current'
     end
   end
 
-  def current
-    @article_categories = ArticleCategory.find(@all_order_articles.group(:article_category_id).pluck(:article_category_id))
-    @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
-
+  def edit
     @q = OrderArticle.search(params[:q])
     @order_articles = @order_articles.merge(@q.result(distinct: true))
-
     @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
-    #                    .where(group_orders: {ordergroup_id: [@ordergroup.id, nil]})
+                        .where(group_orders: {ordergroup_id: [@ordergroup.id, nil]})
 
-    if params[:q].blank? or params[:q].values.compact.empty?
-      # if no search given, show shopping cart = only OrderArticles with a GroupOrderArticle
-      @order_articles = @order_articles.joins(:group_order_articles)
-    end
-
-    compute_order_article_details
+    @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
     @group_orders_sum = GroupOrder.includes(:order).merge(Order.open).references(:order).sum(:price)
-
-    render 'current'
+    compute_order_article_details
   end
 
   def create
@@ -130,7 +118,12 @@ class GroupOrdersController < ApplicationController
       begin
         # parsing integer group_orders is legacy - dates are used nowadays
         @order_date = Integer(@order_date)
-        @order_date = Order.joins(:group_orders).where(group_orders: {id: @order_date}).first.ends.to_date
+        group_order = @ordergroup.group_orders.where(id: Integer(@order_date)).joins(:order).first
+        if group_order
+          @order_date = group_order.order.ends.to_date
+        else
+          redirect_to group_orders_url, alert: I18n.t('group_orders.errors.notfound')
+        end
       rescue ArgumentError
         # this is the main flow
         @order_date = @order_date.to_date
@@ -140,6 +133,18 @@ class GroupOrdersController < ApplicationController
   rescue ArgumentError
     @order_date = nil
     @orders = nil
+  end
+
+  def get_order_articles
+    return unless @orders
+    @all_order_articles = OrderArticle.includes(:order, :article).merge(@orders).references(:order)
+    @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
+    @order_articles = @order_articles.page(params[:page]).per(@per_page)
+  end
+
+  def get_article_categories
+    return unless @all_order_articles
+    @article_categories = ArticleCategory.find(@all_order_articles.group(:article_category_id).pluck(:article_category_id))
   end
 
   # some shared order_article details that need to be done on the final query
