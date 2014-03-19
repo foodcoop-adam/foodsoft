@@ -13,6 +13,7 @@ class GroupOrdersController < ApplicationController
   def show
     @render_totals = true
     @order_articles = @order_articles.joins(:group_order_articles)
+                        .includes(order: :group_orders).merge(GroupOrder.where(ordergroup_id: @ordergroup.id))
     unless @order_date == 'current'
       @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:orders)
                                .select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price)
@@ -30,10 +31,9 @@ class GroupOrdersController < ApplicationController
     @q = OrderArticle.search(params[:q])
     @order_articles = @order_articles.merge(@q.result(distinct: true))
     @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
-                        .where(group_orders: {ordergroup_id: [@ordergroup.id, nil]})
 
     @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
-    @group_orders_sum = GroupOrder.includes(:order).merge(Order.open).references(:order).sum(:price)
+    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(Order.open).references(:order).sum(:price)
     compute_order_article_details
   end
 
@@ -152,6 +152,10 @@ class GroupOrdersController < ApplicationController
     @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty?
     @has_stock = !@order_articles.select {|oa| oa.order.stockit?}.empty?
     @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
+    # preload group_order_articles
+    @goa_by_oa = Hash[@ordergroup.group_order_articles
+                        .where(order_article_id: @order_articles.map(&:id))
+                        .map {|goa| [goa.order_article_id, goa]}]
   end
 
 end
