@@ -6,9 +6,9 @@
 
 - unless @options[:skip_extra]
   ~ "\n"
-  - if @options[:delivered_before]
+  - unless @options[:delivered_before].blank?
     ~ t '.line_delivered_before',  when: @options[:delivered_before]
-  - if @options[:order_contact_name]
+  - unless @options[:order_contact_name].blank?
     ~ t '.line_order_contact', name: @options[:order_contact_name], phone: @options[:order_contact_phone]
-  - if @options[:delivery_contact_name]
+  - unless @options[:delivery_contact_name].blank?
     ~ t '.line_delivery_contact', name: @options[:delivery_contact_name], phone: @options[:delivery_contact_phone]

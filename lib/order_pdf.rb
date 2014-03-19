@@ -1,6 +1,7 @@
 require "prawn/measurement_extensions"
 
 class OrderPdf < Prawn::Document
+  include ApplicationHelper
   include ActionView::Helpers::NumberHelper
 
   def initialize(order, options = {})

@@ -47,14 +47,24 @@ class OrderFax < OrderPdf
     move_down 5
     text Date.today.strftime(I18n.t('date.formats.default')), align: :right
 
-    move_down 10
-    text I18n.t('mailer.order_result_supplier.line_delivered_before', when: @options[:delivered_before])
-    move_down 10
-
-    contact = @order.supplier.try(:contact_person)
-    unless contact.blank?
-      text "#{Supplier.human_attribute_name :contact_person}: #{@order.supplier[:contact_person]}"
+    if @options[:delivered_before]
       move_down 10
+      date = @options[:delivered_before]
+      date = format_time(date) if date.kind_of? Time
+      text I18n.t('mailer.order_result_supplier.line_delivered_before', when: date)
+      if @options[:order_contact_name]
+        text I18n.t('mailer.order_result_supplier.line_delivered_before_note', name: @options[:order_contact_name]), size: 9, color: '444444'
+      end
+      move_down 10
+    end
+
+    unless @options[:order_contact_name] or @options[:delivery_contact_name]
+      # legacy, this is confusing when we have an order and delivery contact
+      contact = @order.supplier.try(:contact_person)
+      unless contact.blank?
+        text "#{Supplier.human_attribute_name :contact_person}: #{@order.supplier[:contact_person]}"
+        move_down 10
+      end
     end
 
     contact = @options[:order_contact_name]

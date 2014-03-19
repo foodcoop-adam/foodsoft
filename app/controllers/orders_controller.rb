@@ -109,9 +109,17 @@ class OrdersController < ApplicationController
     @order_info[:sender_name] ||= @current_user.name
     @order_info[:order_contact_name] ||= @current_user.name
     @order_info[:order_contact_phone] ||= @current_user.phone
-    @order_info[:delivered_before] ||= view_context.format_date(@order.pickup) if @order.pickup
     @order_info[:message] ||= Mailer.order_result_supplier(@order, [],
                                 @order_info.merge({skip_attachments: true, skip_extra: true})).body
+
+    @order_info[:delivered_before] ||= @order.pickup
+    # date_picker_time workaround for not using activerecord objects
+    if @order_info[:delivered_before_date]
+      conv = DateTimeAttribute::Container.new
+      conv.date = @order_info[:delivered_before_date]
+      conv.time = @order_info[:delivered_before_time]
+      @order_info[:delivered_before] = conv.date
+    end
 
     if request.post?
       @order.finish!(@current_user, @order_info)

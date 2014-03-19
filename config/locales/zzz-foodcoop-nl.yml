@@ -53,6 +53,7 @@ nl:
   mailer:
     order_result_supplier:
       line_delivered_before: 'Leverdatum: %{when}'
+      line_delivered_before_note: '(neem in geval van twijfel contact op met %{name})'
       line_order_contact: 'Contactpersoon bestelling: %{name}, %{phone}'
       line_delivery_contact: 'Contactpersoon levering: %{name}, %{phone}'
       subject: Nieuwe bestelling
@@ -101,7 +102,8 @@ nl:
       confirm_end_send_manual: 'Om de bestelling te plaatsen: download de Fax in het volgende scherm en stuur het naar de leverancier.'
       contact_order: Contactpersoon bestelling
       contact_delivery: Contactpersoon levering
-      delivered_before: Leverdatum
+      delivered_before: Leveren vóór
+      delivered_before_note: Bij twijfel over de leverdatum kan de leverancier contact opnemen met de contactpersoon bestelling.
       edit_message: bericht bewerken
       submit_close: Bestelling sluiten
       submit_send: Bestelling sluiten & versturen

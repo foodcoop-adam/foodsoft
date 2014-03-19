@@ -33,17 +33,18 @@
                   class: 'input-block-level', placeholder: User.human_attribute_name(:phone)
 
           .control-group
-            %label{for: 'order_info_delivered_before'}= t '.delivered_before'
-            = text_field_tag 'order_info[delivered_before]', @order_info[:delivered_before],
-                class: 'input-block-level', required: true
+            %label{for: 'order_info_delivered_before_date'}= t '.delivered_before'
+            .pull-left{style: 'margin-right: 12px'}
+              = simple_fields_for :order_info do |f|
+                = f.input_field :delivered_before, value: @order_info[:delivered_before], as: :date_picker_time, required: true
+            .help-block{style: 'font-size: 12px; line-height: 15px;'}= t '.delivered_before_note'
 
           .control-group
             .pull-right
               = link_to '#', data: {toggle: 'collapse', target: '#send_comment_container'} do
                 %label{for: 'order_info_message', style: 'display: inline'}= '(' + t('.edit_message') + ')'
             = t('.confirm_end_send')
-            %br
-            %span{style: 'margin-top: 0; color: #666; font-size: 80%;'}= 'to: ' + @order.order_send_emails.join(', ')
+            .help-block{style: 'font-size: 12px;'}= 'to: ' + @order.order_send_emails.join(', ')
             .collapse#send_comment_container
               = text_area_tag 'order_info[message]', @order_info[:message], {rows: 6, class: 'input-block-level'}
 

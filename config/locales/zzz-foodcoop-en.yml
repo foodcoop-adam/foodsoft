@@ -52,8 +52,9 @@ en:
         min_quantity_reached: You've reached the minimum order quantity of %{min_quantity} with a total of %{sum}.
   mailer:
     order_result_supplier:
-      line_delivered_before: 'Date of delivery: %{when}'
-      line_order_contact: 'Contact person for ordering: %{name}, %{phone}'
+      line_delivered_before: 'Deliver before: %{when}'
+      line_delivered_before_note: '(in case of doubt, please contact %{name})'
+      line_order_contact: 'Contact person for order: %{name}, %{phone}'
       line_delivery_contact: 'Contact person for delivery: %{name}, %{phone}'
       subject: New order
       subject_with_date: New order for %{delivered_before}
@@ -101,7 +102,8 @@ en:
       confirm_end_send_manual: To place the order, download the Fax in the following screen and send it to the supplier.
       contact_order: Order contact
       contact_delivery: Delivery contact
-      delivered_before: Date of delivery
+      delivered_before: Deliver before
+      delivered_before_note: In case of doubt about the delivery date, the supplier may approach the order contact.
       edit_message: edit message
       submit_close: Close order
       submit_send: Close & send order to supplier
