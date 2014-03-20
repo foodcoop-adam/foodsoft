@@ -1,4 +1,4 @@
-= form_for :group_order, url: group_order_path(params[:id]) do
+= form_for :group_order, url: group_order_path(params[:id]), method: :patch do |f|
   %table#articles_table.table.table-hover
     %thead
       %tr
@@ -27,5 +27,6 @@
     - if @render_totals
       %tfoot
         = render 'group_order_totals', cols: cols
+  = f.submit
 
 = pagination_links_remote @order_articles

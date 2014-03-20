@@ -45,15 +45,30 @@ class GroupOrdersController < ApplicationController
   end
 
   def update
-    @group_order.attributes = params[:group_order]
-    begin
-      @group_order.save_ordering!
-      redirect_to group_order_url(@group_order), :notice => I18n.t('group_orders.update.notice')
-    rescue ActiveRecord::StaleObjectError
-      redirect_to group_orders_url, :alert => I18n.t('group_orders.update.error_stale')
-    rescue => exception
-      logger.error('Failed to update order: ' + exception.message)
-      redirect_to group_orders_url, :alert => I18n.t('group_orders.update.error_general')
+    oa_attrs = params[:group_order][:group_order_articles_attributes].transform_keys {|o| o.to_i}
+    @order_articles = OrderArticle.includes(:order, :article, :article_price).where(id: oa_attrs.keys) 
+    @order_articles = @order_articles.merge(Order.open).references(:order) # security!
+    compute_order_article_details
+
+    GroupOrder.transaction do
+      @order_articles.each do |oa|
+        oa_attr = oa_attrs[oa.id]
+        goa = @goa_by_oa[oa.id]
+        goa.update_quantities oa_attr['quantity'].to_i, oa_attr['tolerance'].to_i||0
+        oa.update_results!
+      end
+      @ordergroup.group_orders.where(order_id: @order_articles.map(&:order_id).uniq).map(&:update_price!)
+    end
+    respond_to do |format|
+      format.html { redirect_to group_order_url(:current), :notice => I18n.t('group_orders.update.notice') }
+      format.js
+    end
+
+  rescue => e
+    logger.error('Failed to update order: ' + e.message)
+    respond_to do |format|
+      format.html { redirect_to group_orders_url(:current), :alert => I18n.t('group_orders.update.error_general') }
+      format.js
     end
   end
   
@@ -138,6 +153,7 @@ class GroupOrdersController < ApplicationController
     @goa_by_oa = Hash[@ordergroup.group_order_articles
                         .where(order_article_id: @order_articles.map(&:id))
                         .map {|goa| [goa.order_article_id, goa]}]
+    @order_articles.each {|oa| @goa_by_oa[oa.id] ||= GroupOrderArticle.new(order_article: oa, ordergroup_id: @ordergroup.id)}
   end
 
 end

@@ -42,6 +42,9 @@ class GroupOrderArticle < ActiveRecord::Base
       return
     end
 
+    # can't build GroupOrderArticleQuantity associations when we have no id
+    save! if new_record?
+
     # Get quantities ordered with the newest item first.
     quantities = group_order_article_quantities.find(:all, :order => 'created_on desc')
     logger.debug("GroupOrderArticleQuantity items found: #{quantities.size}")

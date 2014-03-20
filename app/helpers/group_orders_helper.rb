@@ -52,7 +52,7 @@ module GroupOrdersHelper
       if ends_open[0] == ends_open[1]
         return "#{time_ago_in_words(ends_open[0])} remaining"
       else
-        return "from #{time_ago_in_words(ends_open[1])} to #{time_ago_in_words(ends_open[0])} remaining"
+        return "#{time_ago_in_words(ends_open[1])} to #{time_ago_in_words(ends_open[0])} remaining"
       end
     end
     if end_finished = orders.select(&:finished?).map(&:ends).max
