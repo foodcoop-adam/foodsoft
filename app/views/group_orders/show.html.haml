@@ -13,6 +13,12 @@
               = number_to_currency price
 
 #articles_table
+  .page-header
+    %h1
+      %i.icon-shopping-cart{style: 'color: #999'}
+      Previous order
+      %span{style: 'font-weight: normal; font-size: 12pt; vertical-align: middle'}
+        = orders_status_line(@orders)
   - if @order_articles and !@order_articles.empty?
     = render 'order_articles'
   - else

@@ -2,7 +2,7 @@
 - cur_has_stock = order_article.order.stockit?
 - cur_has_tolerance = (order_article.price.unit_quantity > 1)
 - group_order_article = @goa_by_oa[order_article.id]
-- group_order_article ||= GroupOrderArticle.new(quantity: 0, tolerance: 0, order_article: order_article)
+- group_order_article ||= GroupOrderArticle.new(order_article: order_article)
 %tr.order-article{class: "#{cycle('even', 'odd', name: 'order_articles')} #{'unavailable' if !cur_open and group_order_article.result==0}"}
   %td.name= order_article.article.name
   %td= order_article.article.origin
