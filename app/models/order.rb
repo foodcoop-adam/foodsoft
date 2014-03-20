@@ -25,7 +25,7 @@ class Order < ActiveRecord::Base
 
   # Finders
   # joins needn't be readonly - https://github.com/rails/rails/issues/10769
-  scope :ordered_open, includes(:supplier).readonly(false).order('ends ASC', 'suppliers.name ASC')
+  scope :ordered_open, joins(:supplier).readonly(false).order('ends ASC', 'suppliers.name ASC')
   scope :ordered_finished, includes(:supplier).readonly(false).order('DATE(ends) DESC', 'suppliers.name ASC')
 
   scope :open, where(state: 'open').ordered_open

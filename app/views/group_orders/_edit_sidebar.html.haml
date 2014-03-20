@@ -4,9 +4,9 @@
   .well.facets
     %ul.nav.nav-list
       %li
-        = search_form_for @q, url: url_for(action: :edit), data: {'submit-onchange' => true}, class: 'form-search', remote: true do |f|
+        = form_for @q, url: url_for(action: :edit), html: {data: {'submit-onchange' => true}, class: 'form-search'}, remote: true do |f|
           .input-append
-            = f.text_field :article_name_cont, placeholder: t('group_orders.form.search_article'), class: 'search-query input-block-level resettable'
+            = f.text_field :article_name_contains, placeholder: t('group_orders.form.search_article'), class: 'search-query input-block-level resettable'
             %button.add-on.btn.reset-search{:type => :button, :title => t('group_orders.form.reset_article_search')}
               %i.icon.icon-remove
       %li.nav-header= ArticleCategory.model_name.human
