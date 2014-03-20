@@ -7,12 +7,14 @@
   %td= order_article.article.origin
   %td.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
   %td.unit{data: {'unit_quantity' => order_article.price.unit_quantity}}= order_article.article.unit
-  - if @has_stock and @has_open_orders
-    %td= order_article.article.quantity_available if cur_has_stock
+  %td.units_to_order{class: ('before_unit' if @has_tolerance and @has_open_orders)}
+    %span.units_to_order_value= order_article.units_to_order * order_article.price.unit_quantity
+    - if cur_has_stock
+      %span.stock of #{order_article.article.quantity_available}
+    - elsif @has_tolerance and @has_open_orders
+      %span.plus= cur_has_tolerance ? '+' : '&nbsp;'.html_safe
   - if @has_tolerance and @has_open_orders
-    %td
-      - if cur_has_tolerance
-        .missing_units= order_article.missing_units
+    %td.final_unit= final_unit_bar order_article if cur_has_tolerance
   %td.center.quantity
     - if cur_open
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|

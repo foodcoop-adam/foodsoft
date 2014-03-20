@@ -44,10 +44,24 @@ $(function() {
     var units_to_order = Math.floor(total_quantity/unit_quantity);
     var remainder = total_quantity % unit_quantity;
     units_to_order += ((remainder > 0) && (remainder + total_tolerance >= unit_quantity) ? 1 : 0)
-    // (same as OrderArticle#missing_units)
-    var missing_units = unit_quantity - ((quantity % unit_quantity) + tolerance)
-    if (missing_units < 0) missing_units = 0
-    $('.missing_units', row).html(missing_units);
+    $('.units_to_order_value', row).html(units_to_order*unit_quantity);
+
+    // progess bar update
+    //   update decreasing number first, to make sure that together it's no more than 100%
+    //   otherwise one of the numbers in the progress bar may temporarily disappear
+    // (same as GroupOrdersHelper#final_unit_bar)
+    var progress_units = total_quantity+total_tolerance - units_to_order*unit_quantity;
+    var progress_pct = Math.floor(Math.min(100, 100*progress_units/unit_quantity));
+    var bars = [
+      [$('.progress .bar:nth-child(1)', row), progress_pct,     progress_units],
+      [$('.progress .bar:nth-child(2)', row), 100-progress_pct, Math.max(0, unit_quantity-progress_units)]
+    ];
+    if (Number(bars[0][0].html()) < progress_units) bars.reverse();
+    $.each(bars, function(i, bar) {
+      bar[0]
+      .width(String(bar[1])+'%')
+      .html(String(bar[2]));
+    });
   });
 });
 

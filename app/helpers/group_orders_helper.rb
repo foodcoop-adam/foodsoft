@@ -59,4 +59,14 @@ module GroupOrdersHelper
       return "settled since #{format_date(end_closed)}"
     end
   end
+
+  def final_unit_bar(order_article)
+    unit_quantity = order_article.price.unit_quantity
+    progress_units = order_article.quantity+order_article.tolerance - order_article.units_to_order*unit_quantity
+    progress_pct = [100, 100*progress_units/unit_quantity].min.to_i
+    content_tag(:div, class: 'progress') do
+      content_tag(:div, progress_units, class: 'bar', style: "width: #{progress_pct}%") +
+      content_tag(:div, [0, unit_quantity-progress_units].max, class: 'bar', style: "width: #{100-progress_pct}%")
+    end
+  end
 end

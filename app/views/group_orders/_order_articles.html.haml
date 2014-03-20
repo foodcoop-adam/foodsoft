@@ -7,12 +7,11 @@
         %th{style: 'width:13px'}
         %th{style: 'width:4.5em'}= t 'group_orders.form.price'
         %th{style: 'width:4.5em'}= heading_helper Article, :unit
-        - if @has_stock and @has_open_orders
+        - if @has_open_orders and @has_tolerance
           - cols += 1
-          %th{style: 'width:20px'}= heading_helper StockArticle, :available
-        - if @has_tolerance and @has_open_orders
-          - cols += 1
-          %th{style: 'width:70px'}= heading_helper OrderArticle, :missing_units, short: true
+          %th.units_to_order{colspan: 2} All members
+        - else
+          %th.units_to_order.center{title: 'All members'} All
         %th#col_required.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :quantity
         - if @has_tolerance
           - cols += 1
