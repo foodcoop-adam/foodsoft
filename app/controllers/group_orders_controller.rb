@@ -5,9 +5,7 @@ class GroupOrdersController < ApplicationController
   before_filter :ensure_ordergroup_member
   before_filter :parse_order_specifier, :only => [:show, :edit]
   before_filter :get_order_articles, :only => [:show, :edit]
-  #before_filter :ensure_open_order, :only => [:new, :create, :edit, :update, :order, :stock_order, :saveOrder]
-  #before_filter :ensure_my_group_order, only: [:show, :edit, :update]
-  #before_filter :enough_apples?, only: [:new, :create]
+  before_filter :enough_apples?, only: [:edit, :update]
 
   def index
     @orders = Order.none
@@ -21,8 +19,11 @@ class GroupOrdersController < ApplicationController
                         .where(group_orders: {ordergroup_id: @ordergroup.id})
     unless @order_date == 'current'
       @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:order)
-                               .select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price)
+                               .group('DATE(orders.ends)').pluck('orders.ends', 'SUM(group_orders.price)')
                                .map {|(ends,price)| [ends.to_date, price]}
+
+
+    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(@orders).references(:order).sum(:price)
 
       compute_order_article_details
       render 'show'
@@ -39,7 +40,6 @@ class GroupOrdersController < ApplicationController
     @order_articles = @order_articles.includes(:order)
 
     @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
-    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(Order.open).references(:order).sum(:price)
     compute_order_article_details
     get_article_categories
   end
@@ -146,9 +146,10 @@ class GroupOrdersController < ApplicationController
 
   # some shared order_article details that need to be done on the final query
   def compute_order_article_details
-    @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty?
+    @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty? unless @ordergroup.not_enough_apples?
     @has_stock = !@order_articles.select {|oa| oa.order.stockit?}.empty?
     @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
+    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(@orders).references(:order).sum(:price)
     # preload group_order_articles
     @goa_by_oa = Hash[@ordergroup.group_order_articles
                         .where(order_article_id: @order_articles.map(&:id))
