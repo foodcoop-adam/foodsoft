@@ -277,6 +277,44 @@ th.price_markup_note {
 
 tr.order-article .article-info { display: none; }
 
+#articles_table {
+  td.units_to_order {
+    text-align: center;
+    white-space: nowrap;
+    .plus {
+      width: 0.5em;
+      display: inline-block;
+      color: #888;
+    }
+  }
+  .units_to_order.before_unit {
+    text-align: right;
+    padding-right: 0;
+   }
+  .final_unit {
+    width: 5em;
+    .progress {
+      margin: 0;
+      .bar:first-child {
+        color: #ccf;
+        text-shadow: none;
+      }
+      .bar:last-child {
+        color: #ddd;
+        background: inherit;
+        text-shadow: none;
+      }
+    }
+  }
+  @media (max-width: 979px) {
+    .units_to_order .plus { display: none; }
+  }
+  @media (max-width: 768px) {
+    .units_to_order { font-size: 0; margin: 0; padding: 0; }
+    .final_unit { width: 3.5em; }
+  }
+}
+
 .well-link {
   padding-top: 12px;
   padding-bottom: 12px;
