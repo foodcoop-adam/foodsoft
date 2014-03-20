@@ -2,7 +2,7 @@
 - cur_has_stock = order_article.order.stockit?
 - cur_has_tolerance = (order_article.price.unit_quantity > 1)
 - group_order_article = @goa_by_oa[order_article.id]
-%tr.order-article{class: "#{cycle('even', 'odd', name: 'order_articles')} #{'unavailable' if !cur_open and group_order_article.result==0}"}
+%tr.order-article{class: "#{cycle('even', 'odd', name: 'order_articles')} #{'unavailable' if !cur_open and group_order_article.result==0}", id: "order_article_#{order_article.id}"}
   %td.name= order_article.article.name
   %td= order_article.article.origin
   %td.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
