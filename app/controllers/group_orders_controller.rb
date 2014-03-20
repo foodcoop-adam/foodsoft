@@ -5,7 +5,6 @@ class GroupOrdersController < ApplicationController
   before_filter :ensure_ordergroup_member
   before_filter :parse_order_specifier, :only => [:show, :edit]
   before_filter :get_order_articles, :only => [:show, :edit]
-  before_filter :get_article_categories, :only => [:show, :edit]
   #before_filter :ensure_open_order, :only => [:new, :create, :edit, :update, :order, :stock_order, :saveOrder]
   #before_filter :ensure_my_group_order, only: [:show, :edit, :update]
   #before_filter :enough_apples?, only: [:new, :create]
@@ -18,10 +17,10 @@ class GroupOrdersController < ApplicationController
 
   def show
     @render_totals = true
-    @order_articles = @order_articles.joins(:group_order_articles)
-                        .includes(order: :group_orders).merge(GroupOrder.where(ordergroup_id: @ordergroup.id))
+    @order_articles = @order_articles.includes(:group_order_articles => :group_order)
+                        .where(group_orders: {ordergroup_id: @ordergroup.id})
     unless @order_date == 'current'
-      @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:orders)
+      @group_order_details = @ordergroup.group_orders.merge(Order.finished)
                                .select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price)
                                .map {|(ends,price)| [ends.to_date, price]}
 
@@ -37,11 +36,12 @@ class GroupOrdersController < ApplicationController
   def edit
     @q = OrderArticle.search(params[:q])
     @order_articles = @order_articles.merge(@q.result(distinct: true))
-    @order_articles = @order_articles.includes(order: {group_orders: :group_order_articles})
+    @order_articles = @order_articles.includes(:order)
 
     @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
     @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(Order.open).references(:order).sum(:price)
     compute_order_article_details
+    get_article_categories
   end
 
   def update
@@ -68,7 +68,7 @@ class GroupOrdersController < ApplicationController
     logger.error('Failed to update order: ' + e.message)
     respond_to do |format|
       format.html { redirect_to group_orders_url(:current), :alert => I18n.t('group_orders.update.error_general') }
-      format.js
+      format.js   { flash[:alert] = I18n.t('group_orders.update.error_general') }
     end
   end
   
