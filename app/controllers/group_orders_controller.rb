@@ -8,8 +8,8 @@ class GroupOrdersController < ApplicationController
   before_filter :enough_apples?, only: [:edit, :update]
 
   def index
-    @orders = Order.none
-    @order_articles = OrderArticle.none
+    @orders = Order.where(id: nil) # Rails 4: Order.none
+    @order_articles = OrderArticle.where(id: nil) # Rails 4: OrderArticle.none
     show
   end
 
@@ -18,12 +18,15 @@ class GroupOrdersController < ApplicationController
     @order_articles = @order_articles.includes(:group_order_articles => :group_order)
                         .where(group_orders: {ordergroup_id: @ordergroup.id})
     unless @order_date == 'current'
-      @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:order)
-                               .group('DATE(orders.ends)').pluck('orders.ends', 'SUM(group_orders.price)')
-                               .map {|(ends,price)| [ends.to_date, price]}
+      @group_order_details = @ordergroup.group_orders.joins(:order => :supplier).merge(Order.finished)
+                               .group('DATE(orders.ends)').select('orders.ends').select('SUM(group_orders.price)')
+                               .order('DATE(orders.ends) DESC')
+      # Rails 3 - http://meltingice.net/2013/06/11/pluck-multiple-columns-rails/
+      @group_order_details = ActiveRecord::Base.connection.select_all(@group_order_details)
+                               .map {|a| [a.values[0].to_date, a.values[1]]}
 
 
-    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(@orders).references(:order).sum(:price)
+      @group_orders_sum = @ordergroup.group_orders.joins(:order => :supplier).merge(@orders).sum(:price)
 
       compute_order_article_details
       render 'show'
@@ -35,8 +38,9 @@ class GroupOrdersController < ApplicationController
   end
 
   def edit
+    params[:q] ||= params[:search] # for meta_search instead of ransack
     @q = OrderArticle.search(params[:q])
-    @order_articles = @order_articles.merge(@q.result(distinct: true))
+    @order_articles = @order_articles.merge(@q.relation)
     @order_articles = @order_articles.includes(:order)
 
     @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
@@ -45,9 +49,10 @@ class GroupOrdersController < ApplicationController
   end
 
   def update
-    oa_attrs = params[:group_order][:group_order_articles_attributes].transform_keys {|o| o.to_i}
+    oa_attrs = params[:group_order][:group_order_articles_attributes]
+    oa_attrs.keys.each {|key| oa_attrs[key.to_i] = oa_attrs.delete(key)} # Rails 4 - transform_keys
     @order_articles = OrderArticle.includes(:order, :article, :article_price).where(id: oa_attrs.keys) 
-    @order_articles = @order_articles.merge(Order.open).references(:order) # security!
+    @order_articles = @order_articles.where(orders: {state: 'open'}) # security!
     compute_order_article_details
 
     GroupOrder.transaction do
@@ -110,7 +115,7 @@ class GroupOrdersController < ApplicationController
   def parse_order_specifier
     @order_date = params[:id]
     if @order_date == 'current'
-      @orders = Order.open
+      @orders = Order.where(state: 'open')
     elsif @order_date
       begin
         # parsing integer group_orders is legacy - dates are used nowadays
@@ -125,7 +130,7 @@ class GroupOrdersController < ApplicationController
         # this is the main flow
         @order_date = @order_date.to_date
       end
-      @orders = Order.finished.where('DATE(orders.ends) = ?', @order_date)
+      @orders = Order.where(state: ['finished', 'closed']).where('DATE(orders.ends) = ?', @order_date)
     end
   rescue ArgumentError
     @order_date = nil
@@ -134,14 +139,14 @@ class GroupOrdersController < ApplicationController
 
   def get_order_articles
     return unless @orders
-    @all_order_articles = OrderArticle.includes(:order, :article).merge(@orders).references(:order)
+    @all_order_articles = OrderArticle.joins(:article, :order).merge(@orders)
     @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
     @order_articles = @order_articles.page(params[:page]).per(@per_page)
   end
 
   def get_article_categories
     return unless @all_order_articles
-    @article_categories = ArticleCategory.find(@all_order_articles.group(:article_category_id).pluck(:article_category_id))
+    @article_categories = ArticleCategory.find(@all_order_articles.group(:article_category_id).pluck('articles.article_category_id'))
   end
 
   # some shared order_article details that need to be done on the final query
@@ -149,7 +154,7 @@ class GroupOrdersController < ApplicationController
     @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty? unless @ordergroup.not_enough_apples?
     @has_stock = !@order_articles.select {|oa| oa.order.stockit?}.empty?
     @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
-    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(@orders).references(:order).sum(:price)
+    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(@orders).sum(:price)
     # preload group_order_articles
     @goa_by_oa = Hash[@ordergroup.group_order_articles
                         .where(order_article_id: @order_articles.map(&:id))
