@@ -50,9 +50,7 @@ Foodsoft::Application.routes.draw do
       resources :order_articles
     end
 
-    resources :group_orders do
-      get :archive, :on => :collection
-    end
+    resources :group_orders, :only => [:index, :show, :edit, :update]
 
     resources :group_order_articles
 

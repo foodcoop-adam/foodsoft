@@ -4,7 +4,7 @@
   = render 'current_order_sidebar'
   .well
     %ul.nav.nav-list
-      %li.nav-header Previous orders
+      %li.nav-header My previous orders
       - @group_order_details.each do |(ends, price)|
         %li{class: ('active' if ends==@order_date)}
           = link_to group_order_path(ends) do
@@ -19,8 +19,9 @@
       Previous order
       %span{style: 'font-weight: normal; font-size: 12pt; vertical-align: middle'}
         = orders_status_line(@orders)
-  - if @order_articles and !@order_articles.empty?
-    = render 'order_articles'
-  - else
+  - if @orders.nil? or @orders.empty?
+    Please select a previous order to view.
+  - elsif @order_articles.nil? or @order_articles.empty?
     You have no articles in this order.
-
+  - else
+    = render 'order_articles'
