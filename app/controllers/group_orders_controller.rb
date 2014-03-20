@@ -20,7 +20,7 @@ class GroupOrdersController < ApplicationController
     @order_articles = @order_articles.includes(:group_order_articles => :group_order)
                         .where(group_orders: {ordergroup_id: @ordergroup.id})
     unless @order_date == 'current'
-      @group_order_details = @ordergroup.group_orders.merge(Order.finished)
+      @group_order_details = @ordergroup.group_orders.includes(:order).merge(Order.finished).references(:order)
                                .select('SUM(price)').group('DATE(orders.ends)').pluck('orders.ends', :price)
                                .map {|(ends,price)| [ends.to_date, price]}
 

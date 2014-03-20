@@ -3,9 +3,9 @@
     .well.well-link
       %i.icon-shopping-cart
       My current order
-      - if (sum rescue nil)
-        .pull-right#group_orders_sum
-          = number_to_currency sum unless sum == 0
+      - sum ||= 0
+      .pull-right.price_total#group_orders_sum{data: {value: sum}}
+        = number_to_currency sum unless sum == 0
 - else
   .well.well-link
     %i.icon-shopping-cart

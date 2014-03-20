@@ -5,16 +5,19 @@
 %tr.order-article{class: "#{cycle('even', 'odd', name: 'order_articles')} #{'unavailable' if !cur_open and group_order_article.result==0}"}
   %td.name= order_article.article.name
   %td= order_article.article.origin
-  %td= number_to_currency(order_article.price.fc_price)
-  %td= order_article.article.unit
+  %td.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
+  %td.unit{data: {'unit_quantity' => order_article.price.unit_quantity}}= order_article.article.unit
   - if @has_stock and @has_open_orders
     %td= order_article.article.quantity_available if cur_has_stock
   - if @has_tolerance and @has_open_orders
-    %td{id: "missing_units_#{order_article.id}"}= order_article.missing_units if cur_has_tolerance
+    %td
+      - if cur_has_tolerance
+        .missing_units= order_article.missing_units
   %td.center.quantity
     - if cur_open
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
         - data_delta = {min: 0, granularity: 1}.merge(cur_has_stock ? {max: order_article.article.quantity_available} : {})
+        - data_delta['value-others'] = order_article.quantity - group_order_article.quantity
         = f.input_field :quantity, as: :delta, class: 'input-nano', data: data_delta, id: "q_#{order_article.id}"
     - else
       = order_article.quantity
@@ -24,11 +27,13 @@
         = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
           - if cur_has_tolerance
             - data_delta = {min: 0, granularity: 1, max: order_article.price.unit_quantity-1}
+            - data_delta['value-others'] = order_article.tolerance - group_order_article.tolerance
             = f.input_field :tolerance, as: :delta, class: 'input-nano', data: data_delta, id: "t_#{order_article.id}"
       - else
         = order_article.tolerance
   - unless @has_open_orders
     %td.center= group_order_article.result unless cur_open
-  %td{id: "td_price_#{order_article.id}"}
-    %span{id: "price_#{order_article.id}_display"}= number_to_currency((group_order_article.total_price(order_article)))
+  %td
+    - price_sum = group_order_article.total_price(order_article)
+    %span.price_sum{data: {value: price_sum}}= number_to_currency(price_sum)
     = render 'order_article_info', order_article: order_article

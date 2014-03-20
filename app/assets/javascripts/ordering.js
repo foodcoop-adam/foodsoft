@@ -1,166 +1,58 @@
 // JavaScript that handles the dynamic ordering quantities on the ordering page.
 //
-// In a JavaScript block on the actual view, define the article data by calls to setData().
-// You should also set the available group balance through setGroupBalance(amount).
+// In a javascript block of the actual view, make sure to override these globals:
+var minimumBalance = 0;          // minimum group balance for the order to be succesful
+var toleranceIsCostly = false;   // default tolerance behaviour
 //
-// Call setDecimalSeparator(char) to overwrite the default character "." with a localized value.
 
-var modified = false    		// indicates if anything has been clicked on this page
-var groupBalance = 0;			// available group money
-var minimumBalance = 0;                 // minimum group balance for the order to be succesful
-var toleranceIsCostly = true;   // default tolerance behaviour
-var isStockit = false;          // Wheter the order is from stock oder normal supplier
-
-// Article data arrays:
-var price = new Array();
-var unit = new Array();  		// items per order unit
-var itemTotal = new Array();    // total item price
-var quantityOthers = new Array();
-var toleranceOthers = new Array();
-var itemsAllocated = new Array();  // how many items the group has been allocated and should definitely get
-var quantityAvailable = new Array();  // stock_order. how many items are currently in stock
-
-function setToleranceBehaviour(value) {
-    toleranceIsCostly = value;
-}
-
-function setStockit(value) {
-    isStockit = value;
-}
-
-function setGroupBalance(amount) {
-    groupBalance = amount;
-}
-
-function setMinimumBalance(amount) {
-    minimumBalance = amount;
-}
-
-function addData(orderArticleId, itemPrice, itemUnit, itemSubtotal, itemQuantityOthers, itemToleranceOthers, allocated, available) {
-    var i = orderArticleId;
-    price[i] = itemPrice;
-    unit[i] = itemUnit;
-    itemTotal[i] = itemSubtotal;
-    quantityOthers[i] = itemQuantityOthers;
-    toleranceOthers[i] = itemToleranceOthers;
-    itemsAllocated[i] = allocated;
-    quantityAvailable[i] = available;
-}
-
-function increaseQuantity(item) {
-    var value = Number($('#q_' + item).val()) + 1;
-    if (!isStockit || (value <= (quantityAvailable[item] + itemsAllocated[item]))) {
-        update(item, value, $('#t_' + item).val());
-    }
-}
-
-function decreaseQuantity(item) {
-    var value = Number($('#q_' + item).val()) - 1;
-    if (value >= 0) {
-        update(item, value, $('#t_' + item).val());
-    }
-}
-
-function increaseTolerance(item) {
-    var value = Number($('#t_' + item).val()) + 1;
-    update(item, $('#q_' + item).val(), value);
-}
-
-function decreaseTolerance(item) {
-    var value = Number($('#t_' + item).val()) - 1;
-    if (value >= 0) {
-        update(item, $('#q_' + item).val(), value);
-    }
-}
-
-function update(item, quantity, tolerance) {
-    // set modification flag
-    modified = true
-
-    // update hidden input fields
-    $('#q_' + item).val(quantity);
-    $('#t_' + item).val(tolerance);
-
-    // calculate how many units would be ordered in total
-    var units = calcUnits(unit[item], quantityOthers[item] + Number(quantity), toleranceOthers[item] + Number(tolerance));
-    if (unitCompletedFromTolerance(unit[item], quantityOthers[item] + Number(quantity), toleranceOthers[item] + Number(tolerance))) {
-        $('#units_' + item).html('<span style=\"color:grey\">' + String(units) + '</span>');
-    } else {
-        $('#units_' + item).html(String(units));
-    }
-
-    // update used/unused quantity
-    var available = Math.max(0, units * unit[item] - quantityOthers[item]);
-    var q_used = Math.min(available, quantity);
-    // ensure that at least the amout of items this group has already been allocated is used
-    if (quantity >= itemsAllocated[item] && q_used < itemsAllocated[item]) {
-        q_used = itemsAllocated[item];
-    }
-    $('#q_used_' + item).html(String(q_used));
-    $('#q_unused_' + item).html(String(quantity - q_used));
-    $('#q_grouptotal_' + item).html(String(Number(quantity)));
-    $('#q_total_' + item).html(String(Number(quantity) + quantityOthers[item]));
-
-    // update used/unused tolerance
-    if (unit[item] > 1) {
-        available = Math.max(0, available - q_used - toleranceOthers[item]);
-        t_used = Math.min(available, tolerance);
-        $('#t_used_' + item).html(String(t_used));
-        $('#t_unused_' + item).html(String(tolerance - t_used));
-        $('#t_grouptotal_' + item).html(String(Number(tolerance)));
-        $('#t_total_' + item).html(String(Number(tolerance) + toleranceOthers[item]));
-    }
-
-    // update total price
-    if(toleranceIsCostly == true) {
-        itemTotal[item] = price[item] * (Number(quantity) + Number(tolerance));
-    } else {
-        itemTotal[item] = price[item] * (Number(quantity));
-    }
-    $('#price_' + item + '_display').html(I18n.l("currency", itemTotal[item]));
-
-    // update unit counters
-    var total_quantity = quantityOthers[item] + Number(quantity);
-    var total_tolerance = toleranceOthers[item] + Number(tolerance);
-
-    // same as OrderArticle#calculate_units_to_order
-    var units_to_order = Math.floor(total_quantity/unit[item]);
-    var remainder = total_quantity % unit[item];
-    units_to_order += ((remainder > 0) && (remainder + total_tolerance >= unit[item]) ? 1 : 0)
-
-    var progress_units = total_quantity+total_tolerance - units_to_order*unit[item];
-    var progress_pct = Math.floor(Math.min(100, 100*progress_units/unit[item]));
-
-    $('#unit_to_order_'+item).html(String(units_to_order*unit[item]));
-    // progess bar update
-    //   update decreasing number first, to make sure that together it's no more than 100%
-    //   otherwise one of the numbers in the progress bar may temporarily disappear
-    var bars = [
-      [$('#progress_'+item+' .bar:nth-child(1)'), progress_pct,     progress_units],
-      [$('#progress_'+item+' .bar:nth-child(2)'), 100-progress_pct, Math.max(0, unit[item]-progress_units)]
-    ];
-    if (Number(bars[0][0].html()) < progress_units) bars.reverse();
-    $.each(bars, function(i, bar) {
-      bar[0]
-        .width(String(bar[1])+'%')
-	.html(String(bar[2]));
+$(function() {
+  $(document).on('changed', '#articles_table input[data-delta]', function() {
+    var row = $(this).closest('tr');
+    var form = $(row).closest('form');
+    // send change server-side
+    $.ajax({
+      url: form.attr('action'),
+      type: form.attr('method') || 'post',
+      data: $('input, select, textarea', row).serialize() + '&' + $('input[type="hidden"]', form).serialize(),
+      dataType: 'script'
     });
 
-    // update balance
-    updateBalance();
-}
+    //
+    // update page locally
+    //
+    var quantity = Number($('.quantity input[data-delta]', row).val());
+    var tolerance = Number($('.tolerance input[data-delta]', row).val());
+    var price_item = Number($('.price', row).data('value'));
+    var old_price_sum = Number($('.price_sum', row).data('value'));
+    var unit_quantity = Number($('.unit', row).data('unit-quantity'));
 
-function calcUnits(unitSize, quantity, tolerance) {
-    var units = Math.floor(quantity / unitSize)
-    var remainder = quantity % unitSize
-    return units + ((remainder > 0) && (remainder + tolerance >= unitSize) ? 1 : 0)
-}
+    var price_sum = price_item * quantity;
+    if (toleranceIsCostly) price_sum += price_item * tolerance;
 
-function unitCompletedFromTolerance(unitSize, quantity, tolerance) {
-    var remainder = quantity % unitSize
-    return (remainder > 0 && (remainder + tolerance >= unitSize));
-}
+    // article sum
+    $('.price_sum', row).html(I18n.l('currency', price_sum)).data('value', price_sum);
 
+    // total group orders sum
+    var old_price_total = Number($('.price_total').data('value'));
+    var new_price_total = old_price_total - old_price_sum + price_sum;
+    $('.price_total').html(I18n.l('currency', new_price_total)).data('value', new_price_total);
+
+    // calculate filled units
+    var total_quantity = Number($('.quantity [data-value-others]', row).data('value-others')) + quantity;
+    var total_tolerance = Number($('.tolerance [data-value-others]', row).data('value-others')) + tolerance;
+    // (same as OrderArticle#calculate_units_to_order)
+    var units_to_order = Math.floor(total_quantity/unit_quantity);
+    var remainder = total_quantity % unit_quantity;
+    units_to_order += ((remainder > 0) && (remainder + total_tolerance >= unit_quantity) ? 1 : 0)
+    // (same as OrderArticle#missing_units)
+    var missing_units = unit_quantity - ((quantity % unit_quantity) + tolerance)
+    if (missing_units < 0) missing_units = 0
+    $('.missing_units', row).html(missing_units);
+  });
+});
+
+
+/* TODO support minimum balance
 function updateBalance() {
     // update total price and order balance
     var total = 0;
@@ -185,22 +77,4 @@ function updateBalance() {
         $('#td_price_' + i).css('background-color', bgcolor);
     }
 }
-
-$(function() {
-    $('input[data-increase_quantity]').on('touchclick', function() {
-        increaseQuantity($(this).data('increase_quantity'));
-    });
-    $('input[data-decrease_quantity]').on('touchclick', function() {
-        decreaseQuantity($(this).data('decrease_quantity'));
-    });
-    $('input[data-increase_tolerance]').on('touchclick', function() {
-        increaseTolerance($(this).data('increase_tolerance'));
-    });
-    $('input[data-decrease_tolerance]').on('touchclick', function() {
-        decreaseTolerance($(this).data('decrease_tolerance'));
-    });
-
-    $('a[data-confirm_switch_order]').on('touchclick', function() {
-        return (!modified || confirm(I18n.t('js.ordering.confirm_change')));
-    });
-});
+*/
