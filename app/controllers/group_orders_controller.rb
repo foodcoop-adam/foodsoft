@@ -10,6 +10,12 @@ class GroupOrdersController < ApplicationController
   #before_filter :ensure_my_group_order, only: [:show, :edit, :update]
   #before_filter :enough_apples?, only: [:new, :create]
 
+  def index
+    @orders = Order.none
+    @order_articles = OrderArticle.none
+    show
+  end
+
   def show
     @render_totals = true
     @order_articles = @order_articles.joins(:group_order_articles)
@@ -20,6 +26,7 @@ class GroupOrdersController < ApplicationController
                                .map {|(ends,price)| [ends.to_date, price]}
 
       compute_order_article_details
+      render 'show'
     else
       # set all variables used in edit, but render a different template
       edit
@@ -37,19 +44,6 @@ class GroupOrdersController < ApplicationController
     compute_order_article_details
   end
 
-  def create
-    @group_order = GroupOrder.new(params[:group_order])
-    begin
-      @group_order.save_ordering!
-      redirect_to group_order_url(@group_order), :notice => I18n.t('group_orders.create.notice')
-    rescue ActiveRecord::StaleObjectError
-      redirect_to group_orders_url, :alert => I18n.t('group_orders.create.error_stale')
-    rescue => exception
-      logger.error('Failed to update order: ' + exception.message)
-      redirect_to group_orders_url, :alert => I18n.t('group_orders.create.error_general')
-    end
-  end
-
   def update
     @group_order.attributes = params[:group_order]
     begin
@@ -63,18 +57,6 @@ class GroupOrdersController < ApplicationController
     end
   end
   
-  # Shows all Orders of the Ordergroup
-  # if selected, it shows all orders of the foodcoop
-  def archive
-    # get only orders belonging to the ordergroup
-    @closed_orders = Order.closed.page(params[:page]).per(10)
-
-    respond_to do |format|
-      format.html # archive.html.haml
-      format.js   # archive.js.erb
-    end
-  end
-
   private
 
   # Returns true if @current_user is member of an Ordergroup.
