@@ -73,14 +73,16 @@ class Order < ActiveRecord::Base
   def order_send_emails
     return unless FoodsoftConfig[:send_order_on_finish]
     return unless supplier.order_send_email or FoodsoftConfig[:send_order_on_finish] == 'cc_only'
-    cc = FoodsoftConfig[:send_order_on_finish_cc] || []
-    ([supplier.order_send_email] + cc.map do |a|
+    to = FoodsoftConfig[:send_order_on_finish_cc] || []
+    to.map! do |a|
       if a == '%{contact.email}'
         (FoodsoftConfig[:contact]['email'] rescue nil)
       else
         a
       end
-    end).compact
+    end.compact!
+    to = [supplier.order_send_email] + to unless FoodsoftConfig[:send_order_on_finish] == 'cc_only'
+    to
   end
 
   def articles_for_ordering
