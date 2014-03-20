@@ -1,0 +1,4 @@
+- content_for :javascript do
+  :javascript
+    var toleranceIsCostly = #{FoodsoftConfig[:tolerance_is_costly].to_s == true.to_s};
+    var minimumBalance = #{FoodsoftConfig[:minimum_balance].to_f or 0};
