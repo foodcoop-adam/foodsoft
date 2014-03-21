@@ -18,6 +18,13 @@ GIT
   specs:
     ice_cube (0.10.1)
 
+GIT
+  remote: git://github.com/wvengen/the_sortable_tree.git
+  revision: 4637e530536c6d31f70bcdf3429def671c4a93a5
+  specs:
+    the_sortable_tree (2.5.0)
+      rails (>= 3.1)
+
 PATH
   remote: lib/foodsoft_adyen
   specs:
@@ -106,9 +113,13 @@ GEM
     activesupport (3.2.18)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
+    acts_as_list (0.4.0)
+      activerecord (>= 3.0)
     acts_as_tree (1.6.1)
       activerecord (>= 3.0.0)
     adyen (1.4.1)
+    ancestry (2.1.0)
+      activerecord (>= 3.0.0)
     arel (3.0.3)
     attribute_normalizer (1.1.0)
     better_errors (1.1.0)
@@ -217,6 +228,8 @@ GEM
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (4.2.1)
+      railties (>= 3.2.16)
     jquery_mobile_rails (1.4.2)
       railties (>= 3.1.0)
     json (1.8.1)
@@ -429,7 +442,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  acts_as_list
   acts_as_tree
+  ancestry
   attribute_normalizer
   better_errors
   binding_of_caller
@@ -466,6 +481,7 @@ DEPENDENCIES
   ice_cube!
   inherited_resources
   jquery-rails
+  jquery-ui-rails
   kaminari
   less-rails
   localize_input!
@@ -494,6 +510,7 @@ DEPENDENCIES
   simple_form
   simplecov
   sqlite3
+  the_sortable_tree!
   therubyracer
   thin
   twitter-bootstrap-rails

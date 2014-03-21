@@ -6,4 +6,6 @@
 *= require list.unlist
 *= require flags/basic
 *= require flags/flags16
+*= require tree
+*= require sortable_tree
 */

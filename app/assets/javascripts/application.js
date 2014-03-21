@@ -19,6 +19,9 @@
 //= require stupidtable
 //= require touchclick
 //= require delta_input
+//= require jquery.ui.sortable
+//= require jquery.ui.nestedSortable
+//= require sortable_tree/initializer
 
 // Load following statements, when DOM is ready
 $(function() {

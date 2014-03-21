@@ -135,7 +135,11 @@ Foodsoft::Application.routes.draw do
       end
     end
 
-    resources :article_categories
+    resources :article_categories do
+      collection do
+        post :rebuild
+      end
+    end
 
     ########### Finance
 

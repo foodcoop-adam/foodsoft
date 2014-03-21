@@ -1,6 +1,10 @@
 class ArticleCategory < ActiveRecord::Base
   has_many :articles
 
+  has_ancestry
+  acts_as_list scope: [:ancestry]
+  include TheSortableTree::Scopes
+
   normalize_attributes :name, :description
 
   validates :name, :presence => true, :uniqueness => true, :length => { :minimum => 2 }

@@ -24,4 +24,5 @@ admin = User.create(
 Membership.create(:group => administrators, :user => admin)
 
 # First entry for article categories
+ArticleCategory.create(:name => "Categories")
 ArticleCategory.create(:name => "Other", :description => "The other stuff fits here..")
