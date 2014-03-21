@@ -7,4 +7,6 @@
 *= require recurring_select
 *= require flags/basic
 *= require flags/flags16
+*= require tree
+*= require sortable_tree
 */

@@ -1,5 +1,6 @@
 require 'wikicloth'
 require 'acts_as_versioned'
+require 'acts_as_tree'
 require 'diffy'
 require 'content_for_in_controllers'
 require 'foodsoft_wiki/engine'

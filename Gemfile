@@ -16,6 +16,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'select2-rails', '>= 3.4.0'
 gem 'bootstrap-datepicker-rails'
 gem 'date_time_attribute'
@@ -49,6 +50,9 @@ gem 'recurring_select'
 gem 'charlock_holmes'
 gem 'attribute_normalizer'
 gem 'version_info'
+gem 'ancestry'
+gem 'acts_as_list'
+gem 'the_sortable_tree', github: 'wvengen/the_sortable_tree'
 
 # we use the git version of acts_as_versioned, and need to include it in this Gemfile
 #gem 'acts_as_versioned', git: 'git://github.com/technoweenie/acts_as_versioned.git'

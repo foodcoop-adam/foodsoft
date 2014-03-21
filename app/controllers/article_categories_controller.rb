@@ -1,8 +1,13 @@
 class ArticleCategoriesController < ApplicationController
+  include TheSortableTreeController::Rebuild
 
   inherit_resources # Build default REST Actions via plugin
 
   before_filter :authenticate_article_meta
+
+  def show
+    redirect_to edit_article_category_path
+  end
 
   def create
     create!(:notice => I18n.t('article_categories.create.notice')) { article_categories_path }
@@ -21,7 +26,7 @@ class ArticleCategoriesController < ApplicationController
   protected
 
   def collection
-    @article_categories = ArticleCategory.order('name')
+    @article_categories = ArticleCategory.all
   end
 
 end

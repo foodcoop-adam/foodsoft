@@ -32,13 +32,19 @@ ActiveRecord::Schema.define(:version => 20140921104907) do
     t.datetime "updated_at",                                             :null => false
   end
 
-  create_table "article_categories", :force => true do |t|
-    t.string "name",        :default => "", :null => false
-    t.string "description"
+  add_index "adyen_notifications", ["psp_reference", "event_code", "success"], :name => "adyen_notification_uniqueness", :unique => true
+
+  create_table "article_categories", force: true do |t|
+    t.string  "name",        default: "", null: false
+    t.string  "description"
+    t.string  "ancestry"
+    t.integer "position"
     t.string "scope"
   end
 
-  add_index "article_categories", ["name"], :name => "index_article_categories_on_name", :unique => true
+  add_index "article_categories", ["ancestry"], name: "index_article_categories_on_ancestry", using: :btree
+  add_index "article_categories", ["name"], name: "index_article_categories_on_name", unique: true, using: :btree
+  add_index "article_categories", ["position"], name: "index_article_categories_on_position", using: :btree
   add_index "article_categories", ["scope"], :name => "index_article_categories_on_scope"
 
   create_table "article_prices", :force => true do |t|
