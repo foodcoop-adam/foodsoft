@@ -4,4 +4,6 @@
 *= require token-input-bootstrappy
 *= require bootstrap-datepicker
 *= require list.unlist
+*= require tree
+*= require sortable_tree
 */

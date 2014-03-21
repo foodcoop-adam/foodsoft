@@ -14,6 +14,7 @@ gem 'therubyracer', platforms: :ruby
 
 
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'select2-rails'
 gem 'bootstrap-datepicker-rails'
 gem 'date_time_attribute'
@@ -42,6 +43,9 @@ gem 'whenever', require: false # For defining cronjobs, see config/schedule.rb
 gem 'protected_attributes'
 gem 'ruby-units'
 gem 'attribute_normalizer'
+gem 'ancestry'
+gem 'acts_as_list'
+gem 'the_sortable_tree', github: 'wvengen/the_sortable_tree'
 
 # we use the git version of acts_as_versioned, and need to include it in this Gemfile
 gem 'acts_as_versioned', git: 'git://github.com/technoweenie/acts_as_versioned.git'
