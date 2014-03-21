@@ -128,9 +128,9 @@ class GroupOrdersController < ApplicationController
         end
       rescue ArgumentError
         # this is the main flow
-        @order_date = @order_date.to_date
+        @order_date = (@order_date.to_date rescue nil)
       end
-      @orders = Order.where(state: ['finished', 'closed']).where('DATE(orders.ends) = ?', @order_date)
+      @orders = Order.where(state: ['finished', 'closed']).where('DATE(orders.ends) = ?', @order_date) if @order_date
     end
   rescue ArgumentError
     @order_date = nil
