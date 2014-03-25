@@ -1,0 +1,3 @@
+var tfoot = $('#articles_table tfoot');
+$('.price_details', tfoot).remove();
+$(tfoot).append('<%= j render('group_order_totals', cols: params[:cols].to_i, price_total: false)%>');
