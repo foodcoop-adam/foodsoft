@@ -1,4 +1,4 @@
-$('#articles_table').html('<%= j render("order_articles") %>');
+<%= render 'show' %>
 <% if params[:q] %>
   <% unless params[:q][:article_name_contains] %>
     // reset name when not specified

@@ -25,8 +25,8 @@
     %tbody.list
       - @order_articles.each do |order_article|
         = render 'order_article', order_article: order_article
-    - if @render_totals
-      %tfoot
+    %tfoot
+      %tr
+        %td{colspan: cols}= pagination_links_remote @order_articles
+      - if @render_totals
         = render 'group_order_totals', cols: cols
-
-= pagination_links_remote @order_articles

@@ -25,9 +25,6 @@ class GroupOrdersController < ApplicationController
       @group_order_details = ActiveRecord::Base.connection.select_all(@group_order_details)
                                .map {|a| [a.values[0].to_date, a.values[1]]}
 
-
-      @group_orders_sum = @ordergroup.group_orders.joins(:order => :supplier).merge(@orders).sum(:price)
-
       compute_order_article_details
       render 'show'
     else
