@@ -147,7 +147,7 @@ class Order < ActiveRecord::Base
     self.starts ||= Time.now
     if FoodsoftConfig[:order_schedule]
       # try to be smart when picking a reference day
-      last = FoodsoftConfig[:order_schedule]['initial'].try(:to_time)
+      last = (DateTime.parse(FoodsoftConfig[:order_schedule]['initial']) rescue nil)
       last ||= Order.finished.reorder(:pickup).where('pickup IS NOT NULL').first.try(:pickup)
       last ||= self.starts
       # adjust end and pickup dates
