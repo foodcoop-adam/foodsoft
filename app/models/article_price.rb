@@ -18,10 +18,20 @@ class ArticlePrice < ActiveRecord::Base
     ArticlePrice.fc_price(self, group)
   end
 
+  def tax_price(group=nil)
+    ArticlePrice.tax_price(self, group)
+  end
+
+
 
   # The financial gross, net plus tax and deposit.
   def self.gross_price(price, group=nil)
     ((price.price + price.deposit) * (price.tax / 100 + 1)).round(2)
+  end
+
+  # The price part which is tax
+  def self.tax_price(price, group=nil)
+    ((price.price + price.deposit) * price.tax / 100).round(2)
   end
 
   # The price for the foodcoop-member.

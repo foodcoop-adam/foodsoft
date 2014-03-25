@@ -149,6 +149,9 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.integer  "lock_version",                                     :default => 0, :null => false
     t.datetime "updated_on",                                                      :null => false
     t.integer  "updated_by_user_id"
+    t.decimal  "net_price",          :precision => 8, :scale => 2, :default => 0
+    t.decimal  "gross_price",        :precision => 8, :scale => 2, :default => 0
+    t.decimal  "deposit",            :precision => 8, :scale => 2, :default => 0
   end
 
   add_index "group_orders", ["order_id"], :name => "index_group_orders_on_order_id"

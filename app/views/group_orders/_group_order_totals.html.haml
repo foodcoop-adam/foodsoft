@@ -1,3 +1,27 @@
 %tr
   %th{colspan: cols-1} Total
   %th.price_total{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
+
+-# the sysadmin might have chosen not to compute price details for old orders
+- if @group_orders_prices[:gross_price]
+  %tr.unavailable.price_details
+    %td
+    %td{colspan: cols-2} of which goes to
+    %td
+  %tr.price_details
+    %td
+    %td{colspan: cols-2} suppliers
+    %td= number_to_currency @group_orders_prices[:net_price]
+  %tr.price_details
+    %td
+    %td{colspan: cols-2}= Article.human_attribute_name :tax
+    %td= number_to_currency (@group_orders_prices[:gross_price]-@group_orders_prices[:net_price])
+  - if @group_orders_prices[:deposit] > 0
+    %tr.price_details
+      %td
+      %td{colspan: cols-2}= Article.human_attribute_name :deposit
+      %td= number_to_currency @group_orders_prices[:deposit]
+  %tr.price_details
+    %td
+    %td{colspan: cols-2}= FoodsoftConfig[:name]
+    %td= number_to_currency (@group_orders_prices[:price]-@group_orders_prices[:gross_price]-@group_orders_prices[:deposit])

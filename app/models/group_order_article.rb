@@ -1,4 +1,4 @@
-# A GroupOrderArticle stores the sum of how many items of an OrderArticle are ordered as part of a GroupOrder.
+  # A GroupOrderArticle stores the sum of how many items of an OrderArticle are ordered as part of a GroupOrder.
 # The chronologically order of the Ordergroup - activity are stored in GroupOrderArticleQuantity
 #
 class GroupOrderArticle < ActiveRecord::Base
@@ -187,15 +187,26 @@ class GroupOrderArticle < ActiveRecord::Base
   # the minimum price depending on configuration. When the order is finished it
   # will be the value depending of the article results.
   def total_price(order_article = self.order_article)
-    if order_article.order.open?
-      if FoodsoftConfig[:tolerance_is_costly]
-        order_article.article.fc_price(group_order.ordergroup) * (quantity + tolerance)
-      else
-        order_article.article.fc_price(group_order.ordergroup) * quantity
-      end
-    else
-      order_article.price.fc_price(group_order.ordergroup) * result
-    end
+    total_prices[:price]
+  end
+  def total_prices(order_article = self.order_article)
+    price = order_article.price
+    amount = if order_article.order.open?
+               if FoodsoftConfig[:tolerance_is_costly]
+                 (quantity + tolerance)
+               else
+                 quantity
+               end
+             else
+               result
+             end
+    {
+      net_price:   amount * price.price,
+      gross_price: amount * price.gross_price(group_order.ordergroup),
+      deposit:     amount * price.deposit,
+      price:       amount * price.fc_price(group_order.ordergroup),
+      tax_price:   amount * price.tax_price(group_order.ordergroup)
+    }
   end
 
   # Check if the result deviates from the result_computed

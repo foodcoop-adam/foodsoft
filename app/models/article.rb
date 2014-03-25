@@ -40,6 +40,11 @@ class Article < ActiveRecord::Base
     ArticlePrice.gross_price(self, group)
   end
 
+  # The price part which is tax
+  def tax_price(group=nil)
+    ArticlePrice.tax_price(self, group)
+  end
+
   # The price for the foodcoop-member.
   def fc_price(group=nil)
     ArticlePrice.fc_price(self, group)
