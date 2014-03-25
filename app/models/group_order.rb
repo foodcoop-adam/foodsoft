@@ -11,7 +11,7 @@ class GroupOrder < ActiveRecord::Base
 
   validates_presence_of :order_id
   validates_presence_of :ordergroup_id
-  validates_numericality_of :price
+  validates_numericality_of :price, :gross_price, :net_price, :deposit
   validates_uniqueness_of :ordergroup_id, :scope => :order_id   # order groups can only order once per order
 
   # cannot use merge on joined scope - at least until after rails 3.2.13
@@ -25,8 +25,13 @@ class GroupOrder < ActiveRecord::Base
 
   # Updates the "price" attribute.
   def update_price!
-    total = group_order_articles.includes(:order_article => [:article, :article_price]).to_a.sum(&:total_price)
-    update_attribute(:price, total)
+    goas = group_order_articles.includes(:order_article => [:article, :article_price])
+    prices = goas.reduce({price: 0, gross_price: 0, net_price: 0, deposit: 0}) do |sum, goa|
+      totals = goa.total_prices
+      sum.keys.each {|s| sum[s] += totals[s] if totals[s]}
+      sum
+    end
+    update_attributes prices
   end
 
 end

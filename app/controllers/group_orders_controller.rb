@@ -19,10 +19,8 @@ class GroupOrdersController < ApplicationController
                         .where(group_orders: {ordergroup_id: @ordergroup.id})
     unless @order_date == 'current'
       @group_order_details = @ordergroup.group_orders.joins(:order => :supplier).merge(Order.finished)
-                               .group('DATE(orders.ends)').select('orders.ends').select('SUM(group_orders.price)')
-                               .order('DATE(orders.ends) DESC')
-      # Rails 3 - http://meltingice.net/2013/06/11/pluck-multiple-columns-rails/
-      @group_order_details = ActiveRecord::Base.connection.select_all(@group_order_details)
+                               .group('DATE(orders.ends)').order('DATE(orders.ends) DESC')
+      @group_order_details = rails3_pluck(@group_order_details, 'orders.ends', 'SUM(group_orders.price)')
                                .map {|a| [a.values[0].to_date, a.values[1]]}
 
       compute_order_article_details
@@ -151,7 +149,13 @@ class GroupOrdersController < ApplicationController
     @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty? unless @ordergroup.not_enough_apples?
     @has_stock = !@order_articles.select {|oa| oa.order.stockit?}.empty?
     @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
-    @group_orders_sum = @ordergroup.group_orders.includes(:order).merge(@orders).sum(:price)
+    @group_orders_prices = rails3_pluck(@ordergroup.group_orders.joins(:order).merge(@orders),
+                                        'SUM(group_orders.price) AS price',
+                                        'SUM(group_orders.gross_price) AS gross_price',
+                                        'SUM(group_orders.net_price) AS net_price',
+                                        'SUM(group_orders.deposit) AS deposit'
+                                       ).first
+    @group_orders_sum = @group_orders_prices[:price]
     # preload group_order_articles
     @goa_by_oa = Hash[@ordergroup.group_order_articles
                         .where(order_article_id: @order_articles.map(&:id))
@@ -159,4 +163,9 @@ class GroupOrdersController < ApplicationController
     @order_articles.each {|oa| @goa_by_oa[oa.id] ||= GroupOrderArticle.new(order_article: oa, ordergroup_id: @ordergroup.id)}
   end
 
+  def rails3_pluck(query, *cols)
+    cols.each {|col| query = query.select(col)}
+    # Rails 3 - http://meltingice.net/2013/06/11/pluck-multiple-columns-rails/
+    ActiveRecord::Base.connection.select_all(query).map(&:symbolize_keys)
+  end
 end

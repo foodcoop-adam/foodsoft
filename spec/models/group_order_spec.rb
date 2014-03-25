@@ -1,8 +1,8 @@
 require_relative '../spec_helper'
 
 describe GroupOrder do
-  let(:order) { create :order }
   let(:go)  { create :group_order, order: order }
+  let(:order) { create :order, article_count: 2 }
 
   # the following two tests are currently disabled - https://github.com/foodcoops/foodsoft/issues/158
 
@@ -17,6 +17,30 @@ describe GroupOrder do
   it 'has zero price initially' do
     expect(go.price).to eq(0)
   end
+
+
+  describe 'computes total' do
+    let(:go) { create :group_order, order: order }
+    let(:oa) { order.order_articles.first }
+    let(:goa) { create :group_order_article, group_order: go, order_article: oa }
+    let(:oa2) { order.order_articles.second }
+    let(:goa2) { create :group_order_article, group_order: go, order_article: oa2 }
+
+    it 'fc price' do
+      n = rand(5) * oa.price.unit_quantity
+      goa.update_quantities n, 0
+      go.update_price!
+      expect(go.price).to eq oa.price.fc_price*n
+    end
+
+    it 'gross price' do
+      n = rand(5) * oa.price.unit_quantity
+      goa.update_quantities n, 0
+      go.update_price!
+      expect(go.gross_price).to eq oa.price.gross_price*n
+    end
+  end
+
 
   describe 'with ordergroup price markup' do
     let(:admin) { create :admin }

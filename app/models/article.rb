@@ -35,13 +35,18 @@ class Article < ActiveRecord::Base
     "#{name} (#{unit})"
   end
 
-  def tax_price
-    ArticlePrice.tax_price(self)
+  def tax_price(group=nil)
+    ArticlePrice.tax_price(self, group)
   end
   
   # The financial gross, net plus tax and deposti
   def gross_price(group=nil)
     ArticlePrice.gross_price(self, group)
+  end
+
+  # The price part which is tax
+  def tax_price(group=nil)
+    ArticlePrice.tax_price(self, group)
   end
 
   # The price for the foodcoop-member.
