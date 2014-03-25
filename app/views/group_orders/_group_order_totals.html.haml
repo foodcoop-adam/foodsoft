@@ -1,14 +1,22 @@
+-# for deface overrides
+- '<price_details_top_mark>'
+
 - if (price_total rescue true)
-  %tr
+  %tr.price_total_row
     %th{colspan: cols-1} Total
     %th.price_total{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
 
+-# for deface overrides
+- '<price_details_middle_mark>'
+
 -# the sysadmin might have chosen not to compute price details for old orders
-- if @group_orders_prices[:gross_price]
+-# if @group_orders_prices[:gross_price]
   %tr.unavailable.price_details
     %td
     %td{colspan: cols-2} of which goes to
     %td
+  -# for deface overrides
+  - '<price_details_nested_mark>'
   %tr.price_details
     %td
     %td{colspan: cols-2} suppliers
@@ -26,3 +34,6 @@
     %td
     %td{colspan: cols-2}= FoodsoftConfig[:name]
     %td= number_to_currency (@group_orders_prices[:price]-@group_orders_prices[:gross_price]-@group_orders_prices[:deposit])
+
+-# for deface overrides
+- '<price_details_bottom_mark>'
