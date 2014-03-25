@@ -3,7 +3,7 @@
 class GroupOrdersController < ApplicationController
   # Security
   before_filter :ensure_ordergroup_member
-  before_filter :parse_order_specifier, :only => [:show, :edit]
+  before_filter :parse_order_specifier, :only => [:show, :edit, :price_details]
   before_filter :get_order_articles, :only => [:show, :edit]
   before_filter :enough_apples?, only: [:edit, :update]
 
@@ -71,6 +71,12 @@ class GroupOrdersController < ApplicationController
       format.js   { flash[:alert] = I18n.t('group_orders.update.error_general') }
     end
   end
+
+  def price_details
+    # only makes sense for current ...
+    @order_articles = []
+    compute_order_article_details
+  end
   
   private
 
@@ -108,7 +114,7 @@ class GroupOrdersController < ApplicationController
 
   # either 'current', an order end date, or a group_order id
   def parse_order_specifier
-    @order_date = params[:id]
+    @order_date = params[:id] || params[:group_order_id]
     if @order_date == 'current'
       @orders = Order.where(state: 'open')
     elsif @order_date

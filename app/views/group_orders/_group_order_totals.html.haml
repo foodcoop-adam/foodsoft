@@ -1,6 +1,7 @@
-%tr
-  %th{colspan: cols-1} Total
-  %th.price_total{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
+- if (price_total rescue true)
+  %tr
+    %th{colspan: cols-1} Total
+    %th.price_total{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
 
 -# the sysadmin might have chosen not to compute price details for old orders
 - if @group_orders_prices[:gross_price]

@@ -2,3 +2,20 @@
   :javascript
     var toleranceIsCostly = #{FoodsoftConfig[:tolerance_is_costly].to_s == true.to_s};
     var minimumBalance = #{FoodsoftConfig[:minimum_balance].to_f or 0};
+
+    // dim price details field when it becomes outdated
+    $(document).on('changed', '#articles_table input[data-delta]', function() {
+      $('#articles_table .price_details').fadeTo(0, 0.75);
+    });
+
+    // request price details update if we have any
+    $(document).on('GroupOrder#update', function() {
+      if ($('#articles_table .price_details').length > 0) {
+        $.ajax({
+          url: '#{group_order_price_details_path(@order_date || :current)}',
+          type: 'get',
+          data: {cols: $('#articles_table tbody tr:first').children().length},
+          contentType: 'application/json; charset=UTF-8'
+        });
+      }
+    });

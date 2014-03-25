@@ -9,11 +9,14 @@ $(function() {
   $(document).on('changed', '#articles_table input[data-delta]', function() {
     var row = $(this).closest('tr');
     var form = $(row).closest('form');
+    var cols = $(row).children().length;
     // send change server-side
     $.ajax({
       url: form.attr('action'),
       type: form.attr('method') || 'post',
-      data: $('input, select, textarea', row).serialize() + '&' + $('input[type="hidden"]', form).serialize(),
+      data: $('input, select, textarea', row).serialize()
+            + '&' + $('input[type="hidden"]', form).serialize()
+            + '&cols='+cols,
       dataType: 'script'
     });
 
