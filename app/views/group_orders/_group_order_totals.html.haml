@@ -4,7 +4,7 @@
     %th.price_total{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
 
 -# the sysadmin might have chosen not to compute price details for old orders
--# if @group_orders_prices[:gross_price]
+- if @group_orders_prices[:gross_price]
   %tr.unavailable.price_details
     %td
     %td{colspan: cols-2} of which goes to

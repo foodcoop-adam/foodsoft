@@ -3,7 +3,6 @@
     var toleranceIsCostly = #{FoodsoftConfig[:tolerance_is_costly].to_s == true.to_s};
     var minimumBalance = #{FoodsoftConfig[:minimum_balance].to_f or 0};
 
--# disabled for now (see _group_order_totals)
     // dim price details field when it becomes outdated
     $(document).on('changed', '#articles_table input[data-delta]', function() {
       $('#articles_table .price_details').fadeTo(0, 0.75);
