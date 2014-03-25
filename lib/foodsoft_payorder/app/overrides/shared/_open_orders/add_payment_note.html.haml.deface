@@ -1,6 +1,0 @@
-/ insert_top 'section'
-- if @current_user.ordergroup and @current_user.ordergroup.get_available_funds < 0
-  .alert.alert-warning
-    To finish your order, 
-    = link_to "please checkout", current_orders_group_orders_path
-    and pay before the closing date.
