@@ -254,7 +254,7 @@ th.price_markup_note {
   }
 }
 
-.article-info-container        {
+.article-info-container {
   display: none;
   position: absolute;
   top: 0;
@@ -276,6 +276,12 @@ th.price_markup_note {
 }
 
 tr.order-article .article-info { display: none; }
+
+// quick hack to hide article info on mobile, because it obstructs
+@media (max-width: 768px) {
+  .article-info { display: none !important; }
+}
+
 
 #articles_table {
   td.units_to_order {
