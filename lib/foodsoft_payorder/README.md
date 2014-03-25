@@ -3,9 +3,6 @@ FoodsoftPayorder
 
 Allows members to pay their order online right after ordering.
 
-This plugin integrates with the current\_orders plugin by adding a
-payment button to its group\_orders page.
-
 You probably want to load a payment provider plugin, and point to it
 in the foodcoop configuration (see below).
 
