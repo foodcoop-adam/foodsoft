@@ -8,9 +8,9 @@
       $('#articles_table .price_details').fadeTo(0, 0.75);
     });
 
-    // request price details update if we have any
+    // request price details update if we have the summary
     $(document).on('GroupOrder#update', function() {
-      if ($('#articles_table .price_details').length > 0) {
+      if ($('#articles_table tfoot .price_total_row').length > 0) {
         $.ajax({
           url: '#{group_order_price_details_path(@order_date || :current)}',
           type: 'get',
