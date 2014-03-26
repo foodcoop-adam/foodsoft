@@ -1,5 +1,5 @@
 / insert_after 'erb[silent]:contains("<price_details_bottom_mark>")'
-- if FoodsoftConfig[:payorder_payment] and (payable = -@ordergroup.get_available_funds) > 0
+- if FoodsoftPayorder.enabled? and (payable = -@ordergroup.get_available_funds) > 0
   - if (sum = @ordergroup.account_balance - @ordergroup.value_of_finished_orders) != 0
     %tr.price_details
       %td{colspan: cols}
@@ -10,4 +10,4 @@
       %th{colspan: cols-1} Total payable
       %th= number_to_currency payable
   %tr.price_details
-    %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button false, class: 'btn btn-primary'
+    %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button

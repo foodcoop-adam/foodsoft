@@ -1,4 +1,4 @@
 / insert_bottom 'h1 span'
-- if FoodsoftConfig[:payorder_payment]
+- if FoodsoftPayorder.enabled?
   .pull-right
-    = order_payment_status_button false, class: 'btn btn-primary'
+    = order_payment_status_button

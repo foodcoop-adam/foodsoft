@@ -11,7 +11,7 @@ module FoodsoftPayorder
           # and associate them with the financial transaction, as far as the account balance
           # suffices.
           def update_group_order_articles(transaction = financial_transactions.where('amount > 0').last)
-            FoodsoftConfig[:use_payorder] or return
+            FoodsoftPayorder.enabled? or return
             # TODO implement tolerance_is_costly for this
             transaction do
               sum = 0
@@ -50,7 +50,7 @@ module FoodsoftPayorder
           alias_method :foodsoft_payorder_orig_get_quantities_for_order_article, :get_quantities_for_order_article
           def get_quantities_for_order_article
             result = foodsoft_payorder_orig_get_quantities_for_order_article
-            FoodsoftConfig[:use_payorder] or return result
+            FoodsoftPayorder.enabled? or return result
             order_article.order.finished? or return result
             result.where('group_order_article_quantities.financial_transaction_id IS NOT NULL') 
           end
@@ -66,7 +66,7 @@ module FoodsoftPayorder
           # When a new GroupOrderArticleQuantity is created, check available funds and set it
           # as paid by default when it suffices. This is to make sure that articles are ordered
           # without needing to pay when account balance is enough.
-          before_create :foodsoft_payorder_set_transaction, if: proc { FoodsoftConfig[:use_payorder] }
+          before_create :foodsoft_payorder_set_transaction, if: proc { FoodsoftPayorder.enabled? }
           def foodsoft_payorder_set_transaction
             ordergroup = group_order_article.group_order.ordergroup
             # TODO support tolerance_is_costly
