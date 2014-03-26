@@ -130,8 +130,8 @@ class GroupOrderArticle < ActiveRecord::Base
       # In total there are enough units ordered. Now check the individual result for the ordergroup (group_order).
       #
       # Get all GroupOrderArticleQuantities for this OrderArticle...
-      order_quantities = GroupOrderArticleQuantity.all(
-          :conditions => ["group_order_article_id IN (?)", order_article.group_order_article_ids], :order => 'created_on')
+      #
+      order_quantities = get_quantities_for_order_article.all
       logger.debug "GroupOrderArticleQuantity records found: #{order_quantities.size}"
 
       # Determine quantities to be ordered...
@@ -213,6 +213,12 @@ class GroupOrderArticle < ActiveRecord::Base
   def result_manually_changed?
     result != result_computed unless result.nil?
   end
+
+  # separate method so that it can be overridden by plugin
+  def get_quantities_for_order_article
+    GroupOrderArticleQuantity.where(group_order_article_id: order_article.group_order_article_ids).order('created_on')
+  end
+
 end
 
 
