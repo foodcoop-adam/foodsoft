@@ -11,6 +11,9 @@ Configuration
 This plugin is configured in the foodcoop configuration in foodsoft's
 "config/app\_config.yml":
 ```
+  # Enable to only order articles that members have paid (like a shopping cart).
+  use_payorder: true
+
   # Payment link.
   # When starting with http: or https:, this is considered to be a full url; else 
   # a Ruby name that will be evaluated on the controller.
