@@ -13,7 +13,11 @@
             %th.units_to_order{colspan: 2} All members
           - else
             - cols += 1
-            %th.units_to_order.center{title: 'All members'} All
+            %th.units_to_order.center
+              %abbr{title: 'All members'} All
+          - if @has_max_quantity
+            - cols += 1
+            %th.max_quantity= #heading_helper OrderArticle, :max_quantity, short: true
         %th#col_required.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :quantity
         - if @has_tolerance
           - cols += 1
@@ -21,12 +25,12 @@
         - unless @has_open_orders
           - cols += 1
           %th.center Received
-        %th= heading_helper GroupOrderArticle, :total_price
+        %th{style: 'width: 4em'}= heading_helper GroupOrderArticle, :total_price
     %tbody.list
       - @order_articles.each do |order_article|
         = render 'order_article', order_article: order_article
-    %tfoot
-      %tr
-        %td{colspan: cols}= pagination_links_remote @order_articles
-      - if @render_totals
+    - if @render_totals
+      %tfoot
         = render 'group_order_totals', cols: cols
+
+= pagination_links_remote @order_articles

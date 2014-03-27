@@ -19,6 +19,8 @@ en:
         order_number_short: Nr.
         origin: Origin
         price: Price (net)
+        quantity: Maximum quantity
+        quantity_short: Max
         supplier: Supplier
         tax: VAT
         unit: Unit
@@ -94,6 +96,8 @@ en:
         updated_by: Last edited by
       order_article:
         article: Article
+        max_quantity: Maximum quantity
+        max_quantity_short: Max
         missing_units: Missing units
         missing_units_short: Missing
         quantity: Desired amount
@@ -1393,11 +1397,13 @@ en:
     hints:
       article:
         unit: e.g. KG or 1L or 500g
+        quantity: maximum units that can be supplied per order
       article_category:
         description: comma-separated list of category names recognised at import/synchronisation
       message:
         private: Message doesn’t show in Foodsoft mail inbox
       order_article:
+        max_quantity: maximum units that can be supplied
         units_to_order: If you change the total amount of delivered units, you also have to change individual group amounts by clicking on the article name. They will not be automatically recalculated and so ordergroups may be accounted for articles that were not delivered!
         update_global_price: Also update the price of future orders
       stock_article:

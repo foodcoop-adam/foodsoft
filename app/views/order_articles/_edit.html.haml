@@ -27,6 +27,7 @@
 
       = form.input :update_global_price, as: :boolean
       = f.input :order_number
+      = f.input :quantity, input_html: {class: 'input-mini'}
   .modal-footer
     = link_to t('ui.close'), '#', class: 'btn', data: {dismiss: 'modal'}
     = form.submit class: 'btn btn-primary'
