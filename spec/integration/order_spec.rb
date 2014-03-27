@@ -40,7 +40,8 @@ describe Order, :type => :feature do
         fill_in 'order_info_order_contact_phone', :with => order_contact_phone
         fill_in 'order_info_delivery_contact_phone', :with => Faker::PhoneNumber.phone_number 
         fill_in 'order_info_delivery_contact_name', :with => delivery_contact_name
-        fill_in 'order_info_delivered_before', :with => Time.now
+        fill_in 'order_info_delivered_before_date', :with => Time.now.strftime('%Y-%m-%d')
+        fill_in 'order_info_delivered_before_time', :with => Time.now.strftime('%H:%M')
         find('input[type="submit"]').click
       end
       expect(page).to_not have_selector('#modalContainer form')
