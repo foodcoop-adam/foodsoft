@@ -51,6 +51,8 @@ class Order < ActiveRecord::Base
   # returns whether this order meets the criteria for sending it to the supplier
   # returns true, or a reason
   def can_send
+    # never for stock orders!
+    stockit? and return :stockit
     # need articles to order
     order_articles.ordered.count > 0 or return :result
     # if we have a number as minimum order quantity, check it
@@ -64,6 +66,7 @@ class Order < ActiveRecord::Base
   #   nil     if there is no minimum order quantity price (note that
   #           there may still be a free-form text min_order_quantity)
   def min_order_quantity_reached
+    stockit? and return nil
     min_order_quantity = supplier.min_order_quantity_price or return nil
     return sum(:gross) >= min_order_quantity
   end

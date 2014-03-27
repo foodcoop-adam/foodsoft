@@ -116,7 +116,7 @@ module OrdersHelper
     # need articles to order
     if order.order_articles.ordered.count == 0
       result << [false, I18n.t('helpers.orders.order_checks.none_ordered', count: order.order_articles.ordered.count)]
-    else
+    elsif not order.stockit?
       # minimum order quantity
       case order.min_order_quantity_reached
       when true # satisfied
