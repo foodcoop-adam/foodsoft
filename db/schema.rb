@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(:version => 20140921104907) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "type"
-    t.integer  "quantity",                                          :default => 0
+    t.integer  "quantity"
     t.string   "info_url"
   end
 

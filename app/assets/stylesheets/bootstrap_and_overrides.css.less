@@ -317,7 +317,7 @@ tr.order-article .article-info { display: none; }
   .units_to_order.before_unit {
     text-align: right;
     padding-right: 0;
-   }
+  }
   .final_unit {
     width: 5em;
     .progress {
@@ -333,11 +333,15 @@ tr.order-article .article-info { display: none; }
       }
     }
   }
+  .max_quantity {
+    text-align: left;
+    white-space: nowrap;
+  }
   @media (max-width: 979px) {
     .units_to_order .plus { display: none; }
   }
   @media (max-width: 768px) {
-    .units_to_order { font-size: 0; margin: 0; padding: 0; }
+    .units_to_order, .max_quantity { font-size: 0; margin: 0; padding: 0; }
     .final_unit { width: 3.5em; }
   }
 }

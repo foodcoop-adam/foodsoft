@@ -6,6 +6,7 @@ class StockArticle < Article
   scope :available, -> { undeleted.where'quantity > 0' }
 
   before_destroy :check_quantity
+  after_initialize :set_default_quantity, if: :new_record?
 
   # Update the quantity of items in stock
   def update_quantity!
@@ -36,6 +37,13 @@ class StockArticle < Article
   end
 
   protected
+
+  def set_default_quantity
+    # since Article needs to have a max_quantity default of nil,
+    # we use an after_initialize hook to set the StockArticle default
+    # http://stackoverflow.com/a/3941201
+    self.quantity ||= 0
+  end
 
   def check_quantity
     raise I18n.t('stockit.check.not_empty', :name => name) unless quantity == 0

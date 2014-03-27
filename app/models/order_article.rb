@@ -34,6 +34,16 @@ class OrderArticle < ActiveRecord::Base
     article.title
   end
 
+  def max_quantity
+    # for now, this is just the article's (maximum) quantity
+    # TODO rename article#quantity to article#max_quantity
+    article.quantity
+  end
+
+  def quantity_available
+    max_quantity - quantity  if max_quantity
+  end
+
   # This method returns either the ArticlePrice or the Article
   # The first will be set, when the the order is finished
   def price
@@ -72,6 +82,8 @@ class OrderArticle < ActiveRecord::Base
   # There must always be at least one item in a unit that is an ordered quantity (no units are ever entirely
   # filled by tolerance items only).
   #
+  # When max_quantity is set, that's the maximum returned.
+  #
   # Example:
   #
   # unit_quantity | quantity | tolerance | calculate_units_to_order
@@ -89,6 +101,12 @@ class OrderArticle < ActiveRecord::Base
     units = quantity / unit_size
     remainder = quantity % unit_size
     units += ((remainder > 0) && (remainder + tolerance >= unit_size) ? 1 : 0)
+
+    if max_quantity
+      [units, max_quantity/unit_size].min
+    else
+      units
+    end
   end
 
   # Calculate price for ordered quantity.
