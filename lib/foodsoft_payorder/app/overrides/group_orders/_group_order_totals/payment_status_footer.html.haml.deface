@@ -1,13 +1,14 @@
 / insert_after 'erb[silent]:contains("<price_details_bottom_mark>")'
-- if FoodsoftPayorder.enabled? and (payable = -@ordergroup.get_available_funds) > 0
-  - if (sum = @ordergroup.account_balance - @ordergroup.value_of_finished_orders) != 0
+- if FoodsoftPayorder.enabled? and @has_open_orders
+  - if (payable = -@ordergroup.get_available_funds) > 0
+    - if (sum = @ordergroup.account_balance - @ordergroup.value_of_finished_orders) != 0
+      %tr.price_details
+        %td{colspan: cols}
+      %tr.price_details
+        %td{colspan: cols-1}= link_to (sum>0 ? 'Already paid' : 'Previous deficit'), my_ordergroup_path
+        %td= number_to_currency(sum.abs) + (' -' if sum > 0)
+      %tr.price_details
+        %th{colspan: cols-1} Total payable
+        %th= number_to_currency payable
     %tr.price_details
-      %td{colspan: cols}
-    %tr.price_details
-      %td{colspan: cols-1}= link_to (sum>0 ? 'Already paid' : 'Previous deficit'), my_ordergroup_path
-      %td= number_to_currency(sum.abs) + (' -' if sum > 0)
-    %tr.price_details
-      %th{colspan: cols-1} Total payable
-      %th= number_to_currency payable
-  %tr.price_details
-    %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button
+      %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button
