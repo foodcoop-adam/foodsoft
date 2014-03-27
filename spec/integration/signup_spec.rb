@@ -90,7 +90,7 @@ if defined? FoodsoftSignup
       before { ordergroup; login user }
 
       it 'disallows ordering when not approved' do
-        visit new_group_order_path(:order_id => order.id)
+        visit group_order_path(:current)
         expect(page).to have_selector('.alert-error')
         expect(current_path).to eq root_path
       end
@@ -98,7 +98,7 @@ if defined? FoodsoftSignup
       it 'allows ordering when approved' do
         ordergroup.approved = true
         ordergroup.save!
-        visit new_group_order_path(:order_id => order.id)
+        visit group_order_path(:current)
         expect(page).to_not have_selector('.alert-error')
       end
     end
