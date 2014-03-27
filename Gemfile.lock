@@ -500,7 +500,6 @@ DEPENDENCIES
   prawn-table
   quiet_assets
   rails (~> 3.2.9)
-  rails-assets-listjs (= 0.2.0.beta.4)
   rails-i18n
   rails-settings-cached (= 0.2.4)
   recurring_select
