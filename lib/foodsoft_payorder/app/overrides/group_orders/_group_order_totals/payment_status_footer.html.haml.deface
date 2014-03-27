@@ -1,5 +1,5 @@
 / insert_after 'erb[silent]:contains("<price_details_bottom_mark>")'
-- if FoodsoftPayorder.enabled? and @has_open_orders
+- if FoodsoftPayorder.enabled? and @order_date == 'current'
   - if (payable = -@ordergroup.get_available_funds) > 0
     - if (sum = @ordergroup.account_balance - @ordergroup.value_of_finished_orders) != 0
       %tr.price_details
