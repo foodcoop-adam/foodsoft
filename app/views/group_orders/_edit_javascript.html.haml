@@ -5,7 +5,9 @@
 
     // dim price details field when it becomes outdated
     $(document).on('changed', '#articles_table input[data-delta]', function() {
-      $('#articles_table .price_details').fadeTo(0, 0.75);
+      $('.price_details').fadeTo(0, 0.5);
+      // disable links until they are updated by ajax
+      $('.price_details a[href], a[href].price_details').attr('href', '#');
     });
 
     // request price details update if we have the summary
