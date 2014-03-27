@@ -18,11 +18,17 @@ module FoodsoftPayorder
               max_sum = account_balance - value_of_finished_orders
               group_order_article_quantities.includes(:group_order_article => {:group_order => :order})
                     .merge(Order.where(state: :open)).order(created_on: :desc).each do |goaq|
-                sum += goaq.quantity * goaq.group_order_article.order_article.price.fc_price
-                if sum <= max_sum
+                goaq_price = goaq.quantity * goaq.group_order_article.order_article.price.fc_price
+                if sum + goaq_price <= max_sum
+                  sum += goaq_price
                   goaq.update_attribute :financial_transaction_id, transaction.id
-                else
+                elsif goaq.financial_transaction_id.present?
                   # TODO - do we need to reset it or not?
+                  #   When an ordergroup ordered and then his account is debited, this may occur. 
+                  #   Some foodcoops may want to keep already paid articles, others may want to
+                  #   be more strict and only deliver articles as long as the account balance
+                  #   suffices.
+                  #   It might be nice to introduce a configuration option for this.
                 end
               end
             end

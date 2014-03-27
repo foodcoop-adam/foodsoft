@@ -11,7 +11,8 @@ Configuration
 This plugin is configured in the foodcoop configuration in foodsoft's
 "config/app\_config.yml":
 ```
-  # Enable to only order articles that members have paid (like a shopping cart).
+  # Enable to add a payment button on the current order overview, and only
+  # order articles that members have paid (like a shopping cart).
   use_payorder: true
 
   # Payment link.
