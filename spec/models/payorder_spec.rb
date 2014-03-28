@@ -34,9 +34,6 @@ if defined? FoodsoftPayorder
         credit go.ordergroup, article.fc_price*3
         update_quantities goa, 3, 0
         order.finish!(admin)
-        #puts "** goa ** #{goa.inspect}"
-        #puts "** oa ** #{goa.order_article.inspect}"
-        #puts "** a ** #{article.inspect}"
         expect(goa.reload.result).to eq 3
       end
 
@@ -88,7 +85,7 @@ if defined? FoodsoftPayorder
         it 'gets one article when not paid enough for two' do
           update_quantities goa,  1, 0
           update_quantities goa3, 2, 0
-          credit go.ordergroup, article.fc_price + article2.fc_price/2
+          credit go.ordergroup, article.fc_price + article3.fc_price/2
           order.finish!(admin)
           expect([goa, goa3].map(&:reload).map(&:result)).to eq [1, 0]
         end
