@@ -1,5 +1,6 @@
 module PayorderHelper
   def order_payment_status_button(options={})
+    return unless @group_orders_sum > 0
     if @ordergroup.get_available_funds >= 0
       link = my_ordergroup_path
       cls = "payment-status-btn #{options[:class]}"
