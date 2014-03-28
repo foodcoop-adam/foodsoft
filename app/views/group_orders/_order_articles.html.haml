@@ -25,7 +25,7 @@
         - unless @has_open_orders
           - cols += 1
           %th.center Received
-        %th{style: 'width: 4em'}= heading_helper GroupOrderArticle, :total_price
+        %th{style: 'width: 4.5em'}= heading_helper GroupOrderArticle, :total_price
     %tbody.list
       - @order_articles.each do |order_article|
         = render 'order_article', order_article: order_article
