@@ -8,9 +8,10 @@ module FoodsoftPayorder
     FoodsoftConfig[:use_payorder]
   end
 
+  # include the option return_to to come back after payment
   def self.payment_link(c, options={})
     unless FoodsoftConfig[:payorder_payment].blank?
-      c.send(FoodsoftConfig[:payorder_payment], options.merge(return_to: c.request.fullpath))
+      c.send FoodsoftConfig[:payorder_payment], options
     else
       '#please_configure:payorder_payment'
     end
