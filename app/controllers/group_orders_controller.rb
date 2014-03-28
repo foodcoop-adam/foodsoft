@@ -162,6 +162,7 @@ class GroupOrdersController < ApplicationController
                                         'SUM(group_orders.net_price) AS net_price',
                                         'SUM(group_orders.deposit) AS deposit'
                                        ).first
+    %w(price gross_price net_price deposit).each {|k| @group_orders_prices[k.to_sym] ||= 0}
     @group_orders_sum = @group_orders_prices[:price]
     # preload group_order_articles
     @goa_by_oa = Hash[@ordergroup.group_order_articles
