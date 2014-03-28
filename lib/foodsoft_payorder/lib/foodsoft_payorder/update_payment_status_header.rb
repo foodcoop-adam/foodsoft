@@ -7,8 +7,10 @@ module FoodsoftPayorder
 
           # add javascript to update button - can't use deface because it's javascript
           # TODO use something like content_for_in_controllers, move js to partial
-          before_filter :payorder_update_payment_status_header, only: :price_details, if: proc { FoodsoftPayorder.enabled? }
-          def payorder_update_payment_status_header
+          alias_method :foodsoft_payorder_orig_price_details, :price_details
+          def price_details
+            foodsoft_payorder_orig_price_details
+            return unless FoodsoftPayorder.enabled?
             html = view_context.order_payment_status_button class: 'price_details'
             @add_javascript ||= ''
             @add_javascript += "$('.page-header .payment-status-btn-container').html('#{view_context.j html}');"
