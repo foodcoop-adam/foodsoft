@@ -63,6 +63,13 @@ PATH
       rails
 
 PATH
+  remote: lib/foodsoft_payorder
+  specs:
+    foodsoft_payorder (0.0.1)
+      deface (~> 1.0.0)
+      rails
+
+PATH
   remote: lib/foodsoft_signup
   specs:
     foodsoft_signup (0.0.1)
@@ -445,6 +452,7 @@ DEPENDENCIES
   foodsoft_messages!
   foodsoft_mollie!
   foodsoft_orderdoc!
+  foodsoft_payorder!
   foodsoft_signup!
   haml-rails
   i18n-js!
