@@ -37,7 +37,7 @@ module FoodsoftPayorder
           # always recompute after a financial transaction
           alias_method :foodsoft_payorder_orig_add_financial_transaction!, :add_financial_transaction!
           def add_financial_transaction!(amount, note, user)
-            result = self.foodsoft_signup_orig_add_financial_transaction!(amount, note, user)
+            result = self.foodsoft_payorder_orig_add_financial_transaction!(amount, note, user)
             self.update_group_order_articles(financial_transactions.last)
             result
           end
