@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(:version => 20140921104907) do
     t.integer  "quantity",               :default => 0
     t.integer  "tolerance",              :default => 0
     t.datetime "created_on",                            :null => false
+    t.integer  "financial_transaction_id"
   end
 
   add_index "group_order_article_quantities", ["group_order_article_id"], :name => "index_group_order_article_quantities_on_group_order_article_id"
