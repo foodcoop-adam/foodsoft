@@ -7,3 +7,5 @@
   $('.facets li[data-category]').removeClass('active');
   $('.facets li[data-category="<%= j params[:q][:article_article_category_id_eq] %>"]').addClass('active');
 <% end %>
+// scroll articles into view, for mobile
+window.location.href = '#articles_table';
