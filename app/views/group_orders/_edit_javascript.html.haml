@@ -2,6 +2,7 @@
   :javascript
     var toleranceIsCostly = #{FoodsoftConfig[:tolerance_is_costly].to_s == true.to_s};
     var minimumBalance = #{FoodsoftConfig[:minimum_balance].to_f or 0};
+    var quantityTimeDeltaClientMs = #{((FoodsoftConfig[:quantity_time_delta_client] or 0.5) * 1000).to_i};
 
     // dim price details field when it becomes outdated
     $(document).on('changed', '#articles_table input[data-delta]', function() {

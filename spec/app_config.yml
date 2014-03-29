@@ -22,6 +22,9 @@ default: &defaults
   # true by default to keep compat with older installations, but test with false here
   use_nick: false
 
+  # disable throttling for tests
+  quantity_time_delta_client: 0
+
 
 development:
   <<: *defaults
