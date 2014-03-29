@@ -10,8 +10,8 @@ describe 'product distribution', :type => :feature do
   let(:oa) { order.order_articles.first }
 
   describe :type => :feature do
-    # make sure users have enough money to order
     before do
+      # make sure users have enough money to order
       [user_a, user_b].each do |user|
         ordergroup = Ordergroup.find(user.ordergroup.id)
         ordergroup.add_financial_transaction! 5000, 'for ordering', admin
