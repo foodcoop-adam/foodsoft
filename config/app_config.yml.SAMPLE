@@ -84,6 +84,10 @@ default: &defaults
   # not fully enforced right now, since the check is only client-side
   minimum_balance: -2000
 
+  # time precision of quantities stored (in seconds); when a member changes his order,
+  # the time of his order is updated only if his previous change was this many seconds
+  # ago (because of performance reasons); default is 30 seconds
+  #quantity_time_delta_server: 30
   # there is also throttling on the client-side: updates to quantity and tolerance are
   # sent only after this time (in seconds); default is 0.5s
   #quantity_time_delta_client: 0.5

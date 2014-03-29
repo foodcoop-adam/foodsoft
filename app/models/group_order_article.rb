@@ -49,7 +49,7 @@ class GroupOrderArticle < ActiveRecord::Base
     quantities = group_order_article_quantities.find(:all, :order => 'created_on desc')
     logger.debug("GroupOrderArticleQuantity items found: #{quantities.size}")
 
-    if (quantities.size == 0)
+    if quantities.size == 0
       # There is no GroupOrderArticleQuantity item yet, just insert with desired quantities...
       logger.debug("No quantities entry at all, inserting a new one with the desired quantities")
       quantities.push(GroupOrderArticleQuantity.new(:group_order_article => self, :quantity => quantity, :tolerance => tolerance))
@@ -77,15 +77,24 @@ class GroupOrderArticle < ActiveRecord::Base
       end
       # If there is at least one increased value: insert a new GroupOrderArticleQuantity object
       if (quantity > self.quantity || tolerance > self.tolerance)
-        logger.debug("Inserting a new GroupOrderArticleQuantity")
-        quantities.insert(0, GroupOrderArticleQuantity.new(
-            :group_order_article => self,
-            :quantity => (quantity > self.quantity ? quantity - self.quantity : 0),
-            :tolerance => (tolerance > self.tolerance ? tolerance - self.tolerance : 0)
-        ))
+        delta_quantity = (quantity > self.quantity ? quantity - self.quantity : 0)
+        delta_tolerance = (tolerance > self.tolerance ? tolerance - self.tolerance : 0)
+        if quantities.first and quantities.first.created_on > (FoodsoftConfig[:quantity_time_delta_server] || 30).seconds.ago
+          # To avoid creating many quantity records, merge into last one if recent
+          logger.debug("Adding to most recent GroupOrderArticleQuantity")
+          quantities.first.quantity += delta_quantity
+          quantities.first.tolerance += delta_tolerance
+        else
+          logger.debug("Inserting a new GroupOrderArticleQuantity")
+          quantities.insert(0, GroupOrderArticleQuantity.new(
+              :group_order_article => self,
+              :quantity => delta_quantity,
+              :tolerance => delta_tolerance
+          ))
+        end
         # Recalc totals:
-        self.quantity += quantities[0].quantity
-        self.tolerance += quantities[0].tolerance
+        self.quantity += delta_quantity
+        self.tolerance += delta_tolerance
       end
     end
 

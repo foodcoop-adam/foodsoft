@@ -23,6 +23,7 @@ default: &defaults
   use_nick: false
 
   # disable throttling for tests
+  quantity_time_delta_server: 0
   quantity_time_delta_client: 0
 
 
