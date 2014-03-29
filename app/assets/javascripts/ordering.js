@@ -1,8 +1,9 @@
 // JavaScript that handles the dynamic ordering quantities on the ordering page.
 //
 // In a javascript block of the actual view, make sure to override these globals:
-var minimumBalance = 0;          // minimum group balance for the order to be succesful
-var toleranceIsCostly = false;   // default tolerance behaviour
+var minimumBalance = 0;              // minimum group balance for the order to be succesful
+var toleranceIsCostly = false;       // default tolerance behaviour
+var quantityTimeDeltaClientMs = 500; // throttling for sending updates (in ms)
 //
 
 $(function() {
@@ -10,15 +11,20 @@ $(function() {
     var row = $(this).closest('tr');
     var form = $(row).closest('form');
     var cols = $(row).children().length;
-    // send change server-side
-    $.ajax({
-      url: form.attr('action'),
-      type: form.attr('method') || 'post',
-      data: $('input, select, textarea', row).serialize()
-            + '&' + $('input[type="hidden"]', form).serialize()
-            + '&cols='+cols,
-      dataType: 'script'
-    });
+
+    // send change server-side, after a delay to rate-limit
+    clearTimeout(row.data('ordering-timeout-id'));
+    row.data('ordering-timeout-id', setTimeout(function() {
+      $.ajax({
+        url: form.attr('action'),
+        type: form.attr('method') || 'post',
+        data: $('input, select, textarea', row).serialize()
+              + '&' + $('input[type="hidden"]', form).serialize()
+              + '&cols='+cols,
+        dataType: 'script'
+      });
+      row.removeData('ordering-timeout-id');
+    }, quantityTimeDeltaClientMs));
 
     //
     // update page locally
