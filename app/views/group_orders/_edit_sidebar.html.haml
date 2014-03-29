@@ -13,7 +13,7 @@
       - @article_categories.each do |article_category|
         - classes = ('active' if article_category.id==@current_category)
         %li{data: {category: article_category.id}, class: classes}
-          = link_to article_category.name, url_for(action: :edit, q: {article_article_category_id_eq: article_category.id}), remote: true
+          = link_to article_category.name, url_for(action: :edit, q: {article_article_category_id_eq: article_category.id}, anchor: 'articles_table'), remote: true
 
 - content_for :javascript do
   :javascript
