@@ -8,6 +8,5 @@ class GroupOrderArticleQuantity < ActiveRecord::Base
   validates_presence_of :group_order_article_id
   validates_inclusion_of :quantity, :in => 0..99
   validates_inclusion_of :tolerance, :in => 0..99
-  
-end
 
+end

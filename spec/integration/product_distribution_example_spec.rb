@@ -19,25 +19,28 @@ describe 'product distribution', :type => :feature do
       order # make sure order is referenced
     end
 
-    it 'agrees to documented example', :js => true do
+    def dotest
       # gruppe a bestellt 2(3), weil sie auf jeden fall was von x bekommen will
       login user_a
       visit_ordering_page
       # click first category
       2.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
       3.times { find("#order_article_#{oa.id} .tolerance button[data-increment]").click }
-      sleep 0.5
+      sleep 0.1
+      yield if block_given?
       # gruppe b bestellt 2(0)
       login user_b
       visit_ordering_page
       2.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
-      sleep 0.5
+      sleep 0.1
+      yield if block_given?
       # gruppe a faellt ein dass sie doch noch mehr braucht von x und aendert auf 4(1).
       login user_a
       visit_ordering_page
       2.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
       2.times { find("#order_article_#{oa.id} .tolerance button[data-decrement]").click }
-      sleep 0.5
+      sleep 0.1
+      yield if block_given?
       # die zuteilung
       order.finish!(admin)
       oa.reload
@@ -50,6 +53,17 @@ describe 'product distribution', :type => :feature do
       # gruppe b bekommt 2 einheiten.
       goa_b = oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_b.ordergroup.id}).first
       expect(goa_b.result).to eq(2)
+    end
+
+    it 'agrees to documented example', :js => true do
+      dotest
+    end
+
+    if defined? FoodsoftPayorder
+      it 'agrees to document example when payorder is enabled', :js => true do
+        FoodsoftConfig.config[:use_payorder] = true
+        dotest
+      end
     end
   end
 
