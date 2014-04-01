@@ -17,6 +17,7 @@ if defined? FoodsoftPayorder
     def update_quantities(goa, quantity, tolerance)
       goa.update_quantities(quantity, tolerance)
       goa.order_article.update_results!
+      go.update_price!
     end
     def credit(ordergroup, amount)
       ordergroup.add_financial_transaction! amount, 'for ordering', admin
@@ -131,6 +132,52 @@ if defined? FoodsoftPayorder
           order2.finish!(admin)
           expect([goa, goa2].map(&:reload).map(&:result)).to eq [1, 0]
         end
+      end
+
+      describe 'with timeout' do
+        before do
+          FoodsoftConfig.config[:quantity_time_delta_server] = 1
+        end
+
+        it 'merges unpayed quantities' do
+          update_quantities goa, 1, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+          update_quantities goa, 2, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+        end
+
+        it 'merges payed quantities' do
+          credit go.ordergroup, article.fc_price*2
+          update_quantities goa, 1, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+          update_quantities goa, 2, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+        end
+
+        it 'does not merge unpayed with payed quantity' do
+          credit go.ordergroup, article.fc_price
+          update_quantities goa, 1, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+          update_quantities goa, 2, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 2
+        end
+
+        it 'does not merge payed with unpayed quantity' do
+          update_quantities goa, 1, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+          credit go.ordergroup, article.fc_price*2
+          update_quantities goa, 3, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 2
+        end
+
+        it 'does not merge unpayed quantities after timeout' do
+          update_quantities goa, 1, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 1
+          sleep 1.2
+          update_quantities goa, 2, 0
+          expect(goa.reload.group_order_article_quantities.count).to eq 2
+        end
+
       end
 
     end

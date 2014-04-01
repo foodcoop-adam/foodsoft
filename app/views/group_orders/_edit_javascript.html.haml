@@ -1,6 +1,6 @@
 - content_for :javascript do
   :javascript
-    var toleranceIsCostly = #{FoodsoftConfig[:tolerance_is_costly].to_s == true.to_s};
+    var toleranceIsCostly = #{FoodsoftConfig[:tolerance_is_costly] ? 'true' : 'false'};
     var minimumBalance = #{FoodsoftConfig[:minimum_balance].to_f or 0};
     var quantityTimeDeltaClientMs = #{((FoodsoftConfig[:quantity_time_delta_client] or 0.5) * 1000).to_i};
 

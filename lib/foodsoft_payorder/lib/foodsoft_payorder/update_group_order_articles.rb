@@ -12,20 +12,20 @@ module FoodsoftPayorder
           # suffices.
           def update_group_order_articles(transaction = financial_transactions.where('amount > 0').last)
             FoodsoftPayorder.enabled? or return
-            # TODO implement tolerance_is_costly for this
             transaction do
               sum = 0
               max_sum = account_balance - value_of_finished_orders
               group_order_article_quantities.includes(:group_order_article => {:group_order => :order})
-                    .merge(Order.where(state: :open)).order(created_on: :desc).each do |goaq|
-                goaq_price = goaq.quantity * goaq.group_order_article.order_article.price.fc_price
+                    .merge(Order.where(state: :open)).order('created_on DESC').each do |goaq|
+                goa = goaq.group_order_article
+                goaq_price = goa.total_price(goa.order_article, goaq.quantity, goaq.tolerance)
                 if sum + goaq_price <= max_sum
                   sum += goaq_price
                   goaq.financial_transaction ||= transaction
                   goaq.save
                 elsif goaq.financial_transaction_id.present?
                   # TODO - do we need to reset it or not?
-                  #   When an ordergroup ordered and then his account is debited, this may occur. 
+                  #   When an ordergroup ordered and then his account is debited, this may occur.
                   #   Some foodcoops may want to keep already paid articles, others may want to
                   #   be more strict and only deliver articles as long as the account balance
                   #   suffices.
@@ -59,7 +59,21 @@ module FoodsoftPayorder
             result = foodsoft_payorder_orig_get_quantities_for_order_article
             FoodsoftPayorder.enabled? or return result
             order_article.order.finished? or return result
-            result.where('group_order_article_quantities.financial_transaction_id IS NOT NULL') 
+            result.where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
+          end
+
+          # Don't merge quantities when one has been payed and the other not
+          alias_method :foodsoft_payorder_orig_update_quantities_merge, :update_quantities_merge
+          def update_quantities_merge(quantities)
+            if FoodsoftPayorder.enabled?
+              if quantities[0] and quantities[1]
+                quantities[0].send :foodsoft_payorder_set_transaction # make sure it's set
+                if quantities[0].financial_transaction.present? != quantities[1].financial_transaction.present?
+                  return quantities
+                end
+              end
+            end
+            foodsoft_payorder_orig_update_quantities_merge quantities
           end
 
         end
@@ -69,25 +83,33 @@ module FoodsoftPayorder
     module GroupOrderArticleQuantity
       def self.included(base) # :nodoc:
         base.class_eval do
+          belongs_to :financial_transaction
+
+          before_create :foodsoft_payorder_set_transaction, if: proc { FoodsoftPayorder.enabled? }
+
+          private
 
           # When a new GroupOrderArticleQuantity is created, check available funds and set it
           # as paid by default when it suffices. This is to make sure that articles are ordered
           # without needing to pay when account balance is enough.
-          before_create :foodsoft_payorder_set_transaction, if: proc { FoodsoftPayorder.enabled? }
           def foodsoft_payorder_set_transaction
-            ordergroup = group_order_article.group_order.ordergroup
-            # TODO support tolerance_is_costly
-            # TODO refactor common code with update_group_order_articles
-            price_sum = quantity * group_order_article.order_article.price.fc_price
-            if ordergroup.get_available_funds >= price_sum
-              self.financial_transaction_id = ordergroup.financial_transactions.where('amount > 0').last.id
+            return if financial_transaction.present? # don't need to do this twice
+
+            goa = group_order_article
+            ordergroup = goa.group_order.ordergroup
+            # the group_order_article's tolerance and quantity have been updated at this stage
+            # the group_order total has not yet been updated at this stage
+            funds_avail = ordergroup.get_available_funds
+            funds_avail += goa.total_price(goa.order_article, goa.quantity_was, goa.tolerance_was) - goa.total_price
+
+            if funds_avail >= 0
+              self.financial_transaction = ordergroup.financial_transactions.order('created_on DESC').where('amount > 0').first
             end
           end
 
         end
       end
     end
-
   end
 end
 

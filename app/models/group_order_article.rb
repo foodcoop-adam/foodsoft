@@ -32,12 +32,12 @@ class GroupOrderArticle < ActiveRecord::Base
   # 
   # See description of the ordering algorithm in the general application documentation for details.
   def update_quantities(quantity, tolerance)
-    logger.debug("GroupOrderArticle[#{id}].update_quantities(#{quantity}, #{tolerance})")
-    logger.debug("Current quantity = #{self.quantity}, tolerance = #{self.tolerance}")
+    logger.debug "GroupOrderArticle[#{id}].update_quantities(#{quantity}, #{tolerance})"
+    logger.debug "Current quantity = #{self.quantity}, tolerance = #{self.tolerance}"
 
     # When quantity and tolerance are zero, we don't serve any purpose
     if quantity == 0 and tolerance == 0
-      logger.debug("Self-destructing since requested quantity and tolerance are zero")
+      logger.debug "Self-destructing since requested quantity and tolerance are zero"
       destroy
       return
     end
@@ -47,29 +47,29 @@ class GroupOrderArticle < ActiveRecord::Base
 
     # Get quantities ordered with the newest item first.
     quantities = group_order_article_quantities.find(:all, :order => 'created_on desc')
-    logger.debug("GroupOrderArticleQuantity items found: #{quantities.size}")
+    logger.debug "GroupOrderArticleQuantity items found: #{quantities.size}"
 
     if quantities.size == 0
       # There is no GroupOrderArticleQuantity item yet, just insert with desired quantities...
-      logger.debug("No quantities entry at all, inserting a new one with the desired quantities")
-      quantities.push(GroupOrderArticleQuantity.new(:group_order_article => self, :quantity => quantity, :tolerance => tolerance))
+      logger.debug "No quantities entry at all, inserting a new one with the desired quantities"
+      quantities.push GroupOrderArticleQuantity.new(:group_order_article => self, :quantity => quantity, :tolerance => tolerance)
       self.quantity, self.tolerance = quantity, tolerance
     else
       # Decrease quantity/tolerance if necessary by going through the existing items and decreasing their values...
       i = 0
       while (i < quantities.size && (quantity < self.quantity || tolerance < self.tolerance))
-        logger.debug("Need to decrease quantities for GroupOrderArticleQuantity[#{quantities[i].id}]")
+        logger.debug "Need to decrease quantities for GroupOrderArticleQuantity[#{quantities[i].id}]"
         if (quantity < self.quantity && quantities[i].quantity > 0)
           delta = self.quantity - quantity
           delta = (delta > quantities[i].quantity ? quantities[i].quantity : delta)
-          logger.debug("Decreasing quantity by #{delta}")
+          logger.debug "Decreasing quantity by #{delta}"
           quantities[i].quantity -= delta
           self.quantity -= delta
         end
         if (tolerance < self.tolerance && quantities[i].tolerance > 0)
           delta = self.tolerance - tolerance
           delta = (delta > quantities[i].tolerance ? quantities[i].tolerance : delta)
-          logger.debug("Decreasing tolerance by #{delta}")
+          logger.debug "Decreasing tolerance by #{delta}"
           quantities[i].tolerance -= delta
           self.tolerance -= delta
         end
@@ -77,21 +77,14 @@ class GroupOrderArticle < ActiveRecord::Base
       end
       # If there is at least one increased value: insert a new GroupOrderArticleQuantity object
       if (quantity > self.quantity || tolerance > self.tolerance)
+        logger.debug "Inserting a new GroupOrderArticleQuantity"
         delta_quantity = (quantity > self.quantity ? quantity - self.quantity : 0)
         delta_tolerance = (tolerance > self.tolerance ? tolerance - self.tolerance : 0)
-        if quantities.first and quantities.first.created_on > (FoodsoftConfig[:quantity_time_delta_server] || 30).seconds.ago
-          # To avoid creating many quantity records, merge into last one if recent
-          logger.debug("Adding to most recent GroupOrderArticleQuantity")
-          quantities.first.quantity += delta_quantity
-          quantities.first.tolerance += delta_tolerance
-        else
-          logger.debug("Inserting a new GroupOrderArticleQuantity")
-          quantities.insert(0, GroupOrderArticleQuantity.new(
-              :group_order_article => self,
-              :quantity => delta_quantity,
-              :tolerance => delta_tolerance
-          ))
-        end
+        quantities.unshift GroupOrderArticleQuantity.new(
+            :group_order_article => self,
+            :quantity => delta_quantity,
+            :tolerance => delta_tolerance
+        )
         # Recalc totals:
         self.quantity += delta_quantity
         self.tolerance += delta_tolerance
@@ -104,11 +97,13 @@ class GroupOrderArticle < ActiveRecord::Base
     end
 
     # Remove zero-only items.
-    quantities = quantities.reject { | q | q.quantity == 0 && q.tolerance == 0}
+    quantities.reject! {|q| q.quantity == 0 && q.tolerance == 0}
+    # Merge quantity if within throttling time
+    update_quantities_merge quantities
 
     # Save
     transaction do
-      quantities.each { | i | i.save! }
+      quantities.each {|i| i.save!}
       self.group_order_article_quantities = quantities
       save!
     end
@@ -195,10 +190,10 @@ class GroupOrderArticle < ActiveRecord::Base
   # Until the order is finished this will be the maximum price or
   # the minimum price depending on configuration. When the order is finished it
   # will be the value depending of the article results.
-  def total_price(order_article = self.order_article)
-    total_prices[:price]
+  def total_price(order_article = self.order_article, quantity = self.quantity, tolerance = self.tolerance)
+    total_prices(order_article, quantity, tolerance)[:price]
   end
-  def total_prices(order_article = self.order_article)
+  def total_prices(order_article = self.order_article, quantity = self.quantity, tolerance = self.tolerance)
     price = order_article.price
     amount = if order_article.order.open?
                if FoodsoftConfig[:tolerance_is_costly]
@@ -223,11 +218,24 @@ class GroupOrderArticle < ActiveRecord::Base
     result != result_computed unless result.nil?
   end
 
-  # separate method so that it can be overridden by plugin
+  # (separate method so that it can be overridden by plugin)
   def get_quantities_for_order_article
     GroupOrderArticleQuantity.where(group_order_article_id: order_article.group_order_article_ids).order('created_on')
   end
 
+  # Merge quantity if within throttling time.
+  # (separate method so that it can be overridden by plugin)
+  def update_quantities_merge(quantities)
+    quantity_time_delta = (FoodsoftConfig[:quantity_time_delta_server] || 30).to_i
+    if quantity_time_delta > 0
+      if quantities[0] and quantities[1] and quantities.second.created_on > quantity_time_delta.seconds.ago
+        logger.debug "Merging new GroupOrderArticleQuantity with most recent"
+        merging = quantities.shift
+        quantities[0].quantity += merging.quantity
+        quantities[0].tolerance += merging.tolerance
+      end
+    end
+    quantities
+  end
+
 end
-
-
