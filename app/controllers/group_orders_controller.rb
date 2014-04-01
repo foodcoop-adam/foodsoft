@@ -142,7 +142,8 @@ class GroupOrdersController < ApplicationController
     return unless @orders
     @all_order_articles = OrderArticle.joins(:article, :order).merge(@orders)
     @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
-    @order_articles = @order_articles.page(params[:page]).per(@per_page)
+    @order_articles = @order_articles.order(articles: :name)
+    @order_articles = @order_articles.page(params[:page]).per(@per_page) unless action_name == 'show'
   end
 
   def get_article_categories

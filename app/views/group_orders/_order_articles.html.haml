@@ -33,4 +33,4 @@
       %tfoot
         = render 'group_order_totals', cols: cols
 
-= pagination_links_remote @order_articles
+= pagination_links_remote @order_articles rescue nil
