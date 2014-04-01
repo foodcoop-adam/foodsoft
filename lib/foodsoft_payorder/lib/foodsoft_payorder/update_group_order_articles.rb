@@ -21,7 +21,8 @@ module FoodsoftPayorder
                 goaq_price = goaq.quantity * goaq.group_order_article.order_article.price.fc_price
                 if sum + goaq_price <= max_sum
                   sum += goaq_price
-                  goaq.update_attribute :financial_transaction_id, transaction.id
+                  goaq.financial_transaction ||= transaction
+                  goaq.save
                 elsif goaq.financial_transaction_id.present?
                   # TODO - do we need to reset it or not?
                   #   When an ordergroup ordered and then his account is debited, this may occur. 
