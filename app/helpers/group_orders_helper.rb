@@ -60,6 +60,16 @@ module GroupOrdersHelper
     end
   end
 
+  def orders_title(orders)
+    if orders.select(&:open?).any?
+      "My current order"
+    elsif orders.select(&:finished?).any?
+      "My last order"
+    else
+      "Previous order"
+    end
+  end
+
   def final_unit_bar(order_article)
     unit_quantity = order_article.price.unit_quantity
     progress_units = order_article.quantity+order_article.tolerance - order_article.units_to_order*unit_quantity
