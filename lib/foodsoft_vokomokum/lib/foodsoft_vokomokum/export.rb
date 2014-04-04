@@ -17,7 +17,7 @@ module FoodsoftVokomokum
         if ordergroup.users.count > 1
           Rails.logger.warn "Ordergroup ##{ordergroup.id} has multiple users, selecting ##{user.id}."
         end
-        lines << "#{user.id}\t#{user.display}\t€ #{'%.02f'%amount}\tAfgewogen"
+        lines << "#{ordergroup.id}\t#{user.display}\t€ #{'%.02f'%amount}\tAfgewogen"
       end
     end
     lines.join("\r\n")
