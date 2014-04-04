@@ -46,10 +46,11 @@ module GroupOrdersHelper
 
   def orders_status_line(orders)
     if (ends_open = orders.select(&:open?).map(&:ends).compact.minmax)[0]
+      ends_open.map! {|e| time_ago_in_words e}
       if ends_open[0] == ends_open[1]
-        return "#{time_ago_in_words(ends_open[0])} remaining"
+        return "#{ends_open[0]} remaining"
       else
-        return "#{time_ago_in_words(ends_open[1])} to #{time_ago_in_words(ends_open[0])} remaining"
+        return "#{ends_open[1]} to #{ends_open[0]} remaining"
       end
     end
     if end_finished = orders.select(&:finished?).map(&:ends).max
