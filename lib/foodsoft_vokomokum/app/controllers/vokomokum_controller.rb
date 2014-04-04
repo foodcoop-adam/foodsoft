@@ -43,7 +43,7 @@ class VokomokumController < ApplicationController
       group_orders = GroupOrder.includes(:order).where(orders: {state: 'finished'})
     end
 
-    amounts = Hash[group_orders.map{|go| [go.ordergroup, go.price] }]
+    amounts = group_orders.map{|go| [go.ordergroup, go.price] }
     send_data FoodsoftVokomokum.export_amounts(amounts), filename: order_name+'-vers.csv', type: 'text/plain; charset=utf-8', disposition: 'inline'
 
   end
