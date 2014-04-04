@@ -22,31 +22,21 @@ describe 'product distribution', :type => :feature do
     def dotest
       # gruppe a bestellt 2(3), weil sie auf jeden fall was von x bekommen will
       login user_a
-      visit_ordering_page
-      # click first category
-      2.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
-      3.times { find("#order_article_#{oa.id} .tolerance button[data-increment]").click }
-      sleep 0.1
+      group_order_delta oa, 2, 3
       yield if block_given?
       # gruppe b bestellt 2(0)
       login user_b
-      visit_ordering_page
-      2.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
-      sleep 0.1
+      group_order_delta oa, 2, 0
       yield if block_given?
       # gruppe a faellt ein dass sie doch noch mehr braucht von x und aendert auf 4(1).
       login user_a
-      visit_ordering_page
-      2.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
-      2.times { find("#order_article_#{oa.id} .tolerance button[data-decrement]").click }
-      sleep 0.1
+      group_order_delta oa, 2, -2
       yield if block_given?
       # die zuteilung
       order.finish!(admin)
       oa.reload
       # Endstand: insg. Bestellt wurden 6(1)
-      expect(oa.quantity).to eq(6)
-      expect(oa.tolerance).to eq(1)
+      expect([oa.quantity, oa.tolerance]).to eq [6, 1]
       # Gruppe a bekommt 3 einheiten.
       goa_a = oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_a.ordergroup.id}).first
       expect(goa_a.result).to eq(3)
@@ -73,6 +63,24 @@ describe 'product distribution', :type => :feature do
       click_link order_article.article.article_category.name
     end
     expect(page).to have_selector("#order_article_#{order_article.id}")
+  end
+
+  def group_order_delta(oa, dq, dt)
+    visit_ordering_page
+    # update quantity
+    if dq > 0
+      dq.times { find("#order_article_#{oa.id} .quantity button[data-increment]").click }
+    elsif dq < 0
+      (-dq).times { find("#order_article_#{oa.id} .quantity button[data-decrement]").click }
+    end
+    # update tolerance
+    if dt > 0
+      dt.times { find("#order_article_#{oa.id} .tolerance button[data-increment]").click }
+    elsif dt < 0
+      (-dt).times { find("#order_article_#{oa.id} .tolerance button[data-decrement]").click }
+    end
+    # wait for ajax change to be done
+    sleep 0.5
   end
 
 end
