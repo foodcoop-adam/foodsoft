@@ -1,5 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+ENV["FOODSOFT_APP_CONFIG"] ||= 'spec/app_config.yml' # load special foodsoft config
 require_relative 'support/coverage' # needs to be first
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
@@ -34,6 +35,12 @@ RSpec.configure do |config|
   end
   config.after(:each) do
     DatabaseCleaner.clean
+  end
+
+  # reload foodsoft configuration, so that tests can use FoodsoftConfig.config[:foo]=x
+  # without messing up tests run after that
+  config.before(:each) do
+    FoodsoftConfig.send :reload!
   end
 
   # If true, the base class of anonymous controllers will be inferred
