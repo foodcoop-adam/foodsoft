@@ -102,10 +102,7 @@ class Mailer < ActionMailer::Base
     @order = order
     @options = options
 
-    unless options[:skip_attachments]
-      attachments['order.pdf'] = OrderFax.new(order, options).to_pdf
-      attachments['order.csv'] = OrderCsv.new(order, options).to_csv
-    end
+    add_order_result_attachments unless options[:skip_attachments]
 
     subject = I18n.t("mailer.order_result_supplier.subject#{options[:delivered_before] and '_with_date'}",
                     delivered_before: options[:delivered_before])
@@ -122,6 +119,12 @@ class Mailer < ActionMailer::Base
     ActionMailer::Base.default_url_options[:protocol] = FoodsoftConfig[:protocol]
     ActionMailer::Base.default_url_options[:host] = FoodsoftConfig[:host]
     ActionMailer::Base.default_url_options[:foodcoop] = foodcoop
+  end
+
+  # separate method to allow plugins to mess with the attachments
+  def add_order_result_attachments
+    attachments['order.pdf'] = OrderFax.new(order, options).to_pdf
+    attachments['order.csv'] = OrderCsv.new(order, options).to_csv
   end
   
 end
