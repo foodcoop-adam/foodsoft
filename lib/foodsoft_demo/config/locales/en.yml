@@ -1,0 +1,10 @@
+en:
+  foodsoft_demo:
+    autologin:
+      fields:
+        email: 'demo%{id}@foodcoop.test'
+        first_name: Demo
+        last_name: '#%{id}'
+        nick: 'demo%{id}'
+    restrict_new_message:
+      notice_disabled: This is just a demo, you'll be able to communicate with other members on the real site.
