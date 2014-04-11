@@ -33,8 +33,7 @@ module FoodsoftFile
                    :tax => row[8],
                    :deposit => (row[9].nil? ? "0" : row[9]),
                    :unit_quantity => row[10],
-                   :scale_quantity => row[11],
-                   :scale_price => row[12],
+                   :quantity => row[11],
                    :category => row[13]}
         case row[0]
         when "x"

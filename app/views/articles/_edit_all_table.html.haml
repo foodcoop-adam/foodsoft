@@ -2,11 +2,12 @@
   %thead
     %tr
       %th= heading_helper Article, :availability, short: true
+      %th= heading_helper Article, :order_number, short: true
       %th= heading_helper Article, :name
       %th= heading_helper Article, :unit
       %th= heading_helper Article, :price, short: true
       %th= heading_helper Article, :unit_quantity, short: true
-      %th= heading_helper Article, :order_number, short: true
+      %th= heading_helper Article, :quantity, short: true
       %th= heading_helper Article, :note
       %th= heading_helper Article, :article_category
       %th= heading_helper Article, :tax
@@ -18,11 +19,12 @@
           %td
             = yield form # allow to add hidden fields to form
             = form.check_box 'availability'
+          %td= form.text_field 'order_number', class: 'input-mini'
           %td= form.text_field 'name', class: 'input-medium input-fill'
           %td= form.text_field 'unit', class: 'input-mini'
-          %td= form.text_field 'price', class: 'input-nano'
+          %td= form.text_field 'price', class: 'input-mini'
           %td= form.text_field 'unit_quantity', class: 'input-nano'
-          %td= form.text_field 'order_number', class: 'input-mini'
+          %td= form.text_field 'quantity', class: 'input-nano'
           %td= form.text_field 'note', class: 'input-medium'
           %td= form.collection_select 'article_category_id', ArticleCategory.all,
             :id, :name, { :include_blank => true }, class: 'input-small'
