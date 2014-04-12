@@ -37,4 +37,16 @@ module ArticlesHelper
     end
   end
 
+  # origin is shown as flag + title with details
+  def article_origin(origin_or_article)
+    origin = (origin_or_article.origin rescue origin_or_article)
+    return if origin.blank?
+    parts = origin.split /,\s*/
+    country = WorldFlags.flag_code parts[-1]
+    flag_list 16 do
+      # TODO get full country name from WorldFlag and display that in title
+      flag country, title: origin
+    end
+  end
+
 end

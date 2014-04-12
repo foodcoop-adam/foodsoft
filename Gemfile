@@ -21,6 +21,7 @@ gem 'bootstrap-datepicker-rails'
 gem 'date_time_attribute'
 gem 'i18n-js', git: 'git://github.com/fnando/i18n-js.git' # to avoid US-ASCII js.erb error
 gem 'rails-i18n'
+gem 'world-flags', '~> 0.6.4'
 
 gem 'mysql2'
 gem 'prawn'

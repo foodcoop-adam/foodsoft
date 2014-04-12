@@ -1397,6 +1397,7 @@ en:
     hints:
       article:
         unit: e.g. KG or 1L or 500g
+        origin: '2-letter country code with optional region, e.g. "DE" or "Sicily, IT"'
         quantity: maximum units that can be supplied per order
       article_category:
         description: comma-separated list of category names recognised at import/synchronisation

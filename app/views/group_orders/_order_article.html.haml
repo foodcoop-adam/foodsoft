@@ -6,7 +6,7 @@
   %td.name
     = article_info_icon order_article.article
     = order_article.article.name
-  %td= order_article.article.origin
+  %td= article_origin order_article.article
   %td.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
   %td.unit{data: {'unit_quantity' => order_article.price.unit_quantity}}= order_article.article.unit
   - if @has_open_orders
