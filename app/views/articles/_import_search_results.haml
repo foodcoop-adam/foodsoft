@@ -6,7 +6,7 @@
     %thead
       %tr
         %th= heading_helper Article, :name
-        %th= heading_helper Article, :origin
+        %th
         %th= heading_helper Article, :manufacturer
         %th= heading_helper Article, :note
         %th{:style => "width:4em"}= heading_helper Article, :price
@@ -16,7 +16,7 @@
       - for article in @articles
         %tr{id: "shared_article_#{article.id}"}
           %td= highlight article.name, search_params[:name_contains_all]
-          %td= article.origin
+          %td= article_origin article
           %td= article.manufacturer
           %td{title: article.note}= truncate(article.note, length: 11)
           %td= number_to_currency(article.price)

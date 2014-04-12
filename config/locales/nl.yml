@@ -1408,7 +1408,9 @@ nl:
       default_message: Problemen gevonden, controleer alsjeblieft de invoer.
     hints:
       article:
-        unit: 'Bijv.: KG of 1L of 500g'
+        unit: ! 'Bijv. KG of 1L of 500g'
+        origin: '2-letterige landcode met optionele regio, bijv. "NL" of "Sicilië, IT"'
+        quantity: maximaal aantal eenheden per bestelling
       article_category:
         description: komma-gescheiden lijst van namen die herkend worden bij uploaden/synchroniseren
       message:

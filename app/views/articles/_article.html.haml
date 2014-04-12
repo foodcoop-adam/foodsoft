@@ -3,7 +3,7 @@
   %td.name.click-me{:data => {'check-this' => "#checkbox_#{article.id}"}}
     = article_info_icon article, @supplier
     = article.name
-  %td= article.origin
+  %td= article_origin article
   %td= truncate(article.article_category.name, :length => 11) if article.article_category
   %td= article.unit
   %td= truncate(article.note, :length => 11)

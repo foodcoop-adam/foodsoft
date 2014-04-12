@@ -14,11 +14,11 @@
     %tr
       %th= check_box_tag 'checkall', "1", false, { 'data-check-all' => '#articleList' }
       %th= heading_helper Article, :name
+      %th
       %th= heading_helper Article, :note
       - if @order.stockit?
         %th= t '.stockit'
       - else
-        %th= heading_helper Article, :origin
         %th= heading_helper Article, :manufacturer
         %th= heading_helper Article, :units
       %th= t '.prices'
@@ -39,11 +39,11 @@
         %tr{class: row_class, id: article.id}
           %td= check_box_tag "order[article_ids][]", article.id, included, :id => "checkbox_#{article.id}"
           %td.click-me{'data-check-this' => "#checkbox_#{article.id}"}= article.name
+          %td= article_origin article
           %td= truncate article.note, length: 25, tooltip: true
           - if @order.stockit?
             %td= "#{article.quantity_available} * #{article.unit}"
           - else
-            %td= truncate article.origin, length: 15, tooltip: true
             %td= truncate article.manufacturer, length: 15, tooltip: true
             %td
               = article.unit

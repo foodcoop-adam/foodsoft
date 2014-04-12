@@ -4,4 +4,6 @@
 *= require select2
 *= require select2-bootstrap
 *= require recurring_select
+*= require flags/basic
+*= require flags/flags16
 */
