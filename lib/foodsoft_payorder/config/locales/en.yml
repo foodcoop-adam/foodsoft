@@ -1,0 +1,10 @@
+en:
+  group_orders:
+    group_order_totals:
+      payable: Total payable
+      previous_surplus: Already paid
+      previous_deficit: Previous deficit
+  helpers:
+    payorder:
+      payment: Payment
+      payment_prompt: Pay for your orders
