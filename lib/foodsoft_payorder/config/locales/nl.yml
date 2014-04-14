@@ -1,0 +1,10 @@
+nl:
+  group_orders:
+    group_order_totals:
+      payable: Totaal te betalen
+      previous_surplus: Reeds betaald
+      previous_deficit: Openstaand bedrag
+  helpers:
+    payorder:
+      payment: Betalen
+      payment_prompt: Bestelling betalen
