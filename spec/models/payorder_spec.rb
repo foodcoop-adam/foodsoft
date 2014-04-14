@@ -23,41 +23,45 @@ if defined? FoodsoftPayorder
       ordergroup.add_financial_transaction! amount, 'for ordering', admin
     end
 
+    def finish_and_check_result(goa, result)
+      goa = [goa] unless goa.is_a? Array
+      result = [result] unless result.is_a? Array
+      goa.map(&:order_article).map(&:order).uniq.map {|order| order.finish! admin}
+      goa.map(&:reload)
+      expect(goa.map(&:result)).to eq result
+      expect(goa.map(&:order_article).map(&:units_to_order)).to eq result
+    end
+
     describe :ordergroup do
 
       it 'has no result without funds' do
         update_quantities goa, 1, 0
-        order.finish!(admin)
-        expect(goa.reload.result).to eq 0
+        finish_and_check_result goa, 0
       end
 
       it 'has result with exact funds before ordering' do
         credit go.ordergroup, article.fc_price*3
         update_quantities goa, 3, 0
-        order.finish!(admin)
-        expect(goa.reload.result).to eq 3
+        finish_and_check_result goa, 3
       end
 
       it 'has result with plenty of funds before ordering' do
         credit go.ordergroup, article.fc_price*120
         update_quantities goa, 1, 0
-        order.finish!(admin)
-        expect(goa.reload.result).to eq 1
+        finish_and_check_result goa, 1
       end
 
       it 'has result when funds are added after ordering' do
         update_quantities goa, 2, 0
         credit go.ordergroup, article.fc_price*2
-        order.finish!(admin)
-        expect(goa.reload.result).to eq 2
+        finish_and_check_result goa, 2
       end
 
       it 'has old result when updating group order after payment' do
         update_quantities goa,  8, 0
         credit go.ordergroup, article.fc_price*8
         update_quantities goa, 10, 0
-        order.finish!(admin)
-        expect(goa.reload.result).to eq 8
+        finish_and_check_result goa, 8
       end
 
       describe 'with multiple order articles' do
@@ -71,24 +75,21 @@ if defined? FoodsoftPayorder
           update_quantities goa,  1, 0
           update_quantities goa2, 2, 0
           credit go.ordergroup, article.fc_price
-          order.finish!(admin)
-          expect([goa, goa2].map(&:reload).map(&:result)).to eq [1, 0]
+          finish_and_check_result [goa, goa2],  [1, 0]
         end
 
         it 'gets second article when paid only second' do
           update_quantities goa3, 2, 0
           update_quantities goa,  1, 0
           credit go.ordergroup, article.fc_price
-          order.finish!(admin)
-          expect([goa, goa3].map(&:reload).map(&:result)).to eq [1, 0]
+          finish_and_check_result [goa, goa3],  [1, 0]
         end
 
         it 'gets one article when not paid enough for two' do
           update_quantities goa,  1, 0
           update_quantities goa3, 2, 0
           credit go.ordergroup, article.fc_price + article3.fc_price/2
-          order.finish!(admin)
-          expect([goa, goa3].map(&:reload).map(&:result)).to eq [1, 0]
+          finish_and_check_result [goa, goa3],  [1, 0]
         end
       end
 
@@ -101,36 +102,28 @@ if defined? FoodsoftPayorder
         it 'has no result without funds' do
           update_quantities goa, 1, 0
           update_quantities goa2, 3, 0
-          order.finish!(admin)
-          order2.finish!(admin)
-          expect([goa, goa2].map(&:reload).map(&:result)).to eq [0, 0]
+          finish_and_check_result [goa, goa2],  [0, 0]
         end
 
         it 'has result with exact funds before ordering' do
           credit go.ordergroup, article.fc_price*5 + article2.fc_price*3
           update_quantities goa,  5, 0
           update_quantities goa2, 3, 0
-          order.finish!(admin)
-          order2.finish!(admin)
-          expect([goa, goa2].map(&:reload).map(&:result)).to eq [5, 3]
+          finish_and_check_result [goa, goa2],  [5, 3]
         end
 
         it 'gets first when paid only first' do
           update_quantities goa,  1, 0
           update_quantities goa2, 2, 0
           credit go.ordergroup, article.fc_price
-          order.finish!(admin)
-          order2.finish!(admin)
-          expect([goa, goa2].map(&:reload).map(&:result)).to eq [1, 0]
+          finish_and_check_result [goa, goa2],  [1, 0]
         end
 
         it 'gets one article when not paid enough for two' do
           update_quantities goa,  1, 0
           update_quantities goa2, 2, 0
           credit go.ordergroup, article.fc_price + article2.fc_price/2
-          order.finish!(admin)
-          order2.finish!(admin)
-          expect([goa, goa2].map(&:reload).map(&:result)).to eq [1, 0]
+          finish_and_check_result [goa, goa2],  [1, 0]
         end
       end
 
