@@ -46,12 +46,7 @@ module GroupOrdersHelper
 
   def orders_status_line(orders)
     if (ends_open = orders.select(&:open?).map(&:ends).compact.minmax)[0]
-      ends_open.map! {|e| time_ago_in_words e}
-      if ends_open[0] == ends_open[1]
-        return "#{ends_open[0]} remaining"
-      else
-        return "#{ends_open[1]} to #{ends_open[0]} remaining"
-      end
+      return FoodsoftDateUtil.distance_of_time_in_words ends_open
     end
     if end_finished = orders.select(&:finished?).map(&:ends).max
       return "closed since #{format_date(end_finished)}"
@@ -63,11 +58,11 @@ module GroupOrdersHelper
 
   def orders_title(orders)
     if orders.select(&:open?).any?
-      "My current order"
+      I18n.t('group_orders.my_current_order')
     elsif orders.select(&:finished?).any?
-      "My last order"
+      I18n.t('group_orders.my_last_order')
     else
-      "Previous order"
+      I18n.t('group_orders.my_previous_order')
     end
   end
 

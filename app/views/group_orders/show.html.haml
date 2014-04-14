@@ -1,10 +1,10 @@
-- title 'Previous order', false
+- title t('group_orders.my_previous_order'), false
 
 - content_for :sidebar do
   = render 'current_order_sidebar'
   .well
     %ul.nav.nav-list
-      %li.nav-header My previous orders
+      %li.nav-header= t 'group_orders.my_previous_orders'
       - @group_order_details.each do |(ends, price)|
         %li{class: ('active' if ends==@order_date)}
           = link_to group_order_path(ends) do
@@ -20,9 +20,9 @@
       %span{style: 'font-weight: normal; font-size: 12pt; vertical-align: middle'}
         = orders_status_line @orders
   - if @orders.nil? or @orders.empty?
-    Please select a previous order to view.
+    = t '.no_orders'
   - elsif @order_articles.nil? or @order_articles.empty?
-    You have no articles in this order.
+    = t '.no_articles'
   - else
     = render 'order_articles'
 

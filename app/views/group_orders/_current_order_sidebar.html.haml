@@ -2,11 +2,10 @@
   = link_to group_order_path(:current) do
     .well.well-link
       %i.icon-shopping-cart
-      My current order
+      = t 'group_orders.my_current_order'
       - sum ||= 0
       .pull-right.price_total#group_orders_sum{data: {value: sum}}
         = number_to_currency sum unless sum == 0
 - else
   .well.well-link
-    %i.icon-shopping-cart
-    No currently open orders
+    %i.icon-shopping-cart= t '.no_current_orders'
