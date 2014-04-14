@@ -10,11 +10,11 @@
         - if @has_open_orders
           - if @has_tolerance
             - cols += 2
-            %th.units_to_order{colspan: 2} All members
+            %th.units_to_order{colspan: 2}= t '.all_members'
           - else
             - cols += 1
             %th.units_to_order.center
-              %abbr{title: 'All members'} All
+              %abbr{title: t('.all_members')}= t '.all_members_short'
           - if @has_max_quantity
             - cols += 1
             %th.max_quantity= #heading_helper OrderArticle, :max_quantity, short: true

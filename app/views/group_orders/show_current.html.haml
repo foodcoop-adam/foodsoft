@@ -7,12 +7,12 @@
   .page-header
     %h1
       %i.icon-shopping-cart.soft-icon
-      My current order
+      = t 'group_orders.my_current_order'
       %span{style: 'font-weight: normal; font-size: 12pt; vertical-align: middle'}
         = orders_status_line(@orders)
   - if @order_articles and !@order_articles.empty?
     = render 'order_articles'
   - else
-    You haven't ordered anything yet. Select one of the categories to get started.
+    = t '.no_articles'
 
 = render 'edit_javascript'

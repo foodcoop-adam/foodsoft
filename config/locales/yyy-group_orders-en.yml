@@ -1,0 +1,30 @@
+# for branch feature-group_order_ajax - please merge into en.yml when this branch is merged upstream
+en:
+  group_orders:
+    my_current_order: My current order
+    my_last_order: My last order
+    my_previous_order: Previous order
+    my_previous_orders: My previous orders
+    current_order_sidebar:
+      no_current_orders: No currently open orders
+    edit:
+      title: Order articles
+    order_article:
+      max_quantity: 'of %{amount}'
+    order_article_info:
+      units_full: Filled units
+      units_total: Total units
+    order_articles:
+      all_members: All members
+      all_members_short: All
+    show:
+      no_orders: Please select a previous order to view.
+      no_articles: You have no articles in this order.
+    show_current_orders:
+      no_articles: You haven't ordered anything yet. Select one of the categories to get started.
+  lib:
+    date_util:
+      time_ago: '%{delta} ago'
+      time_now: now
+      time_until: '%{delta} remaining'
+      times_join: '%{from} to %{to}'

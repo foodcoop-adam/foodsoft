@@ -18,7 +18,7 @@
       %td.final_unit{class: ('before_unit' if @has_max_quantity)}
         = final_unit_bar order_article if cur_has_tolerance
     - if @has_max_quantity
-      %td.max_quantity= "of #{order_article.max_quantity}" if cur_has_max_quantity
+      %td.max_quantity= t('.max_quantity', amount: order_article.max_quantity) if cur_has_max_quantity
   %td.center.quantity
     - if cur_open
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|

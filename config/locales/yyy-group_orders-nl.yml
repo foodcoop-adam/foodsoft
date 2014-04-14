@@ -1,0 +1,30 @@
+# for branch feature-group_order_ajax - please merge into en.yml when this branch is merged upstream
+nl:
+  group_orders:
+    my_current_order: Mijn bestelling
+    my_last_order: Mijn laatste bestelling
+    my_previous_order: Vorige bestelling
+    my_previous_orders: Mijn vorige bestellingen
+    current_order_sidebar:
+      no_current_orders: Er zijn momenteel geen open bestellingen.
+    edit:
+      title: Artikelen
+    order_article:
+      max_quantity: 'van %{amount}'
+    order_article_info:
+      units_full: Volle eenheden
+      units_total: Totaal aantal
+    order_articles:
+      all_members: Alle leden
+      all_members_short: Allen
+    show:
+      no_orders: Kies een vroegere bestelling om te bekijken.
+      no_articles: Er zijn geen artikelen in deze bestelling.
+    show_current_order:
+      no_articles: Je hebt nog niets besteld. Selecteer een categorie om te beginnen.
+  lib:
+    date_util:
+      time_ago: '%{delta} geleden'
+      time_now: nu
+      time_until: 'nog %{delta}'
+      times_join: '%{from} tot %{to}'
