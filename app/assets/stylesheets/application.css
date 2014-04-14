@@ -3,6 +3,7 @@
 *= require bootstrap-datepicker
 *= require select2
 *= require select2-bootstrap
+*= require list.unlist
 *= require flags/basic
 *= require flags/flags16
 */
