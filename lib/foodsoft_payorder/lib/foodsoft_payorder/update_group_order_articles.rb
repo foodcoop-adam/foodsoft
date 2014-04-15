@@ -15,14 +15,18 @@ module FoodsoftPayorder
             transaction do
               sum = 0
               max_sum = account_balance - value_of_finished_orders
+              order_articles = []
               group_order_article_quantities.includes(:group_order_article => {:group_order => :order})
                     .merge(Order.where(state: :open)).order('created_on DESC').each do |goaq|
                 goa = goaq.group_order_article
                 goaq_price = goa.total_price(goa.order_article, goaq.quantity, goaq.tolerance)
                 if sum + goaq_price <= max_sum
                   sum += goaq_price
-                  goaq.financial_transaction ||= transaction
-                  goaq.save
+                  if goaq.financial_transaction.blank?
+                    goaq.financial_transaction = transaction
+                    goaq.save
+                    order_articles << goa.order_article
+                  end
                 elsif goaq.financial_transaction_id.present?
                   # TODO - do we need to reset it or not?
                   #   When an ordergroup ordered and then his account is debited, this may occur.
@@ -31,6 +35,10 @@ module FoodsoftPayorder
                   #   suffices.
                   #   It might be nice to introduce a configuration option for this.
                 end
+              end
+              # need to update OrderArticle after payment as well
+              order_articles.uniq.each do |order_article|
+                order_article.update_results!
               end
             end
           end
@@ -110,6 +118,28 @@ module FoodsoftPayorder
         end
       end
     end
+
+    module OrderArticle
+      def self.included(base) # :nodoc:
+        base.class_eval do
+         has_many :group_order_article_quantities, :through => :group_order_articles
+
+          private
+
+          # only count paid amounts
+          alias_method :foodsoft_payorder_orig_collect_result, :collect_result
+          def collect_result(attr)
+            if not FoodsoftPayorder.enabled? or attr.to_s == 'result'
+              foodsoft_payorder_orig_collect_result(attr)
+            else
+              group_order_article_quantities
+                .where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
+                .collect(&attr).sum
+            end
+          end
+        end
+      end
+    end
   end
 end
 
@@ -117,4 +147,5 @@ ActiveSupport.on_load(:after_initialize) do
   Ordergroup.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::Ordergroup
   GroupOrderArticle.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::GroupOrderArticle
   GroupOrderArticleQuantity.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::GroupOrderArticleQuantity
+  OrderArticle.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::OrderArticle
 end

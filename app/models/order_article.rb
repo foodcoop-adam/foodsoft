@@ -60,19 +60,18 @@ class OrderArticle < ActiveRecord::Base
   # Count quantities of belonging group_orders. 
   # In balancing this can differ from ordered (by supplier) quantity for this article.
   def group_orders_sum
-    quantity, fc_price = group_order_articles.inject([0,0]) {|sum, goa| [sum[0]+goa.result, sum[1]+goa.total_price]}
-    {:quantity => quantity, :price => fc_price}
+    {:quantity => collect_result(:result), :price => collect_result(:total_price)}
   end
 
   # Update quantity/tolerance/units_to_order from group_order_articles
   def update_results!
     if order.open?
-      quantity = group_order_articles.collect(&:quantity).sum
-      tolerance = group_order_articles.collect(&:tolerance).sum
+      quantity = collect_result(:quantity)
+      tolerance = collect_result(:tolerance)
       update_attributes(:quantity => quantity, :tolerance => tolerance,
                         :units_to_order => calculate_units_to_order(quantity, tolerance))
     elsif order.finished?
-      update_attribute(:units_to_order, group_order_articles.collect(&:result).sum)
+      update_attribute(:units_to_order, collect_result(:result))
     end
   end
 
@@ -250,6 +249,12 @@ class OrderArticle < ActiveRecord::Base
     # in case of performance issues, update only ordergroups, which ordered this article
     # CAUTION: in after_destroy callback related records (e.g. group_order_articles) are already non-existent
     order.group_orders.each(&:update_price!)
+  end
+
+  # collects the sum of an attribute of all associated GroupOrderArticles
+  # can be overridden by plugins if needed
+  def collect_result(attr)
+    group_order_articles.collect(&attr).sum
   end
 
 end
