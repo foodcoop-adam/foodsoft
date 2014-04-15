@@ -16,7 +16,7 @@ if defined? FoodsoftPayorder
 
     def update_quantities(goa, quantity, tolerance)
       goa.update_quantities(quantity, tolerance)
-      goa.order_article.update_results!
+      goa.order_article.reload.update_results!
       go.update_price!
     end
     def credit(ordergroup, amount)
