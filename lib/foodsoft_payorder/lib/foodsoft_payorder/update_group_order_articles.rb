@@ -17,7 +17,7 @@ module FoodsoftPayorder
               max_sum = account_balance - value_of_finished_orders
               order_articles = []
               group_order_article_quantities.includes(:group_order_article => {:group_order => :order})
-                    .merge(Order.where(state: :open)).order('created_on DESC').each do |goaq|
+                    .merge(Order.where(state: :open)).order('created_on ASC').each do |goaq|
                 goa = goaq.group_order_article
                 goaq_price = goa.total_price(goa.order_article, goaq.quantity, goaq.tolerance)
                 if sum + goaq_price <= max_sum
