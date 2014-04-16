@@ -148,7 +148,7 @@ class GroupOrdersController < ApplicationController
 
   def get_article_categories
     return unless @all_order_articles
-    @article_categories = ArticleCategory.find(@all_order_articles.group(:article_category_id).pluck('articles.article_category_id'))
+    @article_categories = ArticleCategory.order(:name).find(@all_order_articles.group(:article_category_id).pluck('articles.article_category_id'))
   end
 
   # some shared order_article details that need to be done on the final query
