@@ -20,7 +20,7 @@ en:
     show:
       no_orders: Please select a previous order to view.
       no_articles: You have no articles in this order.
-    show_current_orders:
+    show_current:
       no_articles: You haven't ordered anything yet. Select one of the categories to get started.
   lib:
     date_util:
