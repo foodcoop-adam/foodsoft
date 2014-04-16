@@ -20,7 +20,7 @@ nl:
     show:
       no_orders: Kies een vroegere bestelling om te bekijken.
       no_articles: Er zijn geen artikelen in deze bestelling.
-    show_current_order:
+    show_current:
       no_articles: Je hebt nog niets besteld. Selecteer een categorie om te beginnen.
   lib:
     date_util:
