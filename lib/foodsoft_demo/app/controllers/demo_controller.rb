@@ -26,6 +26,7 @@ class DemoController < ApplicationController
                       nick:       I18n.t('foodsoft_demo.autologin.fields.nick', id: id))
       user.password = user.new_random_password(8)
       user.ordergroup = {id: 'new'}
+      user.locale = FoodsoftConfig[:default_locale] if FoodsoftConfig[:default_locale]
       user.save!
       return user
     end
