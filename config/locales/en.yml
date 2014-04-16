@@ -1402,7 +1402,7 @@ en:
       article_category:
         description: comma-separated list of category names recognised at import/synchronisation
       message:
-        private: Message doesn’t show in Foodsoft mail inbox
+        private: Hide from the Foodsoft messages list.
       order_article:
         max_quantity: maximum units that can be supplied
         units_to_order: If you change the total amount of delivered units, you also have to change individual group amounts by clicking on the article name. They will not be automatically recalculated and so ordergroups may be accounted for articles that were not delivered!
