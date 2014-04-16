@@ -45,14 +45,18 @@ module GroupOrdersHelper
   end
 
   def orders_status_line(orders)
-    if (ends_open = orders.select(&:open?).map(&:ends).compact.minmax)[0]
-      return FoodsoftDateUtil.distance_of_time_in_words ends_open
+    if ends_open = orders.select(&:open?)
+      if ends_open = (ends_open.map(&:ends).compact.minmax)[0]
+        return FoodsoftDateUtil.distance_of_time_in_words ends_open
+      else
+        return I18n.t('orders.state.open')
+      end
     end
     if end_finished = orders.select(&:finished?).map(&:ends).max
-      return "closed since #{format_date(end_finished)}"
+      return I18n.t('helpers.group_orders.finished_since', when: format_date(end_finished))
     end
     if end_closed = orders.select(&:closed?).map(&:ends).max
-      return "settled since #{format_date(end_closed)}"
+      return I18n.t('helpers.group_orders.closed_since', when: format_date(end_closed))
     end
   end
 

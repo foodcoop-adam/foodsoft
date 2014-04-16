@@ -866,6 +866,9 @@ nl:
     deliveries:
       new_invoice: Nieuwe factuur
       show_invoice: Factuur tonen
+    group_orders:
+      finished_since: 'gesloten sinds %{when}'
+      closed_since: 'afgerekend sinds %{when}'
     messages:
       write_message: Bericht schrijven
     orders:

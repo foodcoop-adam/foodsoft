@@ -887,6 +887,9 @@ en:
     deliveries:
       new_invoice: New invoice
       show_invoice: Show invoice
+    group_orders:
+      finished_since: 'closed since %{when}'
+      closed_since: 'settled since %{when}'
     finance:
       financial_transactions:
         state:
