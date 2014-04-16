@@ -761,6 +761,9 @@ nl:
     deliveries:
       new_invoice: Nieuwe rekening
       show_invoice: Rekening tonen
+    group_orders:
+      finished_since: 'gesloten sinds %{when}'
+      closed_since: 'afgerekend sinds %{when}'
     orders:
       old_price: Oude prijs
       option_choose: Leverancier/voorraad kiezen
