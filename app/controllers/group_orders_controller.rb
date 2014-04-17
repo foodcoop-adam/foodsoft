@@ -117,6 +117,8 @@ class GroupOrdersController < ApplicationController
     @order_date = params[:id] || params[:group_order_id]
     if @order_date == 'current'
       @orders = Order.where(state: 'open')
+    elsif @order_date == 'last'
+      @orders = Order.where(state: 'finished')
     elsif @order_date
       begin
         # parsing integer group_orders is legacy - dates are used nowadays

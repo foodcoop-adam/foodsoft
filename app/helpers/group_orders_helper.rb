@@ -45,7 +45,7 @@ module GroupOrdersHelper
   end
 
   def orders_status_line(orders)
-    if ends_open = orders.select(&:open?)
+    if (ends_open = orders.select(&:open?)).present?
       if ends_open = (ends_open.map(&:ends).compact.minmax)[0]
         return FoodsoftDateUtil.distance_of_time_in_words ends_open
       else

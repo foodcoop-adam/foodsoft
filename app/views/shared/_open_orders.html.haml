@@ -1,18 +1,21 @@
 %section
   %h2= t '.title'
   - orders = Order.where(state: ['open', 'finished'])
+  - has_open = orders.find(&:open?).present?
   - group_orders = ordergroup.group_orders.includes(:order).merge(orders)
   - if ordergroup.not_enough_apples?
     .alert
       = t '.not_enough_apples'
   .well
-    - if orders.any?
-      = link_to group_order_path(:current) do
+    -# Only show current/last order link when there are open orders,
+    -#   or if a member has ordered anything from a finished order.
+    - if has_open or group_orders.any?
+      = link_to group_order_path(has_open ? :current : :last) do
         .pull-left{style: 'font-size: 38.5px; line-height: 40px; margin-right: 20px'}
           %i.icon-shopping-cart.soft-icon
         %b= orders_title orders
         .pull-right{style: 'line-height: 40px'}
-          = number_to_currency group_orders.sum(:price)
+          = number_to_currency group_orders.sum(:price) if group_orders.any?
         .unavailable
           = orders_status_line(orders)
     - else
