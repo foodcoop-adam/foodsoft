@@ -5,7 +5,7 @@ en:
         title: 'Credit your account'
       form:
         amount_pay: 'Amount to pay'
-        bank: 'Your bank'
+        method: 'Pay using'
         submit: 'Pay at your bank'
       controller:
         result:
