@@ -51,7 +51,7 @@ PATH
   remote: lib/foodsoft_mollie
   specs:
     foodsoft_mollie (0.0.1)
-      ideal-mollie
+      mollie-api-ruby
       rails
 
 PATH
@@ -266,10 +266,11 @@ GEM
     mime-types (1.25.1)
     mimemagic (0.2.1)
     mini_portile (0.6.0)
+    mollie-api-ruby (1.1.1)
+      json (~> 1.8)
+      rest-client (~> 1.6)
     mono_logger (1.1.0)
     multi_json (1.10.1)
-    multi_xml (0.5.5)
-    multipart-post (1.2.0)
     mysql2 (0.3.16)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)

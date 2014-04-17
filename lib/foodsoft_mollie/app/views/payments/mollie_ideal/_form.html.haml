@@ -15,9 +15,9 @@
           = "(min #{number_to_currency params[:min], precision: 0})"
   .control-group
     .control-label
-      = label_tag 'bank_id', t('.bank')
+      = label_tag 'method', t('.method')
     .controls
-      = select_tag 'bank_id', options_from_collection_for_select(@banks, 'id', 'name')
+      = select_tag 'method', options_for_select(@method_options, params[:method])
 
   .control-group
     .controls

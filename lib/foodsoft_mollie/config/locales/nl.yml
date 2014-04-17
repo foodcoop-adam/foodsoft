@@ -5,7 +5,7 @@ nl:
         title: 'Betalen'
       form:
         amount_pay: 'Te betalen bedrag'
-        bank: 'Jouw bank'
+        method: 'Hoe te betalen'
         submit: 'Betalen'
       controller:
         result:

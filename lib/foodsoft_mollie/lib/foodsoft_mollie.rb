@@ -1,4 +1,4 @@
-require 'ideal-mollie'
+require 'Mollie/API/Client'
 require 'foodsoft_mollie/engine'
 
 module FoodsoftMollie
