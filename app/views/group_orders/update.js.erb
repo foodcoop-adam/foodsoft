@@ -1,2 +1,6 @@
-// TODO handle errors
-$(document).trigger('GroupOrder#update');
+<% if flash[:alert] %>
+  // error, redirect so message can be shown
+  window.location = '<% j group_orders_url(:current) %>';
+<% else %>
+  $(document).trigger('GroupOrder#update');
+<% end %>
