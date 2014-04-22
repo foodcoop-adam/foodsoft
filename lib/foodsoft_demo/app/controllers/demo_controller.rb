@@ -19,7 +19,7 @@ class DemoController < ApplicationController
   def create_new_user
     User.transaction do
       # XXX check that simultaneous creation doesn't result in duplicate ideas
-      id = (User.maximum(:id) rescue 0) + 1
+      id = (User.maximum(:id) or 0) + 1
       user = User.new(first_name: I18n.t('foodsoft_demo.autologin.fields.first_name', id: id),
                       last_name:  I18n.t('foodsoft_demo.autologin.fields.last_name', id: id),
                       email:      I18n.t('foodsoft_demo.autologin.fields.email', id: id),
