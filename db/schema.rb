@@ -37,9 +37,11 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
   create_table "article_categories", :force => true do |t|
     t.string "name",        :default => "", :null => false
     t.string "description"
+    t.string "scope"
   end
 
   add_index "article_categories", ["name"], :name => "index_article_categories_on_name", :unique => true
+  add_index "article_categories", ["scope"], :name => "index_article_categories_on_scope"
 
   create_table "article_prices", :force => true do |t|
     t.integer  "article_id"
@@ -178,10 +180,12 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.integer  "next_weekly_tasks_number",                               :default => 8
     t.boolean  "ignore_apple_restriction",                               :default => false
     t.boolean  "approved",                                               :default => false
+    t.string   "scope"
     t.string   "price_markup_key"
   end
 
   add_index "groups", ["name"], :name => "index_groups_on_name", :unique => true
+  add_index "groups", ["scope"], :name => "index_groups_on_scope"
 
   create_table "invites", :force => true do |t|
     t.string   "token",      :default => "", :null => false
@@ -189,8 +193,10 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.integer  "group_id"
     t.integer  "user_id",    :default => 0,  :null => false
     t.string   "email",      :default => "", :null => false
+    t.string   "scope"
   end
 
+  add_index "invites", ["scope"], :name => "index_invites_on_scope"
   add_index "invites", ["token"], :name => "index_invites_on_token"
 
   create_table "invoices", :force => true do |t|
@@ -263,8 +269,10 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.decimal  "foodcoop_result",    :precision => 8, :scale => 2
     t.integer  "created_by_user_id"
     t.datetime "pickup"
+    t.string   "scope"
   end
 
+  add_index "orders", ["scope"], :name => "index_orders_on_scope"
   add_index "orders", ["state"], :name => "index_orders_on_state"
 
   create_table "page_versions", :force => true do |t|
@@ -347,10 +355,12 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.string   "min_order_quantity"
     t.datetime "deleted_at"
     t.string   "article_info_url"
+    t.string   "scope"
     t.string   "shared_sync_method"
   end
 
   add_index "suppliers", ["name"], :name => "index_suppliers_on_name", :unique => true
+  add_index "suppliers", ["scope"], :name => "index_suppliers_on_scope"
 
   create_table "tasks", :force => true do |t|
     t.string   "name",                   :default => "",    :null => false
@@ -363,10 +373,12 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.integer  "required_users",         :default => 1
     t.integer  "duration",               :default => 1
     t.integer  "periodic_task_group_id"
+    t.string   "scope"
   end
 
   add_index "tasks", ["due_date"], :name => "index_tasks_on_due_date"
   add_index "tasks", ["name"], :name => "index_tasks_on_name"
+  add_index "tasks", ["scope"], :name => "index_tasks_on_scope"
   add_index "tasks", ["workgroup_id"], :name => "index_tasks_on_workgroup_id"
 
   create_table "users", :force => true do |t|
