@@ -16,5 +16,8 @@ Foodcoop options in `config/app_config.yml`:
 
   # Introduction text on group selection signup page.
   #multishared_signup_text: "Select which foodcoop you'd like to join:"
+
+  # Uncomment to show address as default subtitle in foodcoop instances.
+  #use_subname_address: true
 ```
 
