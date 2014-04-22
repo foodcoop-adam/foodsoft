@@ -1,0 +1,7 @@
+nl:
+  multishared_signup:
+    error_no_ordergroup: Vraag je foodcoop om je in een huishouden te plaatsen.
+    full: vol
+    index:
+      text: "Kies een foodcoop om lid van te worden:"
+      submit: naar inschrijven
