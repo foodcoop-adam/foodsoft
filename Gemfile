@@ -65,6 +65,7 @@ gem 'foodsoft_payorder', path: 'lib/foodsoft_payorder'
 #gem 'foodsoft_uservoice', path: 'lib/foodsoft_uservoice'
 gem 'foodsoft_orderdoc', path: 'lib/foodsoft_orderdoc'
 #gem 'foodsoft_demo', path: 'lib/foodsoft_demo'
+#gem 'foodsoft_multishared', path: 'lib/foodsoft_multishared'
 
 group :production do
   gem 'exception_notification'

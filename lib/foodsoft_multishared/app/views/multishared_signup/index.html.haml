@@ -1,0 +1,96 @@
+- title t('signup.signup.title', name: FoodsoftConfig[:name])
+
+- use_filter = @scopes.count > 8
+
+.row-fluid
+  .span6
+    %p= FoodsoftConfig[:multishared_signup_text] || t('.text')
+
+    - if use_filter
+      .form-search
+        .input-append
+          = text_field_tag :query, params[:query], class: 'search search-query resettable', autocomplete: 'off'
+          %button.add-on.btn.reset-search{:type => :button}
+            %i.icon.icon-remove
+        %p
+
+    = simple_form_for :signup do |f|
+      .list{style: ('height: 280px; overflow: auto;' if use_filter)}
+        = f.input_field :scope, collection: @scopes_en.to_a.map {|(s,cfg)| [scope_title(s, cfg), s]}, as: :radio_buttons
+        = f.input_field :scope, collection: @scopes_di.to_a.map {|(s,cfg)| [scope_title(s, cfg), s]}, as: :radio_buttons, disabled: true
+
+      %p
+      = f.submit t('.submit')
+
+  .span6
+    #map{style: 'height: 400px'}
+
+  %div{style: 'clear: right'}
+
+
+- content_for :head do
+  = stylesheet_link_tag 'maps'
+
+- content_for :javascript do
+  = javascript_include_tag 'maps'
+  = javascript_include_tag '//maps.google.com/maps/api/js?v=3.13&sensor=false&libraries=geometry'
+  :javascript
+    var markers = #{raw scope_markers(@scopes).to_json};
+    $(function() {
+      handler = Gmaps.build('Google');
+      handler.buildMap({internal: {id: 'map'}}, function() {
+        // add markers to map
+        gmarkers = handler.addMarkers(markers);
+        $.each(markers, function(i) { markers[i].gmarker = gmarkers[i] });
+        handler.bounds.extendWith(gmarkers);
+        handler.fitMapToBounds();
+        // show selected scope on map
+        $(document).on('change', 'form.signup input[type=radio]:checked', function() {
+          var el = $(this);
+          $.each(markers, function(i) {
+            map_update_marker(handler, markers[i], el.val());
+          });
+        });
+        // update marker status now
+        sel_id = $('form.signup input[type=radio]:checked').val();
+        $.each(markers, function(i) {
+          map_update_marker(handler, markers[i], sel_id);
+        });
+      });
+    });
+
+    function map_update_marker(handler, marker, sel_id) {
+      if (marker.id == sel_id) {
+        marker.picture = #{maps_marker_icon('waypoint-a', :dot).to_json};
+        marker.gmarker.panTo();
+      } else if (marker.full == 'true') {
+        marker.picture = #{maps_marker_icon('waypoint-b', t('multishared_signup.full'), 10).to_json};
+      } else {
+        marker.picture = #{maps_marker_icon.to_json};
+      }
+      // recreate marker (cannot set picture property otherwise)
+      // TODO may create duplicate markers somehow; now setting to invisible as workaround
+      marker.gmarker.getServiceObject().setOptions({visible: false});
+      marker.gmarker.setMap(null);
+      marker.gmarker = handler.addMarker(marker);
+      if (sel_id == marker.id) marker.gmarker.getServiceObject().setZIndex(google.maps.Marker.MAX_ZINDEX + 10);
+      // setup event handler
+      google.maps.event.addListener(marker.gmarker.getServiceObject(), 'click', function() {
+        // if it's filtered out in the list, remove search term
+        if ($("form.signup #signup_scope_"+marker.id).closest('label').hasClass('unlisted'))
+          $('.form-search .reset-search').click();
+        // make sure item is visible in the list if not in view
+        $('.list').scrollTo("#signup_scope_"+marker.id);
+        // and activate item
+        $("form.signup #signup_scope_"+marker.id).click();
+      });
+    }
+
+    // dynamic search
+    $(function() {
+      new List(document.body, {
+        valueNames: ['scope-title'],
+        engine: 'unlist',
+        plugins: [['reset', {highlightClass: 'btn-primary'}]]
+      });
+    });

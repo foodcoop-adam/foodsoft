@@ -1,0 +1,7 @@
+en:
+  multishared_signup:
+    error_no_ordergroup: Please ask your foodcoop to place you in an ordergroup.
+    full: full
+    index:
+      text: "Select which foodcoop you'd like to join:"
+      submit: to signup
