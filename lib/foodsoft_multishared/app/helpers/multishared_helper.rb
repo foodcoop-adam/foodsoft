@@ -1,7 +1,7 @@
 module MultisharedHelper
   # return foodcoop title from scope configuration
   def scope_title(scope, cfg)
-    address = scope_address(cfg)
+    address = FoodsoftMultishared.address_line(cfg[:contact])
     append = []
     addons = []
     addons << cfg[:name] if cfg[:name].strip != FoodsoftConfig[:name].strip
@@ -13,10 +13,6 @@ module MultisharedHelper
       append << content_tag(:b, ' ('+I18n.t('multishared_signup.full')+')')
     end
    content_tag :div, h(address) + safe_join(append, ' ') + safe_join(addons), class: 'scope-title'
-  end
-
-  def scope_address(cfg)
-    %w(street zip_code city).map{|p| cfg[:contact][p]}.compact.join(', ')
   end
 
   def scope_markers(scopes)

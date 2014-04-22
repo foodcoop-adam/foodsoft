@@ -2,6 +2,7 @@ require 'foodsoft_multishared/engine'
 require 'foodsoft_multishared/scoped_login'
 require 'foodsoft_multishared/scoped_signup'
 require 'foodsoft_multishared/use_foodcoop_scope'
+require 'foodsoft_multishared/default_sub_name'
 if defined? FoodsoftSignup
   require 'underscore-rails'
   require 'gmaps4rails'
@@ -46,5 +47,11 @@ module FoodsoftMultishared
     groups = Ordergroup.unscoped.where(scope: scope)
     groups = groups.where(approved: true) if FoodsoftSignup.enabled?(:approval)
     groups.count >= limit.to_i
+  end
+
+  # return address line for contact info
+  def self.address_line(contact)
+    contact = contact.stringify_keys
+    %w(street zip_code city).map{|p| contact[p]}.compact.join(', ')
   end
 end
