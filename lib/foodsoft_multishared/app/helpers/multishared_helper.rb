@@ -29,7 +29,7 @@ module MultisharedHelper
   # possible names are: waypoint-a waypoint-b waypoint-blue ad poi
   def maps_marker_icon(name='waypoint-a', text=nil, size=30)
     text = '•' if text == :dot
-    url = "http://mt.google.com/vt/icon?psize=#{u size}&name=icons/spotlight/spotlight-#{u name}.png"
+    url = "//mt.google.com/vt/icon?psize=#{u size}&name=icons/spotlight/spotlight-#{u name}.png"
     url += "&font=fonts/arialuni_t.ttf&color=ff304C13&ax=43&ay=48&text=#{u text}" if text
     {url: url, width: 22, height: 40}
   end
