@@ -13,7 +13,6 @@ module FoodsoftSignup
 
   def self.signup_warning(c, user)
     FoodsoftSignup.enabled? :approval or return true
-    return true if FoodsoftConfig[:unapproved_allow_access]=='*'
     if user
       user.role_admin? and return true
       if user.ordergroup.nil?
