@@ -232,7 +232,10 @@ ActiveRecord::Schema.define(:version => 20140523085022) do
     t.integer  "email_state",    :default => 0,     :null => false
     t.boolean  "private",        :default => false
     t.datetime "created_at"
+    t.string   "scope"
   end
+
+  add_index "messages", ["scope"], :name => "index_messages_on_scope"
 
   create_table "order_articles", :force => true do |t|
     t.integer "order_id",         :default => 0, :null => false
