@@ -34,8 +34,11 @@
 - content_for :javascript do
   = javascript_include_tag 'maps'
   = javascript_include_tag '//maps.google.com/maps/api/js?v=3.13&sensor=false&libraries=geometry'
+  - zoom = FoodsoftConfig[:multishared_signup_zoom] 
+  - zoom = nil if zoom == 'auto'
   :javascript
     var markers = #{raw scope_markers(@scopes).to_json};
+    var defaultZoom = #{zoom ? zoom.to_i : 'undefined'};
     $(function() {
       handler = Gmaps.build('Google');
       handler.buildMap({internal: {id: 'map'}}, function() {
@@ -44,6 +47,7 @@
         $.each(markers, function(i) { markers[i].gmarker = gmarkers[i] });
         handler.bounds.extendWith(gmarkers);
         handler.fitMapToBounds();
+        if (defaultZoom != undefined) handler.getMap().setZoom(defaultZoom);
         // show selected scope on map
         $(document).on('change', 'form.signup input[type=radio]:checked', function() {
           var el = $(this);
