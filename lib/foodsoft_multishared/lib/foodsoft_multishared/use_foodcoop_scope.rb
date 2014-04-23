@@ -51,12 +51,12 @@ module FoodsoftMultishared
     end
   end
 
-  # restrict users to those who have a matching ordergroup
+  # restrict users to those who have a matching group
   # TODO - except the default foodcoop, which shows all?
   module ScopeUsers
     def self.included(base) # :nodoc:
       base.class_eval do
-        default_scope -> { joins(:groups).readonly(false).where(groups: {type: 'Ordergroup', scope: FoodsoftConfig.scope}) }
+        default_scope -> { joins(:groups).readonly(false).where(groups: {scope: [FoodsoftConfig.scope, '*']}) }
       end
     end
   end
