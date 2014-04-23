@@ -13,6 +13,8 @@ Foodcoop options in `config/app_config.yml`:
   # When showing this foodcoop in a list of foodcoops, this is added
   # as a short description. Empty by default.
   #list_desc: for yuppies and greenies, every last Friday of the month
+  # Text to show in foodcoop list search box
+  #list_search_placeholder: Search city or name...
 
   # Introduction text on group selection signup page.
   #multishared_signup_text: "Select which foodcoop you'd like to join:"
