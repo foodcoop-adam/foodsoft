@@ -23,3 +23,6 @@ Foodcoop options in `config/app_config.yml`:
   #use_subname_address: true
 ```
 
+When you're using the messages plugin, be sure to enable that before enabling
+this plugin (the messages migration needs to be run before multishared).
+
