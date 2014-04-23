@@ -9,7 +9,7 @@
     - if use_filter
       .form-search
         .input-append
-          = text_field_tag :query, params[:query], class: 'search search-query resettable', autocomplete: 'off'
+          = text_field_tag :query, params[:query], class: 'search search-query resettable', autocomplete: 'off', placeholder: FoodsoftConfig[:list_search_placeholder] || t('.search_placeholder')
           %button.add-on.btn.reset-search{:type => :button}
             %i.icon.icon-remove
         %p

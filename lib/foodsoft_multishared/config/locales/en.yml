@@ -4,4 +4,5 @@ en:
     full: full
     index:
       text: "Select which foodcoop you'd like to join:"
+      search_placeholder: Search city or name...
       submit: to signup
