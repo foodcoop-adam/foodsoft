@@ -74,7 +74,9 @@ end
 
 # now patch desired controllers to include this
 ActiveSupport.on_load(:after_initialize) do
-  [Group, Order, Supplier, ArticleCategory, Invite, Task].each do |model|
+  models = [Group, Order, Supplier, ArticleCategory, Invite, Task]
+  models << Message if defined? FoodsoftMessages
+  models.each do |model|
     model.send :include, FoodsoftMultishared::ProtectScope
     model.send :include, FoodsoftMultishared::SetDefaultScope
     model.send :include, FoodsoftMultishared::RestrictScope

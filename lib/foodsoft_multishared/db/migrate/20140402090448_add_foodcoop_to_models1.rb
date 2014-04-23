@@ -15,6 +15,10 @@ class AddFoodcoopToModels1 < ActiveRecord::Migration
     add_column table, :scope, :string
     add_index table, :scope
     # set scope for current records to FoodsoftConfig.scope
-    table.to_s.classify.constantize.update_all scope: FoodsoftConfig.scope
+    reversible do |dir|
+      dir.up do
+        table.to_s.classify.constantize.update_all scope: FoodsoftConfig.scope
+      end
+    end
   end
 end
