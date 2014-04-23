@@ -25,6 +25,23 @@ module FoodsoftMultishared
     end
   end
 
+  # allow members with a '*' group to login anywhere + more friendly wrong-foodcoop-login message
+  module LoginWildcard
+    def self.included(base) # :nodoc:
+      base.class_eval do
+        before_filter :foodsoft_multishared_find_user, only: :create
+
+        private
+        def foodsoft_multishared_find_user
+          @user = User.unscoped.authenticate(params[:nick], params[:password])
+          if @user and not @user.groups.any?
+            redirect_to_login :alert => "You're not a member of #{FoodsoftConfig[:name]}. Perhaps you meant to #{view_context.link_to 'login here', login_path(foodcoop: FoodsoftConfig[:default_scope])}?"
+          end
+        end
+      end
+    end
+  end
+
   # the default scope's login page redirects a member to its own foodcoop
   module DefaultMultilogin
     def self.included(base) # :nodoc:
@@ -65,4 +82,5 @@ end
 ActiveSupport.on_load(:after_initialize) do
   ApplicationController.send :include, FoodsoftMultishared::LoginScope
   SessionsController.send :include, FoodsoftMultishared::DefaultMultilogin
+  SessionsController.send :include, FoodsoftMultishared::LoginWildcard
 end
