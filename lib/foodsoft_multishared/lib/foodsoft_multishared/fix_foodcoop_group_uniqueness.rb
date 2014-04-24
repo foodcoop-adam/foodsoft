@@ -18,10 +18,10 @@ module FoodsoftMultishared
           end
 
           def self.name_from_user(user)
-            name = user.display
+            name = user.display.truncate(25, omission: '').rstrip
             suffix = 2
             while Ordergroup.unscoped.where(name: name).exists? do
-              name = "#{user.display} (#{suffix})"
+              name = "#{user.display.truncate(20, omission: '').rstrip} (#{suffix})"
               suffix += 1
             end
             name
