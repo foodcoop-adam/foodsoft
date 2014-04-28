@@ -21,6 +21,12 @@ module FoodsoftMultishared
     scope.to_s == FoodsoftConfig.scope.to_s
   end
 
+  # returns whether the current scope has access to all scopes
+  def self.is_master?
+    master_scope = FoodsoftConfig[:master_scope]
+    master_scope and FoodsoftConfig.scope == master_scope
+  end
+
   # returns which foodcoop scopes one can view
   def self.view_scopes
     [FoodsoftConfig.scope, '*']
