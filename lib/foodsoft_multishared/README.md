@@ -6,6 +6,9 @@ single database. Uses the multicoops functionality.
 
 Foodcoop options in `config/app_config.yml`:
 ```yaml
+  # If defined, this foodcoop scope has access to *all* foodcoops records.
+  #master_scope: 'central'
+
   # Set this to true to hide the foodcoop from foodcoop lists, like the
   # central signup list introduced by the multishared plugin.
   #hidden: true
