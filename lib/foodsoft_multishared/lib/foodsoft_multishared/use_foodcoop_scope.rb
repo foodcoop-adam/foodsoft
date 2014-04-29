@@ -6,6 +6,7 @@ module FoodsoftMultishared
     def self.included(base) # :nodoc:
       base.class_eval do
         validate :foodsoft_multishared_protect_scope, unless: -> { FoodsoftMultishared.is_master? }
+        before_destroy :foodsoft_multishared_protect_scope, unless: -> { FoodsoftMultishared.is_master? }
 
         private
         def foodsoft_multishared_protect_scope
@@ -13,10 +14,12 @@ module FoodsoftMultishared
             Rails.logger.debug "Attempt to edit record from different scope #{scope_was} (mine is #{FoodsoftConfig.scope})"
             # can only edit records that match our scope
             errors[:base] << "This #{self.class.model_name.human} is not owned by your foodcoop."
+            return false
           elsif not FoodsoftMultishared.own_scope?(scope)
             # cannot change scope to something else
             Rails.logger.debug "Attempt to change scope from #{scope_was} to #{scope}"
             errors.add :scope, "Scope must be #{FoodsoftConfig.scope}."
+            return false
           end
         end
       end
@@ -27,7 +30,7 @@ module FoodsoftMultishared
   module RestrictScope
     def self.included(base) # :nodoc:
       base.class_eval do
-        default_scope -> { where(scope: FoodsoftMultishared.view_scopes) unless FoodsoftMultishared.is_master? }
+        default_scope -> { where(scope: FoodsoftMultishared.view_scopes(self)) unless FoodsoftMultishared.is_master? }
       end
     end
   end
@@ -35,7 +38,7 @@ module FoodsoftMultishared
   module RestrictScopeAlways
     def self.included(base) # :nodoc:
       base.class_eval do
-        default_scope -> { where(scope: FoodsoftMultishared.view_scopes) }
+        default_scope -> { where(scope: FoodsoftMultishared.view_scopes(self)) }
       end
     end
   end
@@ -60,7 +63,7 @@ module FoodsoftMultishared
   module ScopeUsers
     def self.included(base) # :nodoc:
       base.class_eval do
-        default_scope -> { joins(:groups).readonly(false).where(groups: {scope: FoodsoftMultishared.view_scopes, type: 'Ordergroup'}) unless FoodsoftMultishared.is_master?}
+        default_scope -> { joins(:groups).readonly(false).where(groups: {scope: FoodsoftMultishared.view_scopes(self), type: 'Ordergroup'}) unless FoodsoftMultishared.is_master?}
       end
     end
   end
@@ -70,7 +73,7 @@ module FoodsoftMultishared
   module ScopeOrdergroupAssociation
     def self.included(base) # :nodoc:
       base.class_eval do
-        default_scope -> { joins(:ordergroup).readonly(false) unless FoodsoftMultishared.is_master? }
+        default_scope -> { joins(:ordergroup).readonly(false).where(groups: {scope: FoodsoftMultishared.view_scopes(self)}) unless FoodsoftMultishared.is_master?}
       end
     end
   end
