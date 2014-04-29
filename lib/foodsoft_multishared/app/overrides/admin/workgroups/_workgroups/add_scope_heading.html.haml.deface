@@ -1,0 +1,3 @@
+/ insert_after 'thead th:contains("access_to")'
+- if FoodsoftMultishared.is_master?
+  %th= Workgroup.human_attribute_name :scope

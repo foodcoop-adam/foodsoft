@@ -1,0 +1,3 @@
+/ insert_after 'thead th:contains("last_login")'
+- if FoodsoftMultishared.is_master?
+  %th= Ordergroup.human_attribute_name :scope

@@ -1,0 +1,3 @@
+/ insert_after 'tbody td:contains("users.size")'
+- if FoodsoftMultishared.is_master?
+  %td= ordergroup.scope

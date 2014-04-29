@@ -1,0 +1,3 @@
+/ insert_before '.form-actions'
+- if FoodsoftMultishared.is_master?
+  = f.input :scope, collection: ['*'] + FoodsoftMultishared.get_scopes(true)
