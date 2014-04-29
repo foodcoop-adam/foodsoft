@@ -1,4 +1,18 @@
 en:
+  activerecord:
+    attributes:
+      article_category:
+        scope: Foodcoop
+      group:
+        scope: Foodcoop
+      message:
+        scope: Foodcoop
+      order:
+        scope: Foodcoop
+      supplier:
+        scope: Foodcoop
+      task:
+        scope: Foodcoop
   multishared_signup:
     error_no_ordergroup: Please ask your foodcoop to place you in an ordergroup.
     full: full

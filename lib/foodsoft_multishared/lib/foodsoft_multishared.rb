@@ -1,3 +1,4 @@
+require 'deface'
 require 'foodsoft_multishared/engine'
 require 'foodsoft_multishared/scoped_login'
 require 'foodsoft_multishared/scoped_signup'
@@ -33,10 +34,10 @@ module FoodsoftMultishared
   end
 
   # returns list of foodcoops
-  def self.get_scopes
+  def self.get_scopes(hidden=false)
     scopes = FoodsoftConfig.send :scopes
     app_config = FoodsoftConfig.class_eval 'APP_CONFIG'
-    scopes.reject {|scope| app_config[scope]['hidden']}
+    hidden ? scopes : scopes.reject {|scope| app_config[scope]['hidden']}
   end
 
   # returns configuration for foodcoop

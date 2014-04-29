@@ -1,0 +1,3 @@
+/ insert_after 'tbody td:contains("last_login")'
+- if FoodsoftMultishared.is_master?
+  %td= user.ordergroup.try(:scope)

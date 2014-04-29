@@ -5,7 +5,7 @@ module FoodsoftMultishared
   module ProtectScope
     def self.included(base) # :nodoc:
       base.class_eval do
-        validate :foodsoft_multishared_protect_scope, unless: FoodsoftMultishared.is_master?
+        validate :foodsoft_multishared_protect_scope, unless: -> { FoodsoftMultishared.is_master? }
 
         private
         def foodsoft_multishared_protect_scope
@@ -23,11 +23,19 @@ module FoodsoftMultishared
     end
   end
 
-  # only show records with matching scope
+  # only show records with matching scope (except for master instance)
   module RestrictScope
     def self.included(base) # :nodoc:
       base.class_eval do
         default_scope -> { where(scope: FoodsoftMultishared.view_scopes) unless FoodsoftMultishared.is_master? }
+      end
+    end
+  end
+
+  module RestrictScopeAlways
+    def self.included(base) # :nodoc:
+      base.class_eval do
+        default_scope -> { where(scope: FoodsoftMultishared.view_scopes) }
       end
     end
   end
@@ -48,11 +56,11 @@ module FoodsoftMultishared
   end
 
   # restrict users to those who have a matching group
-  # TODO - except the default foodcoop, which shows all?
+  #   to avoid having duplicate user records, only consider ordergroups
   module ScopeUsers
     def self.included(base) # :nodoc:
       base.class_eval do
-        default_scope -> { joins(:groups).readonly(false).where(groups: {scope: FoodsoftMultishared.view_scopes}) unless FoodsoftMultishared.is_master?}
+        default_scope -> { joins(:groups).readonly(false).where(groups: {scope: FoodsoftMultishared.view_scopes, type: 'Ordergroup'}) unless FoodsoftMultishared.is_master?}
       end
     end
   end
@@ -71,11 +79,16 @@ end
 # now patch desired controllers to include this
 ActiveSupport.on_load(:after_initialize) do
   models = [Group, Order, Supplier, ArticleCategory, Invite, Task]
+  models_master = [Group] # master instance has access to all of those from other instances
   models << Message if defined? FoodsoftMessages
   models.each do |model|
     model.send :include, FoodsoftMultishared::ProtectScope
     model.send :include, FoodsoftMultishared::SetDefaultScope
-    model.send :include, FoodsoftMultishared::RestrictScope
+    if models_master.include? model
+      model.send :include, FoodsoftMultishared::RestrictScope
+    else
+      model.send :include, FoodsoftMultishared::RestrictScopeAlways
+    end
   end
   User.send :include, FoodsoftMultishared::ScopeUsers
   [GroupOrder, FinancialTransaction].each do |model|

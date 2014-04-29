@@ -1,0 +1,3 @@
+/ insert_after 'tbody td:contains("format_roles")'
+- if FoodsoftMultishared.is_master?
+  %td= workgroup.scope

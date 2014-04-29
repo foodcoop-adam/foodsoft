@@ -1,0 +1,5 @@
+/ replace 'erb:contains("link_to(membership.group.name")'
+- if FoodsoftMultishared.is_master?
+  %li= link_to("#{membership.group.name} (#{membership.group.scope})", [:admin, membership.group])
+- else
+  %li= link_to(membership.group.name, [:admin, membership.group])
