@@ -29,8 +29,16 @@ module FoodsoftMultishared
   end
 
   # returns which foodcoop scopes one can view
-  def self.view_scopes
-    [FoodsoftConfig.scope, '*']
+  def self.view_scopes(type=nil)
+    scopes = [FoodsoftConfig.scope, '*']
+    if [Supplier, ArticleCategory, Order].include? type
+      join_scopes = FoodsoftConfig[:join_scope] || []
+      join_scopes.is_a? Hash and join_scopes = join_scopes.keys
+      join_scopes.is_a? Array or join_scopes = [join_scopes]
+      scopes + join_scopes
+    else
+      scopes
+    end
   end
 
   # returns list of foodcoops
