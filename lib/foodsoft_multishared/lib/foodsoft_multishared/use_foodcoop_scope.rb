@@ -63,7 +63,31 @@ module FoodsoftMultishared
   module ScopeUsers
     def self.included(base) # :nodoc:
       base.class_eval do
+
         default_scope -> { joins(:groups).readonly(false).where(groups: {scope: FoodsoftMultishared.view_scopes(self), type: 'Ordergroup'}) unless FoodsoftMultishared.is_master?}
+
+        with_options unless: -> { FoodsoftMultishared.is_master? } do |o|
+          o.validate :foodsoft_multishared_protect_scope
+          o.before_destroy :foodsoft_multishared_protect_scope
+        end
+
+        private
+        # XXX code duplication
+        def foodsoft_multishared_protect_scope
+          scope = ordergroup.try :scope
+          scope_was = ordergroup.try :scope_was
+          if not new_record? and not FoodsoftMultishared.own_scope?(scope_was)
+            Rails.logger.debug "Attempt to edit record from different scope #{scope_was} (mine is #{FoodsoftConfig.scope})"
+            # can only edit records that match our scope
+            errors[:base] << "This #{self.class.model_name.human} is not owned by your foodcoop."
+            return false
+          elsif not new_record? and not FoodsoftMultishared.own_scope?(scope)
+            # cannot change scope to something else
+            Rails.logger.debug "Attempt to change scope from #{scope_was} to #{scope}"
+            errors.add :scope, "Scope must be #{FoodsoftConfig.scope}."
+            return false
+          end
+        end
       end
     end
   end

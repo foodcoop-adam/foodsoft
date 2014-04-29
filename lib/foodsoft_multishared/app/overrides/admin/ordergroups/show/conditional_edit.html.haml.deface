@@ -1,0 +1,3 @@
+/ surround 'erb:contains("link_to"):contains("ui.")'
+- if FoodsoftMultishared.is_master? or FoodsoftMultishared.own_scope?(@ordergroup.scope)
+  = render_original
