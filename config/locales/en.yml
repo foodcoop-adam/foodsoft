@@ -492,12 +492,12 @@ en:
       filename: Order %{name}-%{date} - by group
       rows:
       - Article
+      - Unit
       - Ordered
       - Received
       - Price
-      - U.Q.
-      - Unit
       - Sum
+      - U.Q.
       sum: Total
       title: ! 'Order sorted by group: %{name}, closed at %{date}'
     order_fax:

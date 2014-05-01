@@ -14,6 +14,7 @@ class OrderByGroups < OrderPdf
     # Start rendering
     @order.group_orders.ordered.each do |group_order|
       total = 0
+      taxes = Hash.new {0}
       rows = []
       dimrows = []
 
@@ -24,6 +25,7 @@ class OrderByGroups < OrderPdf
         price = goa.order_article.price.fc_price(group_order.ordergroup)
         sub_total = price * goa.result
         total += sub_total
+        taxes[goa.order_article.price.tax] += goa.result * goa.order_article.price.tax_price
         rows <<  [goa.order_article.article.name,
                   goa.order_article.article.unit,
                   goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
@@ -37,6 +39,15 @@ class OrderByGroups < OrderPdf
 
       # total
       rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 5}, number_to_currency(total), nil]
+      # price details
+      price_details = []
+      price_details << "#{Article.human_attribute_name :price} #{number_to_currency group_order.net_price}"
+      price_details << "#{Article.human_attribute_name :deposit} #{number_to_currency group_order.deposit}" if group_order.deposit > 0
+      taxes.each do |tax, tax_price|
+        price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
+      end
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency (group_order.price - group_order.gross_price)}"
+      rows << [{content: '  ' + price_details.join('; '), colspan: 7}]
 
       # table header
       rows.unshift I18n.t('documents.order_by_groups.rows').dup
@@ -54,9 +65,15 @@ class OrderByGroups < OrderPdf
         table.cells.border_color = 'dddddd'
         table.rows(0).border_width = 1
         table.rows(0).border_color = '666666'
-        table.row(rows.length-2).border_width = 1
-        table.row(rows.length-2).border_color = '666666'
+        table.row(rows.length-3).border_width = 1
+        table.row(rows.length-3).border_color = '666666'
+        table.row(rows.length-2).borders = []
         table.row(rows.length-1).borders = []
+
+        # bottom row with price details
+        table.row(rows.length-1).text_color = '999999'
+        table.row(rows.length-1).size = fontsize(7)
+        table.row(rows.length-1).padding = [0, 5, 0, 5]
 
         table.column(0).width = 190
         table.column(3).font_style = :bold
