@@ -6,7 +6,7 @@
         %td{colspan: cols}
       %tr.price_details
         %td{colspan: cols-1}= link_to I18n.t("group_orders.group_order_totals.previous_#{sum>0 ? 'surplus' : 'deficit'}"), my_ordergroup_path
-        %td= number_to_currency(sum.abs) + (' -' if sum > 0)
+        %td= number_to_currency(sum.abs) + ('&nbsp;-'.html_safe if sum > 0)
       %tr.price_details
         %th{colspan: cols-1}= t '.payable'
         %th= number_to_currency payable
