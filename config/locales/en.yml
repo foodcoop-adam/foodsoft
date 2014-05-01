@@ -495,10 +495,10 @@ en:
       - Ordered
       - Received
       - Price
-      - Unit quantity
+      - U.Q.
       - Unit
       - Sum
-      sum: Sum
+      sum: Total
       title: ! 'Order sorted by group: %{name}, closed at %{date}'
     order_fax:
       date: sent %{date}

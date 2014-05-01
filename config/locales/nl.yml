@@ -458,12 +458,12 @@ nl:
       rows:
       - Artikel
       - Besteld
-      - Hoeveelheid
+      - Ontvangen
       - Prijs
       - Gr.Eenh.
       - Eenheid
       - Som
-      sum: Som
+      sum: Totaal
       title: ! 'Huishoudenslijst van bestelling: %{name}, gesloten op %{date}'
     order_fax:
       date: verzonden %{date}
