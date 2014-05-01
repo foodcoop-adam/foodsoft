@@ -1,48 +1,33 @@
 .article-info
   %h3= order_article.article.name
 
-  %table.table
-    %tbody
-      %tr
-        %th= Article.human_attribute_name(:supplier) + ':'
-        %td= order_article.article.supplier.name
+  %p
+    - if order_article.article.manufacturer.blank?
+      = raw t '.supplied_by', supplier: content_tag(:em, order_article.article.supplier.name)
+    - elsif order_article.article.supplier.name == order_article.article.manufacturer
+      = raw t '.supplied_and_made_by', manufacturer: content_tag(:em, order_article.article.supplier.name)
+    - else
+      = raw t '.supplied_by_made_by', supplier: content_tag(:em, order_article.article.supplier.name), manufacturer: content_tag(:em, order_article.article.manufacturer)
+    - unless order_article.article.origin.blank?
+      = raw t '.origin_in', origin: content_tag(:em, order_article.article.origin)
 
-      - unless order_article.article.manufacturer.blank?
-        %tr
-          %th= Article.human_attribute_name(:manufacturer) + ':'
-          %td= order_article.article.manufacturer
+  - unless order_article.article.note.blank?
+    %p= order_article.article.note
 
-      - unless order_article.article.origin.blank?
-        %tr
-          %th= Article.human_attribute_name(:origin) + ':'
-          %td= order_article.article.origin
-
-      %tr
-        %th= Article.human_attribute_name(:units) + ':'
-        - if order_article.article.is_a? StockArticle
-          %td 
-            = order_article.article.quantity_available
-            &times;
-            = order_article.article.unit
-        - else
-          %td
-            = order_article.article.unit
-            - if order_article.price.unit_quantity > 1
-              %span.package
-                &times;
-                = order_article.price.unit_quantity 
-                = pkg_helper_icon
-
-      - unless order_article.article.note.blank?
-        %tr
-          %th= Article.human_attribute_name(:note) + ':'
-          %td= order_article.article.note
-
-      %tr
-        %th= t('.units_full') + ':'
-        %td= order_article.units_to_order
-
-      %tr
-        %th= t('.units_total') + ':'
-        %td= "#{order_article.quantity} + #{order_article.tolerance}"
-
+  - if order_article.article.is_a? StockArticle
+    %p.unavailable
+      = order_article.article.quantity_available
+      &times;
+      = order_article.article.unit
+      = t '.ordered_stock', ordered: order_article.quantity
+  - else
+    %p.unavailable
+      = order_article.quantity
+      &times;
+      = order_article.article.unit
+      - if not order_article.article.unit_quantity > 1
+        = t '.ordered_normal'
+      - else
+        - if order_article.tolerance > 0
+          (+#{order_article.tolerance} #{t '.extra'})
+        = raw t '.ordered_tolerance', units: pkg_helper_icon(order_article.units_to_order), unit_quantity: order_article.article.unit_quantity

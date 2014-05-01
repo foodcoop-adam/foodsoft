@@ -12,8 +12,14 @@ en:
     order_article:
       max_quantity: 'of %{amount}'
     order_article_info:
-      units_full: Filled units
-      units_total: Total units
+      extra: extra
+      origin_in: in %{origin}
+      ordered_stock: available in stock, of which %{ordered} is ordered.
+      ordered_normal: ordered by all members.
+      ordered_tolerance: ordered by all members, which is %{units} boxes of %{unit_quantity}.
+      supplied_by: from %{supplier}
+      supplied_and_made_by: made by %{manufacturer}
+      supplied_by_made_by: from %{supplier} made by %{manufacturer}
     order_articles:
       all_members: All members
       all_members_short: All

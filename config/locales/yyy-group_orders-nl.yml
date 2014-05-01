@@ -12,8 +12,14 @@ nl:
     order_article:
       max_quantity: 'van %{amount}'
     order_article_info:
-      units_full: Volle eenheden
-      units_total: Totaal aantal
+      extra: extra
+      origin_in: uit %{origin}
+      ordered_stock: op voorraad, waarvan %{ordered} is besteld.
+      ordered_normal: besteld door iedereen.
+      ordered_tolerance: besteld door iedereen, wat neerkomt op %{units} dozen van %{unit_quantity}.
+      supplied_by: van %{supplier}
+      supplied_and_made_by: gemaakt door %{manufacturer}
+      supplied_by_made_by: van %{supplier} gemaakt door %{manufacturer}
     order_articles:
       all_members: Alle leden
       all_members_short: Allen

@@ -1,5 +1,4 @@
 - cur_open = order_article.order.open?
-- cur_has_max_quantity = !order_article.max_quantity.nil?
 - cur_has_tolerance = (order_article.price.unit_quantity > 1)
 - group_order_article = @goa_by_oa[order_article.id]
 %tr.order-article{class: "#{cycle('even', 'odd', name: 'order_articles')} #{'unavailable' if !cur_open and group_order_article.result==0}", id: "order_article_#{order_article.id}"}
@@ -10,15 +9,13 @@
   %td.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
   %td.unit{data: {'unit_quantity' => order_article.price.unit_quantity}}= order_article.article.unit
   - if @has_open_orders
-    %td.units_to_order{class: ('before_unit' if @has_tolerance or @has_max_quantity)}
+    %td.units_to_order{class: ('before_unit' if @has_tolerance)}
       %span.units_to_order_value= order_article.units_to_order * order_article.price.unit_quantity
       - if @has_tolerance
         %span.plus= cur_has_tolerance ? '+' : '&nbsp;'.html_safe
     - if @has_tolerance
-      %td.final_unit{class: ('before_unit' if @has_max_quantity)}
+      %td.final_unit
         = final_unit_bar order_article if cur_has_tolerance
-    - if @has_max_quantity
-      %td.max_quantity= t('.max_quantity', amount: order_article.max_quantity) if cur_has_max_quantity
   %td.center.quantity
     - if cur_open
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
