@@ -15,9 +15,6 @@
             - cols += 1
             %th.units_to_order.center
               %abbr{title: t('.all_members')}= t '.all_members_short'
-          - if @has_max_quantity
-            - cols += 1
-            %th.max_quantity= #heading_helper OrderArticle, :max_quantity, short: true
         %th#col_required.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :quantity
         - if @has_tolerance
           - cols += 1
