@@ -593,7 +593,7 @@ en:
       - U.Q.
       - Unit
       - Sum
-      sum: Sum
+      sum: Total
       title: 'Order sorted by group: %{name}, closed at %{date}'
     order_fax:
       filename: Order %{name}-%{date} - Fax

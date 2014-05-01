@@ -572,7 +572,7 @@ nl:
       - Colli
       - Eenheid
       - Som
-      sum: Som
+      sum: Totaal
       title: 'Huishoudenslijst van bestelling: %{name}, gesloten op %{date}'
     order_fax:
       filename: Bestelling %{name}-%{date} - Fax
