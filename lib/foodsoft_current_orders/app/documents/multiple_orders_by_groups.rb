@@ -11,34 +11,53 @@ class MultipleOrdersByGroups < OrderPdf
 
   def body
     # Start rendering
-    Ordergroup.joins(:orders).where(:orders => {:id => @order}).select('distinct(groups.id) AS id, groups.name AS name').reorder(:name).each do |ordergroup|
+    Ordergroup.joins(:orders).where(:orders => {:id => @order}).select('distinct(groups.id) AS id, groups.name AS name, groups.price_markup_key').reorder(:name).each do |ordergroup|
 
       total = 0
+      taxes = Hash.new {0}
       rows = []
       dimrows = []
+      group_order_articles = GroupOrderArticle.ordered.joins(:group_order => :order).where(:group_orders =>{:ordergroup_id => ordergroup.id}).where(:orders => {id: @order}).includes(:order_article => :article_price).reorder('orders.id')
+      has_tolerance = group_order_articles.where('article_prices.unit_quantity > 1').any?
 
-      GroupOrderArticle.ordered.joins(:group_order => :order).where(:group_orders =>{:ordergroup_id => ordergroup.id}).where(:orders => {id: @order}).includes(:order_article).reorder('orders.id').each do |goa|
-        price = goa.order_article.price.fc_price(goa.group_order.ordergroup)
+      group_order_articles.each do |goa|
+        price = goa.order_article.price.fc_price(ordergroup)
         sub_total = goa.total_price
         total += sub_total
+        taxes[goa.order_article.price.tax] += goa.result * goa.order_article.price.tax_price(ordergroup)
         rows <<  [goa.order_article.article.name,
                   goa.order_article.article.unit,
-                  goa.group_order.order.name.truncate(9, omission: ''),
-                  "#{goa.quantity} + #{goa.tolerance}",
+                  goa.group_order.order.name.truncate(10, omission: ''),
+                  goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
                   goa.result,
                   number_to_currency(price),
-                  number_to_currency(sub_total)]
+                  number_to_currency(sub_total),
+                  (goa.order_article.price.unit_quantity if has_tolerance)]
         dimrows << rows.length if goa.result == 0
       end
       next if rows.length == 0
-      rows << [I18n.t('documents.order_by_groups.sum'), nil, nil, nil, nil, nil, number_to_currency(total)]
-      rows.unshift [OrderArticle.human_attribute_name(:name),
-                    OrderArticle.human_attribute_name(:unit),
-                    OrderArticle.human_attribute_name(:supplier),
-                    I18n.t('shared.articles.ordered'),
-                    I18n.t('shared.articles.received'),
-                    OrderArticle.human_attribute_name(:price),
-                    I18n.t('shared.articles_by.price_sum')]
+
+      # total
+      go_totals = GroupOrder.ordered.where(ordergroup_id: ordergroup.id).where(order_id: @order).select('SUM(net_price) AS net_price, SUM(deposit) AS deposit, SUM(gross_price) AS gross_price, SUM(tax0) AS tax0, SUM(tax1) AS tax1, SUM(tax2) AS tax2, SUM(tax3) AS tax3').first
+      rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 6}, number_to_currency(total), nil]
+      # price details
+      price_details = []
+      price_details << "#{Article.human_attribute_name :price} #{number_to_currency go_totals.net_price}"
+      price_details << "#{Article.human_attribute_name :deposit} #{number_to_currency go_totals.deposit}" if go_totals.deposit > 0
+      taxes.each do |tax, tax_price|
+        price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
+      end
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage ordergroup.markup_pct} #{number_to_currency (total - go_totals.gross_price)}"
+      rows << [{content: ('  ' + price_details.join('; ') if total > 0), colspan: 8}]
+
+      # table header
+      rows.unshift I18n.t('documents.order_by_groups.rows').dup
+      if has_tolerance
+        rows.first[6] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
+      else
+        rows.first[6] = nil
+      end
+      rows.first.insert(2, Article.human_attribute_name(:supplier))
 
       text ordergroup.name, size: fontsize(9), style: :bold
       table rows, width: 500, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
@@ -48,16 +67,30 @@ class MultipleOrdersByGroups < OrderPdf
         table.cells.border_color = 'dddddd'
         table.rows(0).border_width = 1
         table.rows(0).border_color = '666666'
-        table.row(rows.length-2).border_width = 1
-        table.row(rows.length-2).border_color = '666666'
+        table.row(rows.length-3).border_width = 1
+        table.row(rows.length-3).border_color = '666666'
+        table.row(rows.length-2).borders = []
         table.row(rows.length-1).borders = []
 
-        table.column(0).width = 180
-        table.column(2).width = 60
+        # bottom row with price details
+        table.row(rows.length-1).text_color = '999999'
+        table.row(rows.length-1).size = fontsize(7)
+        table.row(rows.length-1).padding = [0, 5, 0, 5]
+        table.row(rows.length-1).height = 0 if total == 0
+
+        table.column(0).width = 150
+        table.column(2).width = 62
         table.column(4).font_style = :bold
-        table.columns(3..5).align = :right
+        table.columns(3..6).align = :center
+        table.column(5).align = :right
         table.column(6).align = :right
         table.column(6).font_style = :bold
+        table.column(7).align = :center
+        # dim rows not relevant for members
+        table.column(3).text_color = '999999'
+        table.column(7).text_color = '999999'
+        # hide unit_quantity if there's no tolerance anyway
+        table.column(7).width = has_tolerance ? 20 : 0
 
         # dim rows which were ordered but not received
         dimrows.each { |ri| table.row(ri).text_color = '999999' }
