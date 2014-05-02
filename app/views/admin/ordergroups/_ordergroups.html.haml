@@ -12,7 +12,7 @@
   %tbody
     - for ordergroup in @ordergroups
       %tr{:class => cycle('even','odd', :name => 'groups')}
-        %td= link_to ordergroup.name, [:admin, ordergroup]
+        %td= show_group_link ordergroup
         %td= ordergroup.contact
         %td= link_to_gmaps ordergroup.contact_address
         %td= ordergroup.users.size

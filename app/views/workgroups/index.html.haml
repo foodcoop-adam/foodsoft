@@ -19,7 +19,7 @@
   - for workgroup in @workgroups
     %tr
       %td= h workgroup.type
-      %td= h workgroup.name
+      %td= show_group workgroup
       %td= h workgroup.description
       %td= h workgroup.account_balance
       %td= h workgroup.account_updated

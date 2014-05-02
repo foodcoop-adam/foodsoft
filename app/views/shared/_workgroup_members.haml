@@ -4,7 +4,7 @@
     - Workgroup.all.each do |workgroup|
       .accordion-group
         .accoridon-heading
-          = link_to workgroup.name, "#collapse#{workgroup.id}", data: {toggle: 'collapse', parent: '#groupMembers'}
+          = link_to show_group(workgroup), "#collapse#{workgroup.id}", data: {toggle: 'collapse', parent: '#groupMembers'}
         %div{id: "collapse#{workgroup.id}", class: 'accordion-body collapse'}
           .accordion-inner
             %ul.unstyled

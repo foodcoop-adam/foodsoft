@@ -57,7 +57,7 @@ class OrderByGroups < OrderPdf
         rows.first[6] = nil
       end
 
-      text group_order.ordergroup.name, size: fontsize(9), style: :bold
+      text show_group(group_order.ordergroup), size: fontsize(9), style: :bold
       table rows, width: 500, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]

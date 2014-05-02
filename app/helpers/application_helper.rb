@@ -212,6 +212,26 @@ module ApplicationHelper
     show_user user
   end
 
+  # render a group (plugins can override this)
+  def show_group(group, options = {})
+    if group
+      group.name
+    elsif group.is_a? Ordergroup
+      I18n.t('model.user.no_ordergroup')
+    else
+      '?'
+    end
+  end
+
+  # render group presentation linking to default action
+  def show_group_link(group, options = {})
+    if group and current_user.role_admin?
+      link_to show_group(group, options), [:admin, group]
+    else
+      show_group(group, options)
+    end
+  end
+
   # allow truncate to add title when tooltip option is given
   def truncate(text, options={}, &block)
     return text if not text or text.length <= (options[:length] or 30)

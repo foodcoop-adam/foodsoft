@@ -56,7 +56,7 @@ class HomeController < ApplicationController
     membership = Membership.find(params[:membership_id])
     if membership.user == current_user
       membership.destroy
-      flash[:notice] = I18n.t('home.ordergroup_cancelled', :group => membership.group.name)
+      flash[:notice] = I18n.t('home.ordergroup_cancelled', :group => show_group(membership.group))
     else
       flash[:error] = I18n.t('errors.general')
     end

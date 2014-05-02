@@ -1,6 +1,6 @@
 - args = {user: @invite.user.name, mail: @invite.user.email, link: @link, expires: I18n.l(@invite.expires_at), foodcoop: FoodsoftConfig[:name]}
 - if @invite.group
-  = raw t '.text_into_group', args.merge(group: @invite.group.name)
+  = raw t '.text_into_group', args.merge(group: show_group(@invite.group))
 - else
   = raw t '.text_new_group', args
 
@@ -11,6 +11,6 @@
   -# TODO use link with 'locale=en' so that the English form is displayed
   - args[:expires] = I18n.l(@invite.expires_at, locale: :en)
   - if @invite.group
-    = raw t '.text_into_group', args.merge(group: @invite.group.name, locale: :en)
+    = raw t '.text_into_group', args.merge(group: show_group(@invite.group), locale: :en)
   - else
     = raw t '.text_new_group', args.merge(locale: :en)

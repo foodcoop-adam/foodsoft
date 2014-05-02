@@ -110,7 +110,7 @@ module OrdersHelper
     if group_orders.count == 0
       return txt
     else
-      desc = group_orders.all.map {|g| g.ordergroup.name}.join(', ')
+      desc = group_orders.all.map {|g| show_group(g.ordergroup)}.join(', ')
       content_tag(:abbr, txt, title: desc).html_safe
     end
   end

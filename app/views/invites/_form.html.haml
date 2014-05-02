@@ -1,5 +1,5 @@
 - if invite.group
-  %p= raw t '.body_into_group', group: h(invite.group.name), type: h(invite.group.class.model_name.human), foodcoop: h(FoodsoftConfig[:name])
+  %p= raw t '.body_into_group', group: h(show_group invite.group), type: h(invite.group.class.model_name.human), foodcoop: h(FoodsoftConfig[:name])
 - else
   %p= raw t '.body_new_group', foodcoop: h(FoodsoftConfig[:name])
 = form.hidden_field :group_id

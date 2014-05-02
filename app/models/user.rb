@@ -148,10 +148,6 @@ class User < ActiveRecord::Base
   def role_orders?
     groups.detect {|group| group.role_orders?}
   end
-  
-  def ordergroup_name
-    ordergroup ? ordergroup.name : I18n.t('model.user.no_ordergroup')
-  end
 
   # returns true if user is a member of a given group
   def member_of?(group)

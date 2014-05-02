@@ -12,7 +12,7 @@
   %tbody
     - for ordergroup in @ordergroups
       %tr
-        %td= ordergroup.name
+        %td= show_group_link ordergroup
         %td=h ordergroup.users.collect { |u| show_user(u) }.join(", ")
         %td= format_date ordergroup.last_order.try(:starts)
 

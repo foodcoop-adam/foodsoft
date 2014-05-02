@@ -12,7 +12,7 @@
   - unless tasks.empty?
     %section
       %h3
-        = group.name
+        = show_group group
         %small= link_to t('.show_group_tasks'), workgroup_tasks_path(workgroup_id: group)
       = render 'list', tasks: tasks
       = link_to_top

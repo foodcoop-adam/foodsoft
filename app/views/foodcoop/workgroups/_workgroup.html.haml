@@ -1,5 +1,5 @@
 %section.well
-  %h3= workgroup.name
+  %h3= show_group workgroup
   = render :partial => 'shared/group', :locals => { :group => workgroup }
   = link_to t('.show_tasks'), workgroup_tasks_path(workgroup_id: workgroup), class: 'btn'
   - if workgroup.member?(current_user)

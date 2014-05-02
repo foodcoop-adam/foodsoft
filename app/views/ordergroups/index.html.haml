@@ -19,7 +19,7 @@
   - for ordergroup in @ordergroups
     %tr
       %td= h ordergroup.type
-      %td= h ordergroup.name
+      %td= show_group ordergroup
       %td= h ordergroup.description
       %td= h ordergroup.account_balance
       %td= h ordergroup.account_updated

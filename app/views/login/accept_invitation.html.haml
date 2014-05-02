@@ -2,7 +2,7 @@
 
 - if @invite and @invite.group
   %p
-    = raw t '.invited_into_group', group: h(@invite.group.name), foodcoop: h(FoodsoftConfig[:name])
+    = raw t '.invited_into_group', group: h(show_group @invite.group), foodcoop: h(FoodsoftConfig[:name])
     = t '.invited_into_group_members', members: @invite.group.users.map(&:name).join(', '), count: @invite.group.users.count
 - else
   %p= t '.invited_new_group', foodcoop: FoodsoftConfig[:name]
