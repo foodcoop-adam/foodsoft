@@ -59,7 +59,7 @@ class MultipleOrdersByGroups < OrderPdf
       end
       rows.first.insert(2, Article.human_attribute_name(:supplier))
 
-      text ordergroup.name, size: fontsize(9), style: :bold
+      text show_group(ordergroup), size: fontsize(9), style: :bold
       table rows, width: 500, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
