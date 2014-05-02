@@ -1,4 +1,4 @@
 // untested
-$('h1, title').html('<%= j t('.title', name: @ordergroup.name) %>');
+$('h1, title').html('<%= j t('.title', name: show_group(@ordergroup)) %>');
 $('#articles_by_groups tbody').replaceWith('<%= j render('articles') %>');
 $('#payment_bar').replaceWith('<%= j render('payment_bar') %>');
