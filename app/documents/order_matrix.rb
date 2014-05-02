@@ -62,7 +62,7 @@ class OrderMatrix < OrderPdf
 
       @order.group_orders.includes(:ordergroup).all.each do |group_order|
 
-        group_result = [group_order.ordergroup.name.truncate(20)]
+        group_result = [show_group(group_order.ordergroup).truncate(20)]
 
         for order_article in current_order_articles
           # get the Ordergroup result for this order_article

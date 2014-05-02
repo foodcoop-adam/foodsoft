@@ -1,4 +1,4 @@
-- title t '.title', name: @workgroup.name
+- title t '.title', name: show_group(@workgroup)
 
 %section= render 'shared/group', group: @workgroup
 = link_to t('ui.edit'), edit_admin_workgroup_path(@workgroup), class: 'btn'

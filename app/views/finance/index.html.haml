@@ -34,7 +34,7 @@
         - @financial_transactions.each do |ft|
           %tr
             %td= format_date(ft.created_on)
-            %td= ft.ordergroup.name
+            %td= show_group_link ft.ordergroup
             %td= ft.note
             %td.numeric{:style => "color:#{ft.amount < 0 ? 'red' : 'black'}"}= number_to_currency(ft.amount)
   .span6

@@ -11,7 +11,7 @@
   %tbody
     - for ordergroup in @ordergroups
       %tr
-        %td= ordergroup.name
+        %td= show_group ordergroup
         %td= ordergroup.contact
         %td.numeric= number_to_currency(ordergroup.available_funds)
         %td

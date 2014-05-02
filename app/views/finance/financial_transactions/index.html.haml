@@ -1,4 +1,4 @@
-- title t('.title', name: @ordergroup.name)
+- title t('.title', name: show_group(@ordergroup))
 
 - if FoodsoftConfig[:use_paymanual]
   - content_for :actionbar do

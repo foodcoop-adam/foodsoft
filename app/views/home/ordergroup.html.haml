@@ -2,7 +2,7 @@
 
 .row-fluid
   .span4
-    %h2= @ordergroup.name
+    %h2= show_group @ordergroup
     .well
       - unless @ordergroup.description.blank?
         %p= @ordergroup.description

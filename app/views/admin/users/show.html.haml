@@ -30,7 +30,7 @@
       %h4= t '.groupabos'
       %ul.unstyled
         - for membership in Membership.find_all_by_user_id(@user.id)
-          %li= link_to(membership.group.name, [:admin, membership.group])
+          %li= show_group_link membership.group
 
 %hr/
 %p

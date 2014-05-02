@@ -11,7 +11,7 @@
   %tbody
     - for workgroup in @workgroups
       %tr
-        %td= link_to workgroup.name, [:admin, workgroup]
+        %td= show_group_link workgroup
         %td= workgroup.users.size
         %td= format_roles(workgroup)
         %td

@@ -2,7 +2,7 @@
   - if not defined?(heading) or heading
     %tr.list-heading
       %th{colspan: 7}
-        %h4.name= group_order.ordergroup.name
+        %h4.name= show_group group_order.ordergroup
       %th.price_markup_note{colspan: 3}
         = show_price_markup group_order.ordergroup, format: :percent_label, optional: true
   - total = 0

@@ -14,7 +14,7 @@
     %table.table.table-striped
       - @current_user.memberships.each do |membership|
         %tr
-          %td= membership.group.name
+          %td= show_group membership.group
           %td= link_to t('.groups.invite'), new_invite_path(id: membership.group_id),
             remote: true, class: 'btn btn-success btn-small'
           - if membership.group.type != 'Ordergroup'
