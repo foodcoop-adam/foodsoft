@@ -1,14 +1,14 @@
 # encoding: utf-8
-class MultipleOrdersByArticles < OrderPdf
+class MultipleOrdersScopeByArticles < OrderPdf
 
   include OrdersHelper
 
   def filename
-    I18n.t('documents.multiple_orders_by_articles.filename', count: @order.count) + '.pdf'
+    I18n.t('documents.multiple_orders_scope_by_articles.filename', count: @order.count) + '.pdf'
   end
 
   def title
-    I18n.t('documents.multiple_orders_by_articles.title', count: @order.count)
+    I18n.t('documents.multiple_orders_scope_by_articles.title', count: @order.count)
   end
 
   def body
@@ -18,16 +18,23 @@ class MultipleOrdersByArticles < OrderPdf
       rows = []
       dimrows = []
 
+      amounts = {}
       for goa in order_article.group_order_articles.ordered
-        rows << [show_group(goa.group_order.ordergroup),
-                 goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
-                 goa.result,
-                 number_to_currency(goa.total_price(order_article))]
-        dimrows << rows.length if goa.result == 0
+        scope = goa.group_order.ordergroup.scope
+        amounts[scope] ||= {quantity: 0, tolerance: 0, result: 0}
+        [:quantity, :tolerance, :result].each {|f| amounts[scope][f] += goa.send(f) }
+      end
+      amounts.each_pair do |scope, goa|
+        rows << [scope,
+                 goa[:tolerance] > 0 ? "#{goa[:quantity]} + #{goa[:tolerance]}" : goa[:quantity],
+                 goa[:result],
+                 number_to_currency(order_article.price.fc_price * goa[:result])]
+        dimrows << rows.length if goa[:result] == 0
       end
       next if rows.length == 0
       sum = order_article.group_orders_sum
-      rows.unshift I18n.t('documents.order_by_articles.rows') # table header
+      rows.unshift I18n.t('documents.order_by_articles.rows').dup # table header
+      rows[0][0] = Ordergroup.human_attribute_name :scope
 
       rows << [I18n.t('documents.order_by_groups.sum'),
                order_article.tolerance > 0 ? "#{order_article.quantity} + #{order_article.tolerance}" : order_article.quantity,
@@ -36,7 +43,7 @@ class MultipleOrdersByArticles < OrderPdf
 
       text "<b>#{order_article.article.name}</b> " +
            "(#{order_article.article.unit}; #{number_to_currency order_article.price.fc_price}; " +
-           units_history_line(order_article, nil, plain: true) + ')',
+           units_history_line(order_article, order_article.order, plain: true) + ')',
            size: fontsize(10), inline_format: true
       table rows, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders

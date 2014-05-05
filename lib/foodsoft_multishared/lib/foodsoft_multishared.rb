@@ -5,6 +5,8 @@ require 'foodsoft_multishared/scoped_signup'
 require 'foodsoft_multishared/use_foodcoop_scope'
 require 'foodsoft_multishared/fix_foodcoop_group_uniqueness'
 require 'foodsoft_multishared/default_sub_name'
+require 'foodsoft_multishared/add_scope_to_documents'
+require 'foodsoft_multishared/order_by_scope'
 if defined? FoodsoftSignup
   require 'underscore-rails'
   require 'gmaps4rails'

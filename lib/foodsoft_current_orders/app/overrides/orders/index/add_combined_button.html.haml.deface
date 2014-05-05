@@ -1,4 +1,4 @@
-/ insert_before 'h2:contains(".orders_finished")'
+/ insert_before 'h2 erb:contains(".orders_finished"), h2:contains(".orders_settled")'
 .btn-toolbar.pull-right#orders_finished_toolbar
   .btn-group
     = link_to '#', data: {toggle: 'dropdown'}, class: 'btn dropdown-toggle' do
