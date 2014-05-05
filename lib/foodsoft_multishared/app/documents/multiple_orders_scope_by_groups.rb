@@ -1,5 +1,5 @@
 # encoding: utf-8
-class MultipleOrdersByGroups < OrderPdf
+class MultipleOrdersScopeByGroups < OrderPdf
 
   def filename
     I18n.t('documents.multiple_orders_by_groups.filename', count: @order.count) + '.pdf'
@@ -11,21 +11,19 @@ class MultipleOrdersByGroups < OrderPdf
 
   def body
     # Start rendering
-    @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id) AS id').select('groups.name').select('groups.price_markup_key').reorder('groups.name')
-    @ordergroups.each do |ordergroup|
+    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).order(:scope).pluck('DISTINCT(groups.scope) AS scope')
+    @scopes.each do |scope|
 
       total = 0
-      taxes = Hash.new {0}
       rows = []
       dimrows = []
-      group_order_articles = GroupOrderArticle.ordered.joins(:group_order => :order).where(:group_orders =>{:ordergroup_id => ordergroup.id}).where(:orders => {id: @order}).includes(:order_article => :article_price).reorder('orders.id')
+      group_order_articles = GroupOrderArticle.ordered.joins(:group_order => [:order, :ordergroup]).where(:groups => {:scope => scope}).where(:orders => {id: @order}).includes(:order_article => :article_price).reorder('orders.id')
       has_tolerance = group_order_articles.where('article_prices.unit_quantity > 1').any?
 
       group_order_articles.each do |goa|
-        price = goa.order_article.price.fc_price(ordergroup)
-        sub_total = goa.total_price
+        price = goa.order_article.price.fc_price
+        sub_total = price * goa.result
         total += sub_total
-        taxes[goa.order_article.price.tax] += goa.result * goa.order_article.price.tax_price(ordergroup)
         rows <<  [goa.order_article.article.name,
                   goa.order_article.article.unit,
                   goa.group_order.order.name.truncate(10, omission: ''),
@@ -39,16 +37,17 @@ class MultipleOrdersByGroups < OrderPdf
       next if rows.length == 0
 
       # total
-      go_totals = GroupOrder.ordered.where(ordergroup_id: ordergroup.id).where(order_id: @order).select('SUM(net_price) AS net_price, SUM(deposit) AS deposit, SUM(gross_price) AS gross_price, SUM(tax0) AS tax0, SUM(tax1) AS tax1, SUM(tax2) AS tax2, SUM(tax3) AS tax3').first
+      go_totals = GroupOrder.ordered.joins(:ordergroup).where(:groups => {:scope => scope}).where(order_id: @order).select('SUM(net_price) AS net_price, SUM(deposit) AS deposit, SUM(gross_price) AS gross_price, SUM(tax0) AS tax0, SUM(tax1) AS tax1, SUM(tax2) AS tax2, SUM(tax3) AS tax3').first
       rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 6}, number_to_currency(total), nil]
       # price details
       price_details = []
       price_details << "#{Article.human_attribute_name :price} #{number_to_currency go_totals.net_price}"
       price_details << "#{Article.human_attribute_name :deposit} #{number_to_currency go_totals.deposit}" if go_totals.deposit > 0
-      taxes.each do |tax, tax_price|
-        price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
+      for i in 0..3 do
+        next unless (tax_price = go_totals.send "tax#{i}") > 0
+        price_details << "#{Article.human_attribute_name :tax} #{FoodsoftConfig[:taxes][i]}% #{number_to_currency tax_price}"
       end
-      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage ordergroup.markup_pct} #{number_to_currency (total - go_totals.gross_price)}"
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_currency (total - go_totals.gross_price)}"
       rows << [{content: ('  ' + price_details.join('; ') if total > 0), colspan: 8}]
 
       # table header
@@ -60,7 +59,7 @@ class MultipleOrdersByGroups < OrderPdf
       end
       rows.first.insert(2, Article.human_attribute_name(:supplier))
 
-      text show_group(ordergroup), size: fontsize(9), style: :bold
+      text scope, size: fontsize(9), style: :bold
       table rows, width: 500, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
