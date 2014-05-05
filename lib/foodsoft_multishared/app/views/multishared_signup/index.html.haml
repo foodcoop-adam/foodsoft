@@ -4,7 +4,7 @@
 
 .row-fluid
   .span6
-    %p= FoodsoftConfig[:multishared_signup_text] || t('.text')
+    %p= (FoodsoftConfig[:multishared_signup_text] || t('.text')).html_safe
 
     - if use_filter
       .form-search
@@ -20,7 +20,7 @@
         = f.input_field :scope, collection: @scopes_di.to_a.map {|(s,cfg)| [scope_title(s, cfg), s]}, as: :radio_buttons, disabled: true
 
       %p
-      = f.submit t('.submit')
+      = f.submit t('.submit') if @scopes_en.any?
 
   .span6
     #map{style: 'height: 400px'}
