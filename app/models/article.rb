@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'ostruct'
 class Article < ActiveRecord::Base
 
   # Replace numeric seperator with database format
@@ -55,45 +56,51 @@ class Article < ActiveRecord::Base
     order.order_articles.where(article_id: id).where('quantity > 0').one?
   end
   
-  # this method checks, if the shared_article has been changed
-  # unequal attributes will returned in array
-  # if only the timestamps differ and the attributes are equal, 
-  # false will returned and self.shared_updated_on will be updated
-  def shared_article_changed?
+  # This method checks if the shared_article has been changed.
+  # Unequal attributes will returned in array.
+  # If only the timestamps differ and the attributes are equal, 
+  # false will returned and self.shared_updated_on will be updated.
+  # Also supports passing in a shared_article or hash of shared_article fields.
+  # When the option convert_units is set to false, no unit conversion will be done.
+  def shared_article_changed?(shared_article = self.shared_article, options={})
     # skip early if the timestamp hasn't changed
-    unless self.shared_article.nil? or self.shared_updated_on == self.shared_article.updated_on
+    return if shared_article.nil?
+    return if shared_article == self.shared_article and self.shared_updated_on == shared_article.updated_on
+    # allow to use a hash as well (for uploads)
+    shared_article = OpenStruct.new(shared_article) if shared_article.is_a? Hash
       
+    unless options[:convert_units] == false
       # try to convert units
       # convert supplier's price and unit_quantity into fc-size
-      new_price, new_unit_quantity = self.convert_units
+      new_price, new_unit_quantity = self.convert_units(shared_article)
       new_unit = self.unit
       unless new_price and new_unit_quantity
         # if convertion isn't possible, take shared_article-price/unit_quantity
-        new_price, new_unit_quantity, new_unit = self.shared_article.price, self.shared_article.unit_quantity, self.shared_article.unit
+        new_price, new_unit_quantity, new_unit = shared_article.price, shared_article.unit_quantity, shared_article.unit
       end
-      
-      # check if all attributes differ
-      unequal_attributes = Article.compare_attributes(
-        {
-          :name => [self.name, self.shared_article.name],
-          :manufacturer => [self.manufacturer, self.shared_article.manufacturer.to_s],
-          :origin => [self.origin, self.shared_article.origin],
-          :unit => [self.unit, new_unit],
-          :price => [self.price, new_price],
-          :tax => [self.tax, self.shared_article.tax],
-          :deposit => [self.deposit, self.shared_article.deposit],
-          # take care of different num-objects.
-          :unit_quantity => [self.unit_quantity.to_s.to_f, new_unit_quantity.to_s.to_f],
-          :note => [self.note.to_s, self.shared_article.note.to_s]
-        }
-      )
-      if unequal_attributes.empty?            
-        # when attributes not changed, update timestamp of article
-        self.update_attribute(:shared_updated_on, self.shared_article.updated_on)
-        false
-      else
-        unequal_attributes
-      end
+    end
+    
+    # check if all attributes differ
+    unequal_attributes = Article.compare_attributes(
+      {
+        :name => [self.name, shared_article.name],
+        :manufacturer => [self.manufacturer, shared_article.manufacturer.to_s],
+        :origin => [self.origin, shared_article.origin],
+        :unit => [self.unit, new_unit],
+        :price => [self.price, new_price],
+        :tax => [self.tax, shared_article.tax],
+        :deposit => [self.deposit, shared_article.deposit],
+        # take care of different num-objects.
+        :unit_quantity => [self.unit_quantity.to_s.to_f, new_unit_quantity.to_s.to_f],
+        :note => [self.note.to_s, shared_article.note.to_s]
+      }
+    )
+    if shared_article == self.shared_article and unequal_attributes.empty?            
+      # when attributes not changed, update timestamp of article
+      self.update_attribute(:shared_updated_on, self.shared_article.updated_on)
+      false
+    else
+      unequal_attributes
     end
   end
   
@@ -115,7 +122,7 @@ class Article < ActiveRecord::Base
   # returns new price and unit_quantity in array, when calc is possible => [price, unit_quanity]
   # returns false if units aren't foodsoft-compatible
   # returns nil if units are eqal
-  def convert_units
+  def convert_units(shared_article = self.shared_article)
     if unit != shared_article.unit
       # legacy, used by foodcoops in Germany
       if shared_article.unit == "KI" and unit == "ST" # 'KI' means a box, with a different amount of items in it
