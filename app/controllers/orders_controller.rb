@@ -87,6 +87,7 @@ class OrdersController < ApplicationController
   # Update an existing order.
   def update
     @order = Order.find params[:id]
+    params[:order][:article_ids].reject!(&:blank?) if params[:order][:article_ids]
     if @order.update_attributes params[:order]
       flash[:notice] = I18n.t('orders.update.notice')
       redirect_to :action => 'show', :id => @order
