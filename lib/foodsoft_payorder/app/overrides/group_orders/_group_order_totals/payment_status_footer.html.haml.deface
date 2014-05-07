@@ -5,10 +5,12 @@
       %tr.price_details
         %td{colspan: cols}
       %tr.price_details
-        %td{colspan: cols-1}= link_to I18n.t("group_orders.group_order_totals.previous_#{sum>0 ? 'surplus' : 'deficit'}"), my_ordergroup_path
-        %td= number_to_currency(sum.abs) + ('&nbsp;-'.html_safe if sum > 0)
+        %td{colspan: cols-3}= link_to I18n.t("group_orders.group_order_totals.previous_#{sum>0 ? 'surplus' : 'deficit'}"), my_ordergroup_path
+        %td.price= number_to_currency(sum.abs)
+        %td{colspan: 2, style: 'text-align: left'}= '-' if sum > 0
       %tr.price_details
-        %th{colspan: cols-1}= t '.payable'
-        %th= number_to_currency payable
+        %th{colspan: cols-3}= t '.payable'
+        %th.price= number_to_currency payable
+        %th{colspan: 2}
     %tr.price_details
       %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button

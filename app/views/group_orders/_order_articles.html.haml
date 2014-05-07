@@ -5,24 +5,25 @@
         - cols = 6
         %th= heading_helper Article, :name
         %th{style: 'width:13px'}
-        %th{style: 'width:4.5em'}= t 'group_orders.form.price'
+        %th.price{style: 'width:4.5em'}= t 'group_orders.form.price'
         %th{style: 'width:4.5em'}= heading_helper Article, :unit
-        - if @has_open_orders
-          - if @has_tolerance
-            - cols += 2
-            %th.units_to_order{colspan: 2}= t '.all_members'
-          - else
-            - cols += 1
-            %th.units_to_order.center
-              %abbr{title: t('.all_members')}= t '.all_members_short'
         %th#col_required.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :quantity
         - if @has_tolerance
           - cols += 1
-          %th#col_tolerance.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :tolerance
+          %th#col_tolerance.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :tolerance, short: true
         - unless @has_open_orders
           - cols += 1
           %th.center Received
-        %th{style: 'width: 4.5em'}= heading_helper GroupOrderArticle, :total_price
+        %th.price{style: 'width: 4.5em'}= heading_helper GroupOrderArticle, :total_price
+        - if @has_open_orders
+          - if @has_tolerance
+            - cols += 2
+            %th.units_to_order{colspan: 2}
+              %abbr{title: t('.all_members_tolerance_desc')}= t '.all_members_tolerance'
+          - else
+            - cols += 1
+            %th.units_to_order.center
+              %abbr{title: t('.all_members_short_desc')}= t '.all_members_short'
     %tbody.list
       - @order_articles.each do |order_article|
         = render 'order_article', order_article: order_article

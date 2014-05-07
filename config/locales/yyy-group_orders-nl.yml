@@ -1,5 +1,12 @@
 # for branch feature-group_order_ajax - please merge into en.yml when this branch is merged upstream
 nl:
+  activerecord:
+    attributes:
+      group_order_article:
+        quantity: Aantal
+        tolerance: Extra aantal
+        tolerance_short: Extra
+        tolerance_desc: Evt. extra om doos vol te maken
   group_orders:
     my_current_order: Mijn bestelling
     my_last_order: Mijn laatste bestelling
@@ -9,8 +16,6 @@ nl:
       no_current_orders: Er zijn momenteel geen open bestellingen.
     edit:
       title: Artikelen
-    order_article:
-      max_quantity: 'van %{amount}'
     order_article_info:
       extra: extra
       origin_in: uit %{origin}
@@ -21,8 +26,10 @@ nl:
       supplied_and_made_by: gemaakt door %{manufacturer}
       supplied_by_made_by: van %{supplier} gemaakt door %{manufacturer}
     order_articles:
-      all_members: Alle leden
+      all_members_tolerance: Iedereen
+      all_members_tolerance_desc: Aantal volle dozen + laatste doos vol?
       all_members_short: Allen
+      all_members_short_desc: Aantal volle dozen
     show:
       no_orders: Kies een vroegere bestelling om te bekijken.
       no_articles: Er zijn geen artikelen in deze bestelling.

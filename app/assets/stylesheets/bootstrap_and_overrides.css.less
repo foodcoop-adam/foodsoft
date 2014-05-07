@@ -194,6 +194,10 @@ th.price_markup_note {
   white-space: nowrap;
 }
 
+.price, td.price, th.price {
+  text-align: right
+}
+
 // Navigation with embedded tabs
 .nav-tabs-with-heading {
   > li {
@@ -244,37 +248,6 @@ th.price_markup_note {
   color: tint(@textColor, @nonessentialDim);
 }
 
-.order-article {
-  .quantity, .tolerance {
-    white-space: nowrap;
-  }
-  .units_all {
-    width: 2em;
-    text-align: right;
-    padding-right: 0;
-    .plus {
-        width: 0.5em;
-        display: inline-block;
-        color: #888;
-    }
-  }
-  .units_pack {
-    width: 7em;
-    .progress {
-      margin: 0;
-      .bar:first-child {
-        color: #ccf;
-        text-shadow: none;
-      }
-      .bar:last-child {
-        color: #ddd;
-        background: inherit;
-        text-shadow: none;
-      }
-    }
-  }
-}
-
 .article-info-container {
   display: none;
   position: absolute;
@@ -307,18 +280,29 @@ tr.order-article .article-info { display: none; }
 #articles_table {
   td.units_to_order {
     text-align: center;
+    font-size: 12px;
+    color: tint(@textColor, @nonessentialDim);
     white-space: nowrap;
-    .plus {
-      width: 0.5em;
+    .units_to_order_value {
+      .package-image(center);
+      min-width: 18px;
+      min-height: 18px;
       display: inline-block;
-      color: #888;
+    }
+    .plus {
+      width: 0.35em;
+      display: inline-block;
     }
   }
-  .units_to_order.before_unit {
+  td.units_to_order.before_unit {
+    padding-right: 0;
+  }
+  td.units_all {
+    width: 2em;
     text-align: right;
     padding-right: 0;
   }
-  .final_unit {
+  td.final_unit {
     width: 5em;
     .progress {
       margin: 0;
@@ -333,16 +317,11 @@ tr.order-article .article-info { display: none; }
       }
     }
   }
-  .max_quantity {
-    text-align: left;
-    white-space: nowrap;
-  }
   @media (max-width: 979px) {
-    .units_to_order .plus { display: none; }
+    td.units_to_order .plus { display: none; }
   }
   @media (max-width: 768px) {
-    .units_to_order, .max_quantity { font-size: 0; margin: 0; padding: 0; }
-    .final_unit { width: 3.5em; }
+    td.final_unit { width: 3.5em; }
   }
 }
 

@@ -8,14 +8,6 @@
   %td= article_origin order_article.article
   %td.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
   %td.unit{data: {'unit_quantity' => order_article.price.unit_quantity}}= order_article.article.unit
-  - if @has_open_orders
-    %td.units_to_order{class: ('before_unit' if @has_tolerance)}
-      %span.units_to_order_value= order_article.units_to_order * order_article.price.unit_quantity
-      - if @has_tolerance
-        %span.plus= cur_has_tolerance ? '+' : '&nbsp;'.html_safe
-    - if @has_tolerance
-      %td.final_unit
-        = final_unit_bar order_article if cur_has_tolerance
   %td.center.quantity
     - if cur_open
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
@@ -37,7 +29,15 @@
         = order_article.tolerance
   - unless @has_open_orders
     %td.center= group_order_article.result unless cur_open
-  %td
+  %td.price
     - price_sum = group_order_article.total_price(order_article)
     %span.price_sum{data: {value: price_sum}}= number_to_currency(price_sum)
     = render 'order_article_info', order_article: order_article
+  - if @has_open_orders
+    %td.units_to_order{class: ('before_unit' if @has_tolerance)}
+      %span.units_to_order_value= order_article.units_to_order
+      - if @has_tolerance
+        %span.plus= cur_has_tolerance ? '+' : '&nbsp;'.html_safe
+    - if @has_tolerance
+      %td.final_unit
+        = final_unit_bar order_article if cur_has_tolerance
