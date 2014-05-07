@@ -1,5 +1,12 @@
 # for branch feature-group_order_ajax - please merge into en.yml when this branch is merged upstream
 en:
+  activerecord:
+    attributes:
+      group_order_article:
+        quantity: Amount
+        tolerance: Extra amount
+        tolerance_short: Extra
+        tolerance_desc: Any extra amount for filling the last box
   group_orders:
     my_current_order: My current order
     my_last_order: My last order
@@ -21,8 +28,10 @@ en:
       supplied_and_made_by: made by %{manufacturer}
       supplied_by_made_by: from %{supplier} made by %{manufacturer}
     order_articles:
-      all_members: All members
+      all_members_tolerance: Everyone
+      all_members_tolerance_desc: Full boxes + last box full?
       all_members_short: All
+      all_members_short_desc: Full boxes
     show:
       no_orders: Please select a previous order to view.
       no_articles: You have no articles in this order.

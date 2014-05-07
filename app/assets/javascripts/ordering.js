@@ -53,7 +53,7 @@ $(function() {
     var units_to_order = Math.floor(total_quantity/unit_quantity);
     var remainder = total_quantity % unit_quantity;
     units_to_order += ((remainder > 0) && (remainder + total_tolerance >= unit_quantity) ? 1 : 0)
-    $('.units_to_order_value', row).html(units_to_order*unit_quantity);
+    $('.units_to_order_value', row).html(units_to_order);
 
     // progess bar update
     //   update decreasing number first, to make sure that together it's no more than 100%

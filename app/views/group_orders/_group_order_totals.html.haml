@@ -3,8 +3,9 @@
 
 - if (price_total rescue true)
   %tr.price_total_row
-    %th{colspan: cols-1} Total
-    %th.price_total{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
+    %th{colspan: cols-3} Total
+    %th.price_total.price{data: {value: @group_orders_sum}}= number_to_currency @group_orders_sum
+    %th{colspan: 2}
 
 -# for deface overrides
 - '<price_details_middle_mark>'
@@ -13,27 +14,31 @@
 -# if @group_orders_prices[:gross_price]
   %tr.unavailable.price_details
     %td
-    %td{colspan: cols-2} of which goes to
-    %td
+    %td{colspan: cols-5} of which goes to
+    %td{colspan: 3}
   -# for deface overrides
   - '<price_details_nested_mark>'
   %tr.price_details
     %td
-    %td{colspan: cols-2} suppliers
-    %td= number_to_currency @group_orders_prices[:net_price]
+    %td{colspan: cols-5} suppliers
+    %td.price= number_to_currency @group_orders_prices[:net_price]
+    %td{colspan: 3}
   %tr.price_details
     %td
-    %td{colspan: cols-2}= Article.human_attribute_name :tax
-    %td= number_to_currency (@group_orders_prices[:gross_price]-@group_orders_prices[:net_price])
+    %td{colspan: cols-5}= Article.human_attribute_name :tax
+    %td.price= number_to_currency (@group_orders_prices[:gross_price]-@group_orders_prices[:net_price])
+    %td{colspan: 3}
   - if @group_orders_prices[:deposit] > 0
     %tr.price_details
       %td
-      %td{colspan: cols-2}= Article.human_attribute_name :deposit
-      %td= number_to_currency @group_orders_prices[:deposit]
+      %td{colspan: cols-5}= Article.human_attribute_name :deposit
+      %td.price= number_to_currency @group_orders_prices[:deposit]
+      %td{colspan: 3}
   %tr.price_details
     %td
-    %td{colspan: cols-2}= FoodsoftConfig[:name]
-    %td= number_to_currency (@group_orders_prices[:price]-@group_orders_prices[:gross_price]-@group_orders_prices[:deposit])
+    %td{colspan: cols-5}= FoodsoftConfig[:name]
+    %td.price= number_to_currency (@group_orders_prices[:price]-@group_orders_prices[:gross_price]-@group_orders_prices[:deposit])
+    %td{colspan: 3}
 
 -# for deface overrides
 - '<price_details_bottom_mark>'
