@@ -118,7 +118,7 @@ ActiveSupport.on_load(:after_initialize) do
     end
   end
   User.send :include, FoodsoftMultishared::ScopeUsers
-  [GroupOrder, FinancialTransaction].each do |model|
+  [FinancialTransaction].each do |model| # do not GroupOrder in this list, since that may break stuff :s
     model.send :include, FoodsoftMultishared::ScopeOrdergroupAssociation
   end
 end
