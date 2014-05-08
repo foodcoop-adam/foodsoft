@@ -11,7 +11,7 @@ class Supplier < ActiveRecord::Base
 
   attr_accessible :name, :address, :phone, :phone2, :fax, :email, :url, :contact_person, :customer_number,
                   :delivery_days, :order_howto, :note, :shared_supplier_id, :min_order_quantity, :shared_sync_method,
-                  :article_info_url
+                  :article_info_url, :use_tolerance
 
   validates :name, :presence => true, :length => { :in => 4..30 }
   validates :phone, :presence => true, :length => { :in => 8..25 }
@@ -121,6 +121,15 @@ class Supplier < ActiveRecord::Base
   # minimum order quantity as (gross) price, or nil
   def min_order_quantity_price
     Float(min_order_quantity) rescue nil
+  end
+
+  # whether to show the tolerance column to members
+  def use_tolerance?
+    case FoodsoftConfig[:use_tolerance]
+    when nil, true             then true
+    when false                 then false
+    when :supplier, 'supplier' then self[:use_tolerance]
+    end
   end
 
   protected

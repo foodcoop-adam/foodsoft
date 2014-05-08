@@ -357,6 +357,7 @@ ActiveRecord::Schema.define(:version => 20140921104907) do
     t.datetime "deleted_at"
     t.string   "article_info_url"
     t.string   "scope"
+    t.boolean  "use_tolerance",      :default => true
     t.string   "shared_sync_method"
   end
 

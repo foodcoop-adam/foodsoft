@@ -184,6 +184,10 @@ class Article < ActiveRecord::Base
     self[:info_url] or supplier.article_info_url(self)
   end
 
+  def use_tolerance?
+    supplier.use_tolerance? and unit_quantity > 1
+  end
+
   protected
   
   # Checks if the article is in use before it will deleted
