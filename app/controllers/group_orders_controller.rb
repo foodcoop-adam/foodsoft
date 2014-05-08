@@ -155,10 +155,9 @@ class GroupOrdersController < ApplicationController
 
   # some shared order_article details that need to be done on the final query
   def compute_order_article_details
-    @has_open_orders = !@order_articles.select {|oa| oa.order.open?}.empty? unless @ordergroup.not_enough_apples?
-    @has_stock = !@order_articles.select {|oa| oa.order.stockit?}.empty?
-    @has_tolerance = !@order_articles.select {|oa| oa.price.unit_quantity > 1}.empty?
-    @has_max_quantity = !@order_articles.select {|oa| oa.max_quantity }.empty?
+    @has_open_orders = @order_articles.select {|oa| oa.order.open?}.any? unless @ordergroup.not_enough_apples?
+    @has_stock = @order_articles.select {|oa| oa.order.stockit?}.any?
+    @has_tolerance = @order_articles.select {|oa| oa.use_tolerance? }.any?
     @group_orders_prices = rails3_pluck(@ordergroup.group_orders.joins(:order).merge(@orders),
                                         'SUM(group_orders.price) AS price',
                                         'SUM(group_orders.gross_price) AS gross_price',

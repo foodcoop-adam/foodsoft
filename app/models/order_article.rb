@@ -229,6 +229,10 @@ class OrderArticle < ActiveRecord::Base
     group_order_articles.any? {|goa| goa.result_manually_changed?}
   end
 
+  def use_tolerance?
+    article.supplier.use_tolerance? and price.unit_quantity > 1
+  end
+
   private
   
   def article_and_price_exist

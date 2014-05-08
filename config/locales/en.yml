@@ -154,6 +154,7 @@ en:
         phone2: Phone 2
         shared_sync_method: How to synchronize
         url: Homepage
+        use_tolerance: Use tolerance
       task:
         description: Description
         done: Done?
@@ -1417,6 +1418,7 @@ en:
           price: <ul><li>Price changes are forbidden.</li><li>If necessary, %{stock_article_copy_link}.</li></ul>
       supplier:
         min_order_quantity: The minimum amount which has to be ordered will be shown during the order process and should motivate ordering
+        use_tolerance: Disable to hide the tolerance column for members
       task:
         duration: How long will the task take, 1-3 hours
         required_users: How many users will be needed in total?

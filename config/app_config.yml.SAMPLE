@@ -109,6 +109,11 @@ default: &defaults
   # Members of a user's groups and administrators can still see full names.
   use_nick: false
 
+  # When unit_quantity > 1, members can enter a tolerance (extra quantity) to help filling
+  # the last box (use_tolerance is `true`, the default). Set this to `false` to always hide
+  # the tolerance column for members, or set this to `supplier` to be able to set this for
+  # each supplier.
+  #use_tolerance: true
   # Members with finance permissions can create debit and credit ordergroup accounts.
   # In some cases, you may want to disable that (e.g. when using online payments only).
   #use_paymanual: true

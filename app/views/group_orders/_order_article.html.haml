@@ -1,5 +1,5 @@
 - cur_open = order_article.order.open?
-- cur_has_tolerance = (order_article.price.unit_quantity > 1)
+- cur_has_tolerance = order_article.use_tolerance?
 - group_order_article = @goa_by_oa[order_article.id]
 %tr.order-article{class: "#{cycle('even', 'odd', name: 'order_articles')} #{'unavailable' if !cur_open and group_order_article.result==0}", id: "order_article_#{order_article.id}"}
   %td.name

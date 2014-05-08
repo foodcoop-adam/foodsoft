@@ -35,8 +35,11 @@
       %dd= @supplier.order_howto
       %dt= heading_helper(Supplier, :note) + ':'
       %dd= @supplier.note
-      %dt= heading_helper(Supplier, :min_order_quantity) + ':'
+      %dt= heading_helper(Supplier, :min_order_quantity, short: true) + ':'
       %dd= @supplier.min_order_quantity
+      - if FoodsoftConfig[:use_tolerance].to_s == 'supplier'
+        %dt= heading_helper(Supplier, :use_tolerance) + ':'
+        %dd= @supplier.use_tolerance
 
     .clearfix
     - if @current_user.role_suppliers?

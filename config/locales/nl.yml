@@ -136,6 +136,7 @@ nl:
         phone: Telefoon
         phone2: Telefoon 2
         url: Homepage
+        use_tolerance: Tolerantie gebruiken?
       task:
         description: Beschrijving
         done: Gedaan?
@@ -1353,6 +1354,7 @@ nl:
           price: <ul><li>De prijs mag niet aangepast worden.</li><li>Indien nodig, %{stock_article_copy_link}.</li></ul>
       supplier:
         min_order_quantity: De minimum bestelhoeveelheid wordt getoond bij het bestellen en is bedoeld om leden te motiveren genoeg te bestellen.
+        use_tolerance: Uitzetten om de kolom tolerantie (extra) te verbergen voor leden.
       task:
         duration: Hoe lang de taak duurt, 1-3 uur.
         required_users: Hoeveel mensen zijn in totaal nodig?
