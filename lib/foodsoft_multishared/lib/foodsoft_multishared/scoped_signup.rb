@@ -16,10 +16,7 @@ if defined? FoodsoftSignup
             elsif params[:signup]
               redirect_to signup_path(foodcoop: params[:signup][:scope])
             else
-              @scopes = FoodsoftMultishared.get_scopes.reject {|s| s==FoodsoftConfig[:default_scope]}
-              @scopes = Hash[@scopes.map{|s| [s, FoodsoftMultishared.get_scope_config(s)]}]
-              @scopes_di = @scopes.select {|s,cfg| FoodsoftMultishared.signup_limit_reached?(s, cfg)}
-              @scopes_en = @scopes.reject {|s,cfg| FoodsoftMultishared.signup_limit_reached?(s, cfg)}
+              @scopes, @scopes_en, @scopes_di = MultisharedSignupController.get_scopes
               render 'multishared_signup/index'
             end
           end

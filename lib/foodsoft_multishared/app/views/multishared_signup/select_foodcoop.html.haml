@@ -1,0 +1,7 @@
+- title t('.title')
+
+- content_for :sidebar do
+  %p= t '.body1', name: FoodsoftConfig.scope
+  %p= t '.body2'
+
+= render 'form', object: :select_foodcoop, text: (FoodsoftConfig[:multishared_select_text] || t('.text')).html_safe, submit_text: t('.submit')

@@ -15,8 +15,19 @@ en:
         scope: Foodcoop
   multishared_signup:
     error_no_ordergroup: Please ask your foodcoop to place you in an ordergroup.
+    error_scope_denied: This is not a foodcoop you can join yourself.
+    form:
+      search_placeholder: Search city or name...
     full: full
     index:
       text: "Select which foodcoop you'd like to join:"
-      search_placeholder: Search city or name...
       submit: to signup
+    profile:
+      subtitle: You are part of foodcoop
+    select_foodcoop:
+      body1: Currently you are part of %{name}. If you would like to join a different foodcoop instead, you can do so here. Select your new foodcoop, and continue. Afterwards, you'll need to login again.
+      body2: Please note that you may not be able to come back to the current foodcoop after leaving.
+      notice: You have moved from %{from} to %{to}.
+      text: "Select which foodcoop you'd like to join instead:"
+      title: Move to a different foodcoop
+      submit: change foodcoop

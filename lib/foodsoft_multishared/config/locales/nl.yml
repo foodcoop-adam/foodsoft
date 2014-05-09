@@ -1,6 +1,22 @@
 nl:
+  activerecord:
+    attributes:
+      article_category:
+        scope: Foodcoop
+      group:
+        scope: Foodcoop
+      message:
+        scope: Foodcoop
+      order:
+        scope: Foodcoop
+      supplier:
+        scope: Foodcoop
+      task:
+        scope: Foodcoop
   multishared_signup:
     error_no_ordergroup: Vraag je foodcoop om je in een huishouden te plaatsen.
+    form:
+      search_placeholder: Zoek stad of naam...
     full: vol
     index:
       text: "Kies een foodcoop om lid van te worden:"
