@@ -1,0 +1,12 @@
+/ insert_bottom '.row-fluid .span5'
+- if FoodsoftConfig[:select_scope]
+  %h3= t('multishared_signup.profile.subtitle')
+
+  %table.table
+    %tr
+      %td
+        %tt= FoodsoftConfig.scope
+        - if FoodsoftConfig[:sub_name]
+          %div
+            %small= FoodsoftConfig[:sub_name]
+      %td= link_to t('multishared_signup.select_foodcoop.submit'), home_select_foodcoop_path, class: 'btn btn-small'

@@ -29,6 +29,16 @@ Foodcoop options in `config/app_config.yml`:
 
   # Uncomment to show address as default subtitle in foodcoop instances.
   #use_subname_address: true
+
+  # When enabled, users can change the foodcoop of their ordergroup (from
+  # profile). It is not possible to join hidden foodcoops. When set to `login`,
+  # the user will be redirected to the page to choose a foodcoop (e.g., when
+  # a foodcoop stops, and members are suggested to join another one).
+  #select_scope: true
+  # When select_scope is `login`, this message, when present, is shown on
+  # top of the foodcoop selection page after logging in. By default it is
+  # not set and no message is shown.
+  #select_scope_msg: Please select a new foodcoop to join.
 ```
 
 When you're using the messages plugin, be sure to enable that before enabling

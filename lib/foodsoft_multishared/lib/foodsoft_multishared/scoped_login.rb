@@ -42,6 +42,23 @@ module FoodsoftMultishared
     end
   end
 
+  # redirect to foodcoop selection page when enabled
+  module SelectAfterLogin
+    def self.included(base) # :nodoc:
+      base.class_eval do
+        before_filter :foodsoft_multishared_redir_select, only: :create
+
+        private
+        def foodsoft_multishared_redir_select
+          if FoodsoftConfig[:select_scope].to_s == 'login' and session[:return_to].blank?
+            session[:return_to] = home_select_foodcoop_path
+            flash[:notice] = FoodsoftConfig[:select_scope_msg] if FoodsoftConfig[:select_scope_msg]
+          end
+        end
+      end
+    end
+  end
+
   # the default scope's login page redirects a member to its own foodcoop
   module DefaultMultilogin
     def self.included(base) # :nodoc:
@@ -83,4 +100,5 @@ ActiveSupport.on_load(:after_initialize) do
   ApplicationController.send :include, FoodsoftMultishared::LoginScope
   SessionsController.send :include, FoodsoftMultishared::DefaultMultilogin
   SessionsController.send :include, FoodsoftMultishared::LoginWildcard
+  SessionsController.send :include, FoodsoftMultishared::SelectAfterLogin
 end
