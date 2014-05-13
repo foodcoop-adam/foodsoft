@@ -13,6 +13,21 @@ en:
         scope: Foodcoop
       task:
         scope: Foodcoop
+  documents:
+    multiple_orders_scope_by_articles:
+      filename:
+        one: Order by foodcoop and article
+        other: '%{count} orders by foodcoop and article'
+      title:
+        one: Order - by foodcoop and article
+        other: '%{count} orders - by foodcoop and article'
+    multiple_orders_scope_by_groups:
+      filename:
+        one: Order by foodcoop
+        other: '%{count} orders by foodcoop'
+      title:
+        one: Order - by foodcoop
+        other: '%{count} orders - by foodcoop'
   multishared_signup:
     error_no_ordergroup: Please ask your foodcoop to place you in an ordergroup.
     error_scope_denied: This is not a foodcoop you can join yourself.
@@ -22,6 +37,9 @@ en:
     index:
       text: "Select which foodcoop you'd like to join:"
       submit: to signup
+    orders:
+      fc_articles_pdf: Foodcoop article PDF
+      fc_group_pdf: Foodcoop group PDF
     profile:
       subtitle: You are part of foodcoop
     select_foodcoop:

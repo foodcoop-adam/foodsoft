@@ -25,7 +25,7 @@ class OrderByGroups < OrderPdf
         price = goa.order_article.price.fc_price(group_order.ordergroup)
         sub_total = price * goa.result
         total += sub_total
-        taxes[goa.order_article.price.tax] += goa.result * goa.order_article.price.tax_price
+        taxes[goa.order_article.price.tax.to_f.round(2)] += goa.result * goa.order_article.price.tax_price
         rows <<  [goa.order_article.article.name,
                   goa.order_article.article.unit,
                   goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,

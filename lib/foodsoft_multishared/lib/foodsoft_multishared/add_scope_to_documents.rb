@@ -37,7 +37,7 @@ module FoodsoftMultishared
 
           alias_method :foodsoft_multishared_orig_body, :body
           def body
-            @ordergroups = Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id) AS id').select('groups.name').reorder('groups.scope, groups.name')
+            @ordergroups = Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select(:name).select(:price_markup_key).reorder('groups.scope, groups.name')
             foodsoft_multishared_orig_body
           end
 

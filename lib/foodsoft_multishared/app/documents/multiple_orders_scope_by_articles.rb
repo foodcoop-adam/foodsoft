@@ -21,14 +21,14 @@ class MultipleOrdersScopeByArticles < OrderPdf
       amounts = {}
       for goa in order_article.group_order_articles.ordered
         scope = goa.group_order.ordergroup.scope
-        amounts[scope] ||= {quantity: 0, tolerance: 0, result: 0}
-        [:quantity, :tolerance, :result].each {|f| amounts[scope][f] += goa.send(f) }
+        amounts[scope] ||= {quantity: 0, tolerance: 0, result: 0, total_price: 0}
+        [:quantity, :tolerance, :result, :total_price].each {|f| amounts[scope][f] += goa.send(f) }
       end
       amounts.each_pair do |scope, goa|
         rows << [scope,
                  goa[:tolerance] > 0 ? "#{goa[:quantity]} + #{goa[:tolerance]}" : goa[:quantity],
                  goa[:result],
-                 number_to_currency(order_article.price.fc_price * goa[:result])]
+                 number_to_currency(goa[:total_price])]
         dimrows << rows.length if goa[:result] == 0
       end
       next if rows.length == 0

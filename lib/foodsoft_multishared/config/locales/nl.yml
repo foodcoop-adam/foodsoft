@@ -13,11 +13,39 @@ nl:
         scope: Foodcoop
       task:
         scope: Foodcoop
+  documents:
+    multiple_orders_scope_by_articles:
+      filename:
+        one: Artikellijst per foodcoop van bestelling
+        other: 'Artikellijst per foodcoop van %{count} bestellingen'
+      title:
+        one: Artikellijst per foodcoop van bestelling
+        other: 'Artikellijst per foodcoop van %{count} bestellingen'
+    multiple_orders_scope_by_groups:
+      filename:
+        one: Foodcooplijst van bestelling
+        other: 'Foodcooplijst van %{count} bestellingen'
+      title:
+        one: Foodcooplijst van bestelling
+        other: 'Foodcooplijst van %{count} bestellingen'
   multishared_signup:
     error_no_ordergroup: Vraag je foodcoop om je in een huishouden te plaatsen.
+    error_scope_denied: Je kunt je niet zelf aanmelden voor deze foodcoop.
     form:
       search_placeholder: Zoek stad of naam...
     full: vol
     index:
       text: "Kies een foodcoop om lid van te worden:"
       submit: naar inschrijven
+    orders:
+      fc_articles_pdf: Foodcoop artikelen PDF
+      fc_group_pdf: Foodcoop huishoudens PDF
+    profile:
+      subtitle: Je bent deel van foodcoop
+    select_foodcoop:
+      body1: Momenteel ben je deel van %{name}. In dit scherm kun je naar een andere foodcoop gaan. Kies je nieuwe foodcoop, en druk op de knop. Daarna wordt je gevraagd opnieuw in te loggen.
+      body2: Denk eraan dat je mogelijk niet zomaar terug kunt komen in de huidige foodcoop.
+      notice: Je bent van %{from} naar %{to} gegaan.
+      text: "Kies bij welke foodcoop je je wilt aansluiten:"
+      title: Naar een andere foodcoop gaan
+      submit: foodcoop veranderen
