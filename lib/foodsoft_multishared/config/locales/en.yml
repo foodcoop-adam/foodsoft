@@ -43,8 +43,7 @@ en:
     profile:
       subtitle: You are part of foodcoop
     select_foodcoop:
-      body1: Currently you are part of %{name}. If you would like to join a different foodcoop instead, you can do so here. Select your new foodcoop, and continue. Afterwards, you'll need to login again.
-      body2: Please note that you may not be able to come back to the current foodcoop after leaving.
+      body: <p>Currently you are part of %{name}. If you would like to join a different foodcoop instead, you can do so here. Select your new foodcoop, and continue. Afterwards, you'll need to login again.<p><p>Please note that you may not be able to come back to the current foodcoop after leaving.</p>
       notice: You have moved from %{from} to %{to}.
       text: "Select which foodcoop you'd like to join instead:"
       title: Move to a different foodcoop

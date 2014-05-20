@@ -43,8 +43,7 @@ nl:
     profile:
       subtitle: Je bent deel van foodcoop
     select_foodcoop:
-      body1: Momenteel ben je deel van %{name}. In dit scherm kun je naar een andere foodcoop gaan. Kies je nieuwe foodcoop, en druk op de knop. Daarna wordt je gevraagd opnieuw in te loggen.
-      body2: Denk eraan dat je mogelijk niet zomaar terug kunt komen in de huidige foodcoop.
+      body: <p>Momenteel ben je deel van %{name}. In dit scherm kun je naar een andere foodcoop gaan. Kies je nieuwe foodcoop, en druk op de knop. Daarna wordt je gevraagd opnieuw in te loggen.</p><p>Denk eraan dat je mogelijk niet zomaar terug kunt komen in de huidige foodcoop.</p>
       notice: Je bent van %{from} naar %{to} gegaan.
       text: "Kies bij welke foodcoop je je wilt aansluiten:"
       title: Naar een andere foodcoop gaan
