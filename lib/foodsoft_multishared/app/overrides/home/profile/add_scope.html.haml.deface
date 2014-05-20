@@ -9,4 +9,7 @@
         - if FoodsoftConfig[:sub_name]
           %div
             %small= FoodsoftConfig[:sub_name]
+        - if FoodsoftConfig[:list_desc]
+          %div
+            %small= FoodsoftConfig[:list_desc]
       %td= link_to t('multishared_signup.select_foodcoop.submit'), home_select_foodcoop_path, class: 'btn btn-small'
