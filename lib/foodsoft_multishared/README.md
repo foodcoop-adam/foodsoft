@@ -38,7 +38,7 @@ Foodcoop options in `config/app_config.yml`:
   # When select_scope is `login`, this message, when present, is shown on
   # top of the foodcoop selection page after logging in. By default it is
   # not set and no message is shown.
-  #select_scope_msg: Please select a new foodcoop to join.
+  #select_scope_text: Please select a new foodcoop to join:
 ```
 
 When you're using the messages plugin, be sure to enable that before enabling

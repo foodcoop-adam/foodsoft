@@ -52,7 +52,6 @@ module FoodsoftMultishared
         def foodsoft_multishared_redir_select
           if FoodsoftConfig[:select_scope].to_s == 'login'
             session[:return_to] = home_select_foodcoop_path
-            flash[:notice] = FoodsoftConfig[:select_scope_msg] if FoodsoftConfig[:select_scope_msg]
           end
         end
       end
