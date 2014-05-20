@@ -39,6 +39,11 @@ Foodcoop options in `config/app_config.yml`:
   # top of the foodcoop selection page after logging in. By default it is
   # not set and no message is shown.
   #select_scope_text: Please select a new foodcoop to join:
+
+  # To temporarily disable to shared signup page with the map, set the
+  # following to `false`. People will still be able to signup at the foodcoop-
+  # specific signup page, but the map will be empty.
+  #use_multishared_signup: false
 ```
 
 When you're using the messages plugin, be sure to enable that before enabling

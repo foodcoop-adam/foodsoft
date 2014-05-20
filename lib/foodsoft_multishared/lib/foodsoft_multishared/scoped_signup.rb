@@ -16,7 +16,11 @@ if defined? FoodsoftSignup
             elsif params[:signup]
               redirect_to signup_path(foodcoop: params[:signup][:scope])
             else
-              @scopes, @scopes_en, @scopes_di = MultisharedSignupController.get_scopes
+              if FoodsoftConfig[:use_multishared_signup].to_s == 'false'
+                @scopes, @scopes_en, @scopes_di = [[], [], []]
+              else
+                @scopes, @scopes_en, @scopes_di = MultisharedSignupController.get_scopes
+              end
               render 'multishared_signup/index'
             end
           end
