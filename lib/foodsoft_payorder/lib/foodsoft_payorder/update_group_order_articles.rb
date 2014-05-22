@@ -129,7 +129,7 @@ module FoodsoftPayorder
           # only count paid amounts
           alias_method :foodsoft_payorder_orig_collect_result, :collect_result
           def collect_result(attr)
-            if not FoodsoftPayorder.enabled? or attr.to_s == 'result'
+            if not FoodsoftPayorder.enabled? or %w(result total_price).include?(attr.to_s)
               foodsoft_payorder_orig_collect_result(attr)
             else
               group_order_article_quantities
