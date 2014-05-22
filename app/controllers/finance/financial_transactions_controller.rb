@@ -54,7 +54,7 @@ class Finance::FinancialTransactionsController < ApplicationController
     end
     @financial_transaction = FinancialTransaction.new(params[:financial_transaction])
     @financial_transaction.user = current_user
-    @financial_transaction.add_transaction!
+    @financial_transaction.save!
     redirect_to finance_ordergroup_transactions_url(@ordergroup), notice: I18n.t('finance.financial_transactions.controller.create.notice')
   rescue ActiveRecord::RecordInvalid => error
     flash.now[:alert] = error.message

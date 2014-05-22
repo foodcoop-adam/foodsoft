@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140521142651) do
+ActiveRecord::Schema.define(:version => 20140523085022) do
 
   create_table "adyen_notifications", :force => true do |t|
     t.boolean  "live",                                :default => false, :null => false
@@ -98,14 +98,26 @@ ActiveRecord::Schema.define(:version => 20140521142651) do
   add_index "deliveries", ["supplier_id"], :name => "index_deliveries_on_supplier_id"
 
   create_table "financial_transactions", :force => true do |t|
-    t.integer  "ordergroup_id",                               :default => 0, :null => false
-    t.decimal  "amount",        :precision => 8, :scale => 2, :default => 0, :null => false
-    t.text     "note",                                                       :null => false
-    t.integer  "user_id",                                     :default => 0, :null => false
-    t.datetime "created_on",                                                 :null => false
+    t.integer  "ordergroup_id",                                  :default => 0, :null => false
+    t.decimal  "amount",           :precision => 8, :scale => 2
+    t.text     "note",                                                          :null => false
+    t.integer  "user_id",                                        :default => 0, :null => false
+    t.datetime "created_on",                                                    :null => false
+    t.datetime "updated_on"
+    t.string   "payment_method"
+    t.string   "payment_plugin"
+    t.string   "payment_id"
+    t.decimal  "payment_amount",   :precision => 8, :scale => 3
+    t.string   "payment_currency"
+    t.string   "payment_state"
+    t.decimal  "payment_fee",      :precision => 8, :scale => 3
+    t.string   "payment_acct_number"
+    t.string   "payment_acct_name"
+    t.text     "payment_info"
   end
 
   add_index "financial_transactions", ["ordergroup_id"], :name => "index_financial_transactions_on_ordergroup_id"
+  add_index "financial_transactions", ["payment_plugin", "payment_id"], :name => "index_financial_transactions_on_payment_plugin_and_payment_id"
 
   create_table "group_order_article_quantities", :force => true do |t|
     t.integer  "group_order_article_id", :default => 0, :null => false
