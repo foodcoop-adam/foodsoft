@@ -65,6 +65,9 @@ default: &defaults
   #  pickup:
   #    markup: 5
   #    name: Pick-up only
+  # Default price markup format to show to members, `full` by default.
+  # One of `percent` `percent_label` `full` `full_label` `icon` `label`
+  #price_markup_member_format: full
 
   # percentage to add to supplier's price when importing from the shared database
   #price_markup_shared: 3.0
