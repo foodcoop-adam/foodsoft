@@ -92,6 +92,28 @@ module FoodsoftMultishared
     end
   end
 
+  # make the default scope's reset password page work
+  module MultiResetPassword
+    def self.included(base) # :nodoc:
+      base.class_eval do
+        with_options if: proc { FoodsoftConfig.scope == FoodsoftConfig[:default_scope] } do |o|
+          o.before_filter :foodsoft_multishared_central_reset_password, only: :reset_password
+        end
+
+        private
+
+        def foodsoft_multishared_central_reset_password
+          # change to the user's scope before sending the email
+          user = User.unscoped.find_by_email(params[:user][:email]) or return
+          ordergroup = Ordergroup.unscoped.where(id: Membership.where(user_id: user.id).pluck(:group_id)).first or return
+          ordergroup.scope.blank? or ordergroup.scope == '*' and return
+          FoodsoftConfig.select_foodcoop ordergroup.scope
+        end
+
+      end
+    end
+  end
+
 end
 
 # now patch desired controllers to include this
@@ -100,4 +122,5 @@ ActiveSupport.on_load(:after_initialize) do
   SessionsController.send :include, FoodsoftMultishared::DefaultMultilogin
   SessionsController.send :include, FoodsoftMultishared::LoginWildcard
   SessionsController.send :include, FoodsoftMultishared::SelectAfterLogin
+  LoginController.send :include, FoodsoftMultishared::MultiResetPassword
 end
