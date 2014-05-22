@@ -41,26 +41,32 @@ class Ordergroup < Group
   end
 
   # Returns the available funds for this order group (the account_balance minus price of all non-closed GroupOrders of this group).
-  # * exclude (GroupOrder): exclude this GroupOrder from the calculation
+  # @param exclude [GroupOrder] Exclude this +GroupOrder+ from the calculation.
   def get_available_funds(exclude = nil)
     account_balance - value_of_open_orders(exclude) - value_of_finished_orders(exclude)
   end
 
   # Creates a new FinancialTransaction for this Ordergroup and updates the account_balance accordingly.
   # Throws an exception if it fails.
-  def add_financial_transaction!(amount, note, user)
-    transaction do      
-      t = FinancialTransaction.new(:ordergroup => self, :amount => amount, :note => note, :user => user)
-      t.save!
-      self.account_balance = financial_transactions.sum('amount')
-      save!
-      # Notify only when order group had a positive balance before the last transaction:
-      if t.amount < 0 && self.account_balance < 0 && self.account_balance - t.amount >= 0
-        Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'negative_balance', self.id, t.id)
-      end
-    end
+  def add_financial_transaction!(amount, note, user, options = {})
+    FinancialTransaction.create! options.merge({ordergroup: self, amount: amount, note: note, user: user})
   end
 
+  # Recomputes the account balance from financial transactions.
+  # @param transaction [FinancialTransaction] Financial transaction that caused this change, or +nil+ to use the last updated one.
+  def update_balance!(transaction = nil)
+    old_account_balance = account_balance
+    account_balance = financial_transactions.sum('amount')
+    save!
+    # Notify only when order group had a positive balance
+    if account_balance < 0 && old_account_balance >= 0
+      transaction ||= financial_transactions.order(:updated_on).last
+      Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'negative_balance', self.id, transaction.id)
+    end
+    account_balance
+  end
+
+  # Recomputes job statistics from group orders.
   def update_stats!
     # Get hours for every job of each user in period
     jobs = users.sum { |u| u.tasks.done.sum(:duration, :conditions => ["updated_on > ?", APPLE_MONTH_AGO.month.ago]) }
@@ -78,8 +84,7 @@ class Ordergroup < Group
     stats[:jobs_size].to_f / stats[:orders_sum].to_f rescue 0
   end
 
-  # This is the ordergroup job per euro performance 
-  # in comparison to the hole foodcoop average
+  # This is the ordergroup job per euro performance in comparison to the whole foodcoop average.
   def apples
     ((avg_jobs_per_euro / Ordergroup.avg_jobs_per_euro) * 100).to_i rescue 0
   end
@@ -105,7 +110,7 @@ class Ordergroup < Group
   end
 
   def account_updated
-    financial_transactions.last.try(:created_on) || created_on
+    financial_transactions.last.try(:updated_on) || created_on
   end
 
   def self.build_from_user(user, attributes = {})
