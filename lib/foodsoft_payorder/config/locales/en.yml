@@ -6,5 +6,6 @@ en:
       previous_deficit: Previous deficit
   helpers:
     payorder:
+      paid: paid
       payment: Payment
       payment_prompt: Pay for your orders

@@ -4,7 +4,7 @@ module PayorderHelper
     if @ordergroup.get_available_funds >= 0
       link = my_ordergroup_path
       cls = "payment-status-btn #{options[:class]}"
-      link_to glyph('ok')+' '+'paid', link, {style: 'color: green'}.merge(options).merge({class: cls})
+      link_to glyph('ok')+' '+I18n.t('helpers.payorder.paid'), link, {style: 'color: green'}.merge(options).merge({class: cls})
     else
       # TODO use method to get link, and also support external urls
       amount = -@ordergroup.get_available_funds
