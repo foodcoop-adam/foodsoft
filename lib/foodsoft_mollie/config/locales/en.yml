@@ -9,5 +9,7 @@ en:
         submit: 'Pay at your bank'
       controller:
         result:
-          notice: 'Your account has been credited.'
+          notice: 'Your account was credited.'
           failed: 'Payment failed.'
+          wait: 'Your account will be credited when the payment is received.'
+        transaction_note: '%{method} payment'

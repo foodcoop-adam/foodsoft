@@ -1,28 +1,10 @@
-#
-# This is a quick hack to get iDEAL payments working without modifying
-# foodsoft's database model. Transactions are not stored while in process,
-# only on success. Failed transactions leave no trace in the database,
-# but they are logged in the server log.
-#
-# Mollie's check url that is used contains the userid as the last path
-# component, so that a financial transaction can be created on success
-# for that user and ordergroup.
-#
-# Perhaps a cleaner approach would be to create a financial transaction
-# without amount zero when the payment process starts, and keep track
-# of the state using that. Then the transaction id would be enough to
-# process it, and also an error message could be given.
-#
-# Or start using activemerchant - e.g.
-#   https://github.com/moneybird/active_merchant_mollie
-#
-# TODO proper error message without ordergroup
-#
+# Mollie payment page
 class Payments::MollieIdealController < ApplicationController
   before_filter -> { require_plugin_enabled FoodsoftMollie }
   skip_before_filter :authenticate, :only => [:check]
-  before_filter :get_ordergroup, only: [:new, :create]
   before_filter :accept_return_to, only: [:new]
+  before_filter :get_ordergroup, only: [:new, :create, :result]
+  before_filter :get_transaction, only: [:result]
 
   def new
     begin
@@ -30,7 +12,7 @@ class Payments::MollieIdealController < ApplicationController
       @issuers = get_mollie.issuers.all
     rescue Mollie::API::Exception => error
       # not sure if this actually could happen
-      # TODO try this without a proper internet connection and see what happens
+      # @todo try this without a proper internet connection and see what happens
       Rails.logger.info "Mollie new warning: #{error}"
       flash[:error] = I18n.t('errors.general_msg', msg: error.message)
       @methods ||= []
@@ -51,22 +33,38 @@ class Payments::MollieIdealController < ApplicationController
     amount = params[:amount].to_f
     amount = [params[:min].to_f, amount].max if params[:min]
     method, issuer = (params[:method]||'').split(':', 2)
+    mollie = get_mollie
+    mollie_method = mollie.methods.get(method) or raise Exception.new('Invalid method') # @todo i18n message
 
-    # TODO check amount > transaction fee
+    # @todo check amount > transaction fee
 
-    payment = get_mollie.payments.create(
+    @transaction = FinancialTransaction.create!(
+      amount: nil,
+      ordergroup: @ordergroup,
+      user: @current_user,
+      payment_method: method,
+      payment_plugin: 'mollie',
+      payment_amount: amount,
+      # @todo payment_currency
+      payment_state: 'created',
+      note: I18n.t('payments.mollie_ideal.controller.transaction_note', method: mollie_method.description)
+    )
+
+    payment = mollie.payments.create(
       amount: amount,
       description: "#{@ordergroup.id}, #{FoodsoftConfig[:name]}",
-      redirectUrl: result_payments_mollie_url,
+      redirectUrl: result_payments_mollie_url(id: @transaction.id),
       webhookUrl: (check_payments_mollie_url unless request.local?), # Mollie doesn't accept localhost here
       method: method,
       issuer: issuer,
       metadata: {
         scope: FoodsoftConfig.scope,
+        transaction_id: @transaction.id,
         user: @current_user.id,
         ordergroup: @ordergroup.id
       }
     )
+    @transaction.update_attributes payment_id: payment.id, payment_state: 'open'
 
     logger.info "Mollie start: #{amount} for \##{@current_user.id} (#{@current_user.display}) with #{params[:issuer]}"
 
@@ -76,36 +74,30 @@ class Payments::MollieIdealController < ApplicationController
     redirect_to new_payments_mollie_path(session[:mollie_params]), :alert => I18n.t('errors.general_msg', msg: error.message)
   end
 
+  # Endpoint that Mollie calls when a payment status changes.
   def check
-    payment = get_mollie.payments.get params[:id]
-    logger.info "Mollie check: #{payment.inspect}"
+    logger.info "Mollie check: #{params[:id]}"
+    @transaction = FinancialTransaction.find_by_payment_plugin_and_payment_id('mollie', params[:id])
+    logger.debug "  financial transaction: #{@transaction.inspect}"
 
-    if not payment.paid?
-      render nothing: true
-    elsif payment.metadata.empty?
-      # TODO match data with account info
-      render plain: 'Error: no metadata'
-    else
-      user = User.find(payment.metadata[:user])
-      ordergroup = Ordergroup.find(payment.metadata[:ordergroup])
-      notice = self.ideal_note(payment.id)
-      @transaction = FinancialTransaction.new(:user=>user, :ordergroup=>ordergroup, :amount=>payment.amount, :note=>notice)
-      @transaction.add_transaction!
-      render plain: 'Paid'
-    end
+    render plain: update_status(@transaction)
   rescue Mollie::API::Exception => error
     Rails.logger.error "Mollie check error: #{error}"
     render plain: "Error: #{error.message}"
   end
 
+  # User is redirect here after payment
   def result
-    payment_id = params[:id]
-    @transaction = FinancialTransaction.where(:note => self.ideal_note(payment_id)).first
-    if @transaction
-      logger.info "Mollie result: transaction #{payment_id} succeeded"
+    update_status @transaction if request.local? # so localhost works too
+    case @transaction.payment_state
+    when 'paid'
+      logger.info "Mollie result: transaction #{@transaction.id} (#{@transaction.payment_id}) succeeded"
       redirect_to_return_or root_path, :notice => I18n.t('payments.mollie_ideal.controller.result.notice')
+    when 'open'
+      logger.info "Mollie result: transaction #{@transaction.id} (#{@transaction.payment_id}) waiting for result"
+      redirect_to_return_or root_path, :notice => I18n.t('payments.mollie_ideal.controller.result.wait')
     else
-      logger.info "Mollie result: transaction #{payment_id} failed"
+      logger.info "Mollie result: transaction #{@transaction.id} (#{@transaction.payment_id}) failed"
       # redirect to form with same parameters as original page
       pms = {foodcoop: FoodsoftConfig.scope}.merge((session[:mollie_params] or {}))
       session[:mollie_params] = nil
@@ -119,18 +111,17 @@ class Payments::MollieIdealController < ApplicationController
 
   protected
 
-  def ideal_note(transaction_id)
-    # this is _not_ translated, because this exact string is used to find the transaction
-    "iDEAL payment (Mollie #{transaction_id})"
-  end
-
   def get_ordergroup
-    # TODO what if the current user doesn't have one?
+    # @todo what if the current user doesn't have one?
     @ordergroup = current_user.ordergroup
   end
 
-  # TODO move this to ApplicationController, use it in SessionController too
-  # TODO use a stack of return_to urls
+  def get_transaction
+    @transaction = @ordergroup.financial_transactions.find(params[:id])
+  end
+
+  # @todo move this to ApplicationController, use it in SessionController too
+  # @todo use a stack of return_to urls
   def accept_return_to
     session[:return_to] = nil # or else an unfollowed previous return_to may interfere
     return unless params[:return_to].present?
@@ -148,11 +139,40 @@ class Payments::MollieIdealController < ApplicationController
     redirect_to redirect_to_url, options
   end
 
+  # Return Mollie client.
   def get_mollie
     mollie = Mollie::API::Client.new
     if mcfg = FoodsoftConfig[:mollie]
       mollie.setApiKey mcfg['api_key']
     end
     mollie
+  end
+
+  # Query Mollie status and update financial transaction
+  def update_status(transaction)
+    payment = get_mollie.payments.get transaction.payment_id
+    logger.debug "Mollie update_status: #{payment.inspect}"
+    # update some attributes when available
+    if payment.details
+      transaction.payment_acct_number = payment.details.consumerAccount if payment.details.consumerAccount
+      transaction.payment_acct_name = payment.details.consumerName if payment.details.consumerName
+    end
+    # update status
+    case payment.status
+    when 'cancelled', 'refunded'
+      transaction.update_attributes payment_state: 'cancelled', amount: 0
+      return 'cancelled'
+    when 'expired'
+      transaction.update_attributes payment_state: 'expired', amount: 0
+      return 'expired'
+    when 'paid', 'paidout'
+      payment_fee = if c = FoodsoftConfig[:mollie]['fee'].try{|c| c[transaction.payment_method]}
+                      c =~ /^(.*)\s*%\s*$/ ? ($1.to_f/100 * payment.amount.to_f) : c.to_f
+                    end
+      transaction.update_attributes! payment_state: 'paid', amount: payment.amount.to_f-payment_fee.to_f, payment_fee: payment_fee
+      return 'paid'
+    else
+      return nil
+    end
   end
 end
