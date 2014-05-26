@@ -1,0 +1,19 @@
+-#= I18n.t('.payment', method: transaction.payment_method) if transaction.payment_method
+-#= I18n.t('.plugin', plugin: transaction.payment_plugin) if transaction.payment_plugin
+
+- if transaction.payment_method or transaction.payment_plugin
+  = "<tt>#{transaction.payment_method}</tt> payment " if transaction.payment_method
+  = "using <tt>#{transaction.payment_plugin}</tt> " if transaction.payment_plugin
+  - if transaction.payment_id
+    %br
+    = "id <tt>#{transaction.payment_id}</tt>"
+  %br
+  = "#{number_to_currency transaction.payment_amount} requested "
+  = "with fee #{number_to_currency transaction.payment_fee}" if transaction.payment_fee
+  %br
+  = "<tt>#{transaction.payment_state}</tt> since #{format_time transaction.updated_on}"
+  - if transaction.payment_info
+    %br
+    Extra info: 
+    %tt= transaction.payment_info.inspect
+

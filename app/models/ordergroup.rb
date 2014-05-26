@@ -55,8 +55,8 @@ class Ordergroup < Group
   # Recomputes the account balance from financial transactions.
   # @param transaction [FinancialTransaction] Financial transaction that caused this change, or +nil+ to use the last updated one.
   def update_balance!(transaction = nil)
-    old_account_balance = account_balance
-    account_balance = financial_transactions.sum('amount')
+    old_account_balance = self.account_balance
+    self.account_balance = financial_transactions.sum('amount')
     save!
     # Notify only when order group had a positive balance
     if account_balance < 0 && old_account_balance >= 0
