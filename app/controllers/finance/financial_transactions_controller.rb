@@ -21,7 +21,7 @@ class Finance::FinancialTransactionsController < ApplicationController
     end
 
     @q = FinancialTransaction.search(params[:search])
-    @financial_transactions_all = @q.relation.includes(:user).order(sort)
+    @financial_transactions_all = @q.relation.hide_expired.includes(:user).order(sort)
     @financial_transactions_all = @financial_transactions_all.where(ordergroup_id: @ordergroup.id) if @ordergroup
     @financial_transactions = @financial_transactions_all.page(params[:page]).per(@per_page)
 
@@ -52,7 +52,8 @@ class Finance::FinancialTransactionsController < ApplicationController
     elsif params[:type] == 'cash'
       params[:financial_transaction][:note] = 'cash delivery day. ' + params[:financial_transaction][:note]
     end
-    @financial_transaction = FinancialTransaction.new(params[:financial_transaction])
+    transaction_params = params[:financial_transaction].merge({payment_method: 'manual', payment_state: 'paid'})
+    @financial_transaction = FinancialTransaction.new transaction_params
     @financial_transaction.user = current_user
     @financial_transaction.save!
     redirect_to finance_ordergroup_transactions_url(@ordergroup), notice: I18n.t('finance.financial_transactions.controller.create.notice')

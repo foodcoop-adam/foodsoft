@@ -42,6 +42,17 @@ en:
         created_on: Date
         note: Note
         ordergroup: Ordergroup
+        payment_amount: Payment amount
+        payment_currency: Payment currency
+        payment_fee: Transaction fee
+        payment_id: Payment identifier
+        payment_id_short: Id
+        payment_method: Payment method
+        payment_method_short: Method
+        payment_plugin: Payment plugin
+        payment_plugin_short: Plugin
+        payment_state: Payment status
+        payment_state_short: Status
         user: Entered by
       group_order:
         price: Order sum
@@ -780,6 +791,12 @@ en:
     deliveries:
       new_invoice: New invoice
       show_invoice: Show invoice
+    finance:
+      financial_transactions:
+        state:
+          cancelled: Cancelled
+          pending: Pending
+          refunded: Refunded
     messages:
       write_message: Write message
     orders:

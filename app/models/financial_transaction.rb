@@ -52,6 +52,31 @@ class FinancialTransaction < ActiveRecord::Base
 
   after_save :update_ordergroup_balance
 
+  # @!method hide_expired
+  #   Scope which hides old transactions that didn't result in a balance change.
+  #   @return [Array<FinancialTransaction>] Filtered list
+  scope :hide_expired, -> { where("payment_state IN (NULL, 'paid', 'refunded') OR amount > 0 OR amount < 0 OR updated_on > ?", 3.days.ago) }
+
+  # Positive transaction amount.
+  #
+  # This is currently any positive amount plus the transaction fee.
+  # Returns +nil+ when this transaction has no credit.
+  def amount_credit
+    if (amount and amount >= 0) or payment_fee
+      (amount if amount.to_f >= 0).to_f + payment_fee.to_f
+    end
+  end
+
+  # Negative transaction amount.
+  #
+  # This is currently the sum of any negative amount and the transaction fee.
+  # Returns +nil+ when this transaction has no debit.
+  def amount_debit
+    if (amount and amount < 0) or payment_fee
+      -(amount if amount.to_f < 0).to_f + payment_fee.to_f
+    end
+  end
+
   private
   def update_ordergroup_balance
     # @todo Make sure this transaction and the ordergroup update is in one database transaction.
