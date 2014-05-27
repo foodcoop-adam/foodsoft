@@ -126,6 +126,29 @@ if defined? FoodsoftSignup
         expect(ordergroup.financial_transactions.last.amount).to eq -20
         expect(ordergroup.account_balance).to eq 0
       end
+
+
+      describe 'and payment fee', :type => :feature do
+        let(:pay_fee) { (0.1 + rand(240)/100) }
+
+        def credit(og, note, delta=0)
+          amount = FoodsoftConfig.config[:membership_fee] + delta
+          FinancialTransaction.create amount: amount-pay_fee, ordergroup: og, note: note, user: admin, payment_amount: amount, payment_fee: pay_fee
+        end
+
+        it 'when payed approves ordergroup' do
+          expect(ordergroup.approved?).to be_false
+          credit ordergroup, 'payment'
+          expect(ordergroup.approved?).to be_true
+          expect(ordergroup.account_balance).to eq 0
+        end
+
+        it 'can be a larger donation' do
+          credit ordergroup, 'larger payment', 20
+          expect(ordergroup.financial_transactions.last.amount).to eq -20
+          expect(ordergroup.account_balance).to eq 0
+        end
+      end
     end
 
   end
