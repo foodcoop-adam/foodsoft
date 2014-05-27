@@ -29,9 +29,9 @@ en:
       supplied_by_made_by: from %{supplier} made by %{manufacturer}
     order_articles:
       all_members_tolerance: Everyone
-      all_members_tolerance_desc: Full boxes + last box full?
+      all_members_tolerance_desc: How full is the last box? + number of full boxes for everyone.
       all_members_short: All
-      all_members_short_desc: Full boxes
+      all_members_short_desc: Number of full boxes for everyone.
     show:
       no_orders: Please select a previous order to view.
       no_articles: You have no articles in this order.
