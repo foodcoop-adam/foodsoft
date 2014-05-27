@@ -9,10 +9,19 @@ This project adds support for iDEAL payments using Mollie to Foodsoft.
 ```yaml
   # Mollie payment settings
   mollie:
-    partner_id: 1234567
-    profile_key: 89ABCDEF
-    test_mode: true          # set to false on production
-    transaction_fee: 1.20    # transaction fee (incl. tax; none by default)
+    # API key for account: 1234567, website profile: FooInc
+    api_key: test_1234567890abcdef1234567890abcd
+    # Transaction fee per payment method, fixed rate and/or percentage.
+    #   This is substracted from the amount actually credited to the ordergroup's account balance.
+    fee:
+      # example fees from May 2014 incl. 21% VAT (verify before using!)
+      ideal: 1.20
+      banktransfer: 0.30
+      paysafecard: 15%
+      creditcard: 3.39% + 0.05
+      paypal: 0.18 + 0.35 + 3.4%
+      mistercash: 2.18% + 0.30
+      bitcoin: 0.30
 ```
 
 At this moment, the transaction fee is not used. But the idea is that
