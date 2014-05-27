@@ -1,4 +1,4 @@
-/ insert_bottom 'h1 span'
+/ insert_after 'h1 span'
 - if FoodsoftPayorder.enabled?
-  .pull-right.payment-status-btn-container
+  .pull-right.normal.payment-status-btn-container
     = order_payment_status_button class: 'price_details'

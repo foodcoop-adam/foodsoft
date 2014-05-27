@@ -8,8 +8,7 @@
     %h1
       %i.icon-shopping-cart.soft-icon
       = t 'group_orders.my_current_order'
-      %span{style: 'font-weight: normal; font-size: 12pt; vertical-align: middle'}
-        = orders_status_line(@orders)
+      %span.normal= orders_status_line(@orders)
   - if @order_articles and !@order_articles.empty?
     = render 'order_articles'
   - else

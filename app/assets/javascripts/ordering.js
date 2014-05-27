@@ -39,7 +39,9 @@ $(function() {
     if (toleranceIsCostly) price_sum += price_item * tolerance;
 
     // article sum
-    $('.price_sum', row).html(I18n.l('currency', price_sum)).data('value', price_sum);
+    $('.price_sum', row)
+      .html(I18n.l('currency', price_sum)).data('value', price_sum)
+      .toggleClass('muted', quantity == 0 && tolerance == 0);
 
     // total group orders sum
     var old_price_total = Number($('.price_total').data('value'));

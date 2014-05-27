@@ -27,9 +27,9 @@ nl:
       supplied_by_made_by: van %{supplier} gemaakt door %{manufacturer}
     order_articles:
       all_members_tolerance: Iedereen
-      all_members_tolerance_desc: Aantal volle dozen + laatste doos vol?
+      all_members_tolerance_desc: Laatste doos vol? + aantal volle dozen voor iedereen.
       all_members_short: Allen
-      all_members_short_desc: Aantal volle dozen
+      all_members_short_desc: Aantal volle dozen voor iedereen.
     show:
       no_orders: Kies een vroegere bestelling om te bekijken.
       no_articles: Er zijn geen artikelen in deze bestelling.
