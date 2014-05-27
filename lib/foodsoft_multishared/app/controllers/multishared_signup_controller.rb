@@ -5,6 +5,10 @@ class MultisharedSignupController < ApplicationController
   # please note that signup is currently handled in lib/foodsoft_multishared/scoped_signup.rb
 
   def select_foodcoop
+    # @todo There were some problems of +current_user+ returning +nil+. The lines commented with HACK
+    #   are a quick fix that may catch some of these cases. Need to investigate and truly fix.
+    #   Best solved by making a foodcoop a true activerecord object.
+    session[:return_to] = nil # HACK
     if request.post? and new_scope = (params[:select_foodcoop][:scope] rescue nil)
       new_config = FoodsoftMultishared.get_scope_config(new_scope)
       case new_scope
@@ -15,7 +19,8 @@ class MultisharedSignupController < ApplicationController
       when FoodsoftMultishared.signup_limit_reached?(new_scope, new_config)
         redirect_to select_foodcoop_path, alert: I18n.t('foodsoft_multishared.error_scope_denied')
       else
-        current_user.ordergroup.update_attribute :scope, new_scope
+        ordergroup = Ordergroup.unscoped.where(id: Membership.where(user_id: session[:user_id]).pluck(:group_id)).first # HACK; we assume here authentication and checking ordergroup was done already
+        ordergroup.update_attribute :scope, new_scope
         redirect_to root_path(foodcoop: new_scope), notice: I18n.t('foodsoft_multishared.select_foodcoop.notice', from: FoodsoftConfig.scope, to: new_scope)
       end
     else
