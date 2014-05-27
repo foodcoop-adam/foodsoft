@@ -2,6 +2,7 @@ nl:
   group_orders:
     group_order_totals:
       payable: Totaal te betalen
+      payment_fee: Transactiekosten
       previous_surplus: Reeds betaald
       previous_deficit: Openstaand bedrag
   helpers:

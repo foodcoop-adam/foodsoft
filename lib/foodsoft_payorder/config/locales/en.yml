@@ -2,6 +2,7 @@ en:
   group_orders:
     group_order_totals:
       payable: Total payable
+      payment_fee: Transaction costs
       previous_surplus: Already paid
       previous_deficit: Previous deficit
   helpers:
