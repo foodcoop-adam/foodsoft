@@ -166,9 +166,7 @@ class Payments::MollieIdealController < ApplicationController
       transaction.update_attributes payment_state: 'expired', amount: 0
       return 'expired'
     when 'paid', 'paidout'
-      payment_fee = if c = FoodsoftConfig[:mollie]['fee'].try{|c| c[transaction.payment_method]}
-                      c =~ /^(.*)\s*%\s*$/ ? ($1.to_f/100 * payment.amount.to_f) : c.to_f
-                    end
+      payment_fee = FoodsoftMollie.payment_fee payment.amount, transaction.payment_method
       transaction.update_attributes! payment_state: 'paid', amount: payment.amount.to_f-payment_fee.to_f, payment_fee: payment_fee
       return 'paid'
     else
