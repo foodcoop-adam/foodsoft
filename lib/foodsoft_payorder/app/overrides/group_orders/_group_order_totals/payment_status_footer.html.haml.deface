@@ -1,6 +1,8 @@
 / insert_after 'erb[silent]:contains("<price_details_bottom_mark>")'
+- payment_fee = FoodsoftConfig[:payorder_payment_fee]
 - if FoodsoftPayorder.enabled? and @order_date == 'current'
   - if (payable = -@ordergroup.get_available_funds) > 0
+    - payable += payment_fee
     - if (sum = @ordergroup.account_balance - @ordergroup.value_of_finished_orders) != 0
       %tr.price_details
         %td{colspan: cols}
@@ -8,6 +10,12 @@
         %td{colspan: cols-3}= link_to I18n.t("group_orders.group_order_totals.previous_#{sum>0 ? 'surplus' : 'deficit'}"), my_ordergroup_path
         %td.price= number_to_currency(sum.abs)
         %td{colspan: 2, style: 'text-align: left'}= '-' if sum > 0
+    - if payment_fee
+      %tr.price_details
+        %td{colspan: cols-3}= t '.payment_fee'
+        %td.price= number_to_currency payment_fee
+        %td{colspan: 2}
+    - if payable != sum
       %tr.price_details
         %th{colspan: cols-3}= t '.payable'
         %th.price= number_to_currency payable
