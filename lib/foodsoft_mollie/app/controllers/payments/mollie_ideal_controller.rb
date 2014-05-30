@@ -2,6 +2,7 @@
 class Payments::MollieIdealController < ApplicationController
   before_filter -> { require_plugin_enabled FoodsoftMollie }
   skip_before_filter :authenticate, :only => [:check]
+  skip_before_filter :verify_authenticity_token, :only => [:check]
   before_filter :accept_return_to, only: [:new]
   before_filter :get_ordergroup, only: [:new, :create, :result]
   before_filter :get_transaction, only: [:result]
@@ -80,10 +81,11 @@ class Payments::MollieIdealController < ApplicationController
     @transaction = FinancialTransaction.find_by_payment_plugin_and_payment_id('mollie', params[:id])
     logger.debug "  financial transaction: #{@transaction.inspect}"
 
-    render plain: update_status(@transaction)
+    # @todo Rails 4: +render plain: <blah>+
+    render text: update_status(@transaction)
   rescue Mollie::API::Exception => error
     Rails.logger.error "Mollie check error: #{error}"
-    render plain: "Error: #{error.message}"
+    render text: "Error: #{error.message}"
   end
 
   # User is redirect here after payment

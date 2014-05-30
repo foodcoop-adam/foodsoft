@@ -25,6 +25,7 @@ module FoodsoftMollie
       return
     end
     # parse
+    return spec if spec.is_a? Numeric
     spec.split('+').inject(0) do |sum, c|
       sum + (c =~ /^(.*)\s*%\s*$/ ? ($1.to_f/100 * amount.to_f) : c.to_f)
     end
