@@ -43,6 +43,11 @@ class FinancialTransaction < ActiveRecord::Base
   # @!attribute user
   #   @return [User] User who entered the transaction.
   belongs_to :user
+
+  # @!attribute notify
+  #   @return [Boolean] Set this to +false+ to disable sending of account balance notifications.
+  #   @note This is a virtual attribute, which is not saved to the database.
+  attr_accessor :notify
   
   validates_presence_of :note, :user_id, :ordergroup_id
   validates_numericality_of :amount, allow_nil: -> { payment_amount.present? }
@@ -81,7 +86,7 @@ class FinancialTransaction < ActiveRecord::Base
   def update_ordergroup_balance
     # @todo Make sure this transaction and the ordergroup update is in one database transaction.
     #   It may be possible to use an around filter if needed.
-    ordergroup.update_balance!
+    ordergroup.update_balance!(self, notify: self.notify)
   end
 end
 
