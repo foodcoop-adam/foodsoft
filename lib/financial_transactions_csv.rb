@@ -22,7 +22,7 @@ class FinancialTransactionsCsv < RenderCSV
               t.ordergroup.name,
               show_user(t.user),
               t.note,
-              number_to_currency(t.amount)
+              (number_to_currency(t.amount) if t.amount)
             ]
     end
   end
