@@ -54,14 +54,15 @@ class Ordergroup < Group
 
   # Recomputes the account balance from financial transactions.
   # @param transaction [FinancialTransaction] Financial transaction that caused this change, or +nil+ to use the last updated one.
-  def update_balance!(transaction = nil)
+  # @param notify [Boolean] Set to +false+ to disable sending negative balance notifications.
+  def update_balance!(transaction = nil, options = {})
     old_account_balance = self.account_balance
     self.account_balance = financial_transactions.sum('amount')
     save!
     # Notify only when order group had a positive balance
     if account_balance < 0 && old_account_balance >= 0
       transaction ||= financial_transactions.order(:updated_on).last
-      Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'negative_balance', self.id, transaction.id)
+      Resque.enqueue(UserNotifier, FoodsoftConfig.scope, 'negative_balance', self.id, transaction.id) if (options[:notify]||true)
     end
     account_balance
   end
