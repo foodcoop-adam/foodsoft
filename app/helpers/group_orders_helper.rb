@@ -79,4 +79,11 @@ module GroupOrdersHelper
       content_tag(:div, [0, unit_quantity-progress_units].max, class: 'bar', style: "width: #{100-progress_pct}%")
     end
   end
+
+  # @param span [Number] Number of cells to span
+  # @param tag [Symbol] Tag to use for the cell (+td+ or +th+)
+  # @return [String] Cell spanning a number of columns, or +nil+ if +span+ is zero.
+  def cell_span(span, tag=:th)
+    content_tag(tag, nil, colspan: span) if span and span > 0
+  end
 end
