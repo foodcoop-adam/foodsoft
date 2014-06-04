@@ -3,6 +3,7 @@
     %thead
       %tr
         - cols = 6
+        - colsright = 0
         %th= heading_helper Article, :name
         %th{style: 'width:13px'}
         %th.unit{style: 'width:4.5em'}= heading_helper Article, :unit
@@ -17,18 +18,18 @@
         %th.colsep-right.price{style: 'width: 4.5em'}= heading_helper GroupOrderArticle, :total_price
         - if @has_open_orders
           - if @has_tolerance
-            - cols += 2
+            - colsright += 2
             %th.units_to_order{colspan: 2}
               %abbr{title: t('.all_members_tolerance_desc')}= t '.all_members_tolerance'
           - else
-            - cols += 1
+            - colsright += 1
             %th.units_to_order
               %abbr{title: t('.all_members_short_desc')}= t '.all_members_short'
-    %tbody.list
+    %tbody.list{data: {ajaxvars: {cols: cols+colsright, colsright: colsright}.to_json}}
       - @order_articles.each do |order_article|
         = render 'order_article', order_article: order_article
     - if @render_totals
       %tfoot
-        = render 'group_order_totals', cols: cols
+        = render 'group_order_totals', cols: cols+colsright, colsright: colsright
 
 = pagination_links_remote @order_articles rescue nil

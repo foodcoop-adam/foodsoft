@@ -17,7 +17,7 @@
         $.ajax({
           url: '#{group_order_price_details_path(@order_date || :current)}',
           type: 'get',
-          data: {cols: $('#articles_table tbody tr:first').children().length},
+          data: $('#articles_table tbody').data('ajaxvars'),
           contentType: 'application/json; charset=UTF-8'
         });
       }

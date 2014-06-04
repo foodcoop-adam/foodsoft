@@ -10,7 +10,7 @@ $(function() {
   $(document).on('changed', '#articles_table input[data-delta]', function() {
     var row = $(this).closest('tr');
     var form = $(row).closest('form');
-    var cols = $(row).children().length;
+    var ajaxvars = $('#articles_table tbody').data('ajaxvars');
 
     // send change server-side, after a delay to rate-limit
     clearTimeout(row.data('ordering-timeout-id'));
@@ -20,7 +20,7 @@ $(function() {
         type: form.attr('method') || 'post',
         data: $('input, select, textarea', row).serialize()
               + '&' + $('input[type="hidden"]', form).serialize()
-              + '&cols='+cols,
+              + '&' + $.param(ajaxvars),
         dataType: 'script'
       });
       row.removeData('ordering-timeout-id');

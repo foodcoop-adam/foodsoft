@@ -338,12 +338,12 @@ tr.order-article .article-info { display: none; }
     td.final_unit { width: 3.5em; }
   }
   @media (min-width: 979px) {
-    th.colsep-right, td.colsep-right { padding-right: 14px; }
+    th.colsep-right:not(:last-child), td.colsep-right:not(:last-child) { padding-right: 14px; }
     th.colsep-right + th, td.colsep-right + td { padding-left: 14px; }
   }
 }
 
-th.colsep-right, td.colsep-right {
+th.colsep-right:not(:last-child), td.colsep-right:not(:last-child) {
   border-right: 1px dashed #ddd;
 }
 
