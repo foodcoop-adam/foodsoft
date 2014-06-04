@@ -2,23 +2,23 @@
 - payment_fee = FoodsoftConfig[:payorder_payment_fee]
 - if FoodsoftPayorder.enabled? and @order_date == 'current'
   - if (payable = -@ordergroup.get_available_funds) > 0
-    - payable += payment_fee
+    - payable += payment_fee.to_f
     - if (sum = @ordergroup.account_balance - @ordergroup.value_of_finished_orders) != 0
       %tr.price_details
         %td{colspan: cols}
       %tr.price_details
-        %td{colspan: cols-3}= link_to I18n.t("group_orders.group_order_totals.previous_#{sum>0 ? 'surplus' : 'deficit'}"), my_ordergroup_path
+        %td{colspan: cols-colsright-1}= link_to I18n.t("group_orders.group_order_totals.previous_#{sum>0 ? 'surplus' : 'deficit'}"), my_ordergroup_path
         %td.price= number_to_currency(sum.abs)
-        %td{colspan: 2, style: 'text-align: left'}= '-' if sum > 0
+        %td{colspan: colsright, style: 'text-align: left'}= '-' if sum > 0
     - if payment_fee
       %tr.price_details
-        %td{colspan: cols-3}= t '.payment_fee'
+        %td{colspan: cols-colsright-1}= t '.payment_fee'
         %td.price= number_to_currency payment_fee
-        %td{colspan: 2}
+        %td{colspan: colsright}
     - if payable != sum
       %tr.price_details
-        %th{colspan: cols-3}= t '.payable'
+        %th{colspan: cols-colsright-1}= t '.payable'
         %th.price= number_to_currency payable
-        %th{colspan: 2}
+        %th{colspan: colsright}
     %tr.price_details
       %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button
