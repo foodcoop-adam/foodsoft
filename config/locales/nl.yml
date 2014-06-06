@@ -459,9 +459,9 @@ nl:
       rows:
       - Artikel
       - Eenheid
+      - Prijs
       - Besteld
       - Ontvangen
-      - Prijs
       - Som
       - Gr.Eenh.
       sum: Totaal

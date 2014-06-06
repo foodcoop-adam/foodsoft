@@ -172,9 +172,13 @@ class GroupOrderArticle < ActiveRecord::Base
     r
   end
 
-  # Returns order result,
-  # either calcualted on the fly or fetched from result attribute
-  # Result is set when finishing the order.
+  # Returns order result.
+  #
+  # This is either calculated on the fly, or fetched from result attribute,
+  # which is is set when finishing the order.
+  # @see #calculate_result
+  # @param type [Symbol] which result: +total+, +quantity+ or +tolerance+.
+  # @return [Number] Order result
   def result(type = :total)
     self[:result] || calculate_result[type]
   end

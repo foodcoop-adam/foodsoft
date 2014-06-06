@@ -455,8 +455,8 @@ fr:
       rows:
       - Nom de l'article
       - Commandée
+      - Prix
       - Quantité
-      - Prix unitaire
       - Unités par lot
       - Unité
       - Prix total

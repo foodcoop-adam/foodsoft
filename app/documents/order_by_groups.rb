@@ -1,5 +1,6 @@
 # encoding: utf-8
 class OrderByGroups < OrderPdf
+  include OrdersHelper
 
   def filename
     I18n.t('documents.order_by_groups.filename', :name => @order.name, :date => @order.ends.to_date) + '.pdf'
@@ -28,9 +29,10 @@ class OrderByGroups < OrderPdf
         taxes[goa.order_article.price.tax.to_f.round(2)] += goa.result * goa.order_article.price.tax_price
         rows <<  [goa.order_article.article.name,
                   goa.order_article.article.unit,
+                  number_to_currency(price),
                   goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
                   goa.result,
-                  number_to_currency(price),
+                  result_in_units(goa),
                   number_to_currency(sub_total),
                   (goa.order_article.price.unit_quantity if has_tolerance)]
         dimrows << rows.length if goa.result == 0
@@ -38,7 +40,7 @@ class OrderByGroups < OrderPdf
       next if rows.length == 0
 
       # total
-      rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 5}, number_to_currency(total), nil]
+      rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 6}, number_to_currency(total), nil]
       # price details
       price_details = []
       price_details << "#{Article.human_attribute_name :price} #{number_to_currency group_order.net_price}"
@@ -51,20 +53,22 @@ class OrderByGroups < OrderPdf
 
       # table header
       rows.unshift I18n.t('documents.order_by_groups.rows').dup
+      rows.first[4] = {content: rows.first[4], colspan: 2}
       if has_tolerance
-        rows.first[6] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
+        rows.first[-1] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
       else
-        rows.first[6] = nil
+        rows.first[-1] = nil
       end
 
       text show_group(group_order.ordergroup), size: fontsize(9), style: :bold
-      table rows, width: 500, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
+      table rows, width: bounds.width, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
         table.cells.border_width = 0.02
         table.cells.border_color = 'dddddd'
         table.rows(0).border_width = 1
         table.rows(0).border_color = '666666'
+        table.rows(0).column(4).font_style = :bold
         table.row(rows.length-3).border_width = 1
         table.row(rows.length-3).border_color = '666666'
         table.row(rows.length-2).borders = []
@@ -75,18 +79,17 @@ class OrderByGroups < OrderPdf
         table.row(rows.length-1).size = fontsize(7)
         table.row(rows.length-1).padding = [0, 5, 0, 5]
 
-        table.column(0).width = 190
-        table.column(3).font_style = :bold
-        table.columns(2..5).align = :center
-        table.column(4).align = :right
-        table.column(5).align = :right
-        table.column(5).font_style = :bold
-        table.column(6).align = :center
-        # dim rows not relevant for members
-        table.column(2).text_color = '999999'
-        table.column(6).text_color = '999999'
+        table.column(0).width = 200 # @todo would like to set minimum width here
+        table.column(2).align = :right
+        table.columns(3..4).align = :center
+        table.columns(4..6).font_style = :bold
+        table.columns(5..6).align = :right
+        table.column(7).align = :center
+        # dim columns not relevant for members
+        table.column(3).text_color = '999999'
+        table.column(7).text_color = '999999'
         # hide unit_quantity if there's no tolerance anyway
-        table.column(6).width = has_tolerance ? 25 : 0
+        table.column(7).width = has_tolerance ? 25 : 0
 
         # dim rows which were ordered but not received
         dimrows.each { |ri| table.row(ri).text_color = '999999' }

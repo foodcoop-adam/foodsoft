@@ -165,4 +165,41 @@ module OrdersHelper
       'unavailable'
     end
   end
+
+  # Returns article result in units when relevant.
+  #
+  #   Result    Article unit     Return value
+  #   ------    ------------     ------------
+  #   6         0.5 kg           3 kg
+  #   2         1 pc             (nil)
+  #   2         3 pc             6 pc
+  #   0         (anything)       (nil)
+  #   8         Foo bar          (nil)
+  #   2         50 ml            100 ml
+  #
+  # @param group_order_article [GroupOrderArticle, Number] Group order article to get result from, the the result as number.
+  # @param article [Article] Article (to retrieve unit), or +nil+ to get from +group_order_article+.
+  # @option options [Symbol] :type See {GroupOrderArticle#result}.
+  # @return [String] Article result in units or +nil+.
+  # @see GroupOrderArticle#result
+  def result_in_units(group_order_article, article = nil, options = {})
+    article ||= group_order_article.order_article.article
+    r = group_order_article
+    r = r.result(options[:type] || :total) if r.is_a? GroupOrderArticle
+    unit = (::Unit.new(article.unit) rescue nil)
+    # nothing at all
+    if r == 0
+      nil
+    # no unit, we can't give info
+    elsif unit.nil?
+      nil
+    # if the unit is one piece, it gives no more information
+    elsif unit.scalar == 1 and unit =~ 'piece'
+      nil
+    # now we know the total in base units is useful to show
+    else
+      unit * r
+    end
+  end
+
 end
