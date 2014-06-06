@@ -589,9 +589,9 @@ en:
       rows:
       - Article
       - Unit
+      - Price
       - Ordered
       - Received
-      - Price
       - Sum
       - U.Q.
       sum: Total
