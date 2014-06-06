@@ -41,14 +41,14 @@ class OrderByGroups < OrderPdf
 
       # total
       rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 6}, number_to_currency(total), nil]
-      # price details
+      # price details (old orders may not have these details set)
       price_details = []
-      price_details << "#{Article.human_attribute_name :price} #{number_to_currency group_order.net_price}"
-      price_details << "#{Article.human_attribute_name :deposit} #{number_to_currency group_order.deposit}" if group_order.deposit > 0
+      price_details << "#{Article.human_attribute_name :price} #{number_to_currency group_order.net_price}" if group_order.net_price
+      price_details << "#{Article.human_attribute_name :deposit} #{number_to_currency group_order.deposit}" if group_order.deposit.to_f > 0
       taxes.each do |tax, tax_price|
         price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
       end
-      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency (group_order.price - group_order.gross_price)}"
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency (group_order.price - group_order.gross_price)}" if group_order.gross_price
       rows << [{content: '  ' + price_details.join('; '), colspan: 7}]
 
       # table header
