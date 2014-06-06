@@ -36,7 +36,7 @@ class OrderPdf < Prawn::Document
 
   # XXX avoid underscore instead of unicode whitespace in pdf :/
   def number_to_currency(number, options={})
-    super(number, options).gsub("\u202f", ' ')
+    super(number, options).gsub("\u202f", ' ') if number
   end
 
   # return fontsize after scaling it with any configured factor
