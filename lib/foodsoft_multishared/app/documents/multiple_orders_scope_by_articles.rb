@@ -1,6 +1,5 @@
 # encoding: utf-8
 class MultipleOrdersScopeByArticles < OrderPdf
-
   include OrdersHelper
 
   def filename
@@ -17,7 +16,7 @@ class MultipleOrdersScopeByArticles < OrderPdf
 
       rows = []
       dimrows = []
-
+      has_units_str = ''
       amounts = {}
       for goa in order_article.group_order_articles.ordered
         scope = goa.group_order.ordergroup.scope
@@ -25,20 +24,25 @@ class MultipleOrdersScopeByArticles < OrderPdf
         [:quantity, :tolerance, :result, :total_price].each {|f| amounts[scope][f] += goa.send(f) }
       end
       amounts.each_pair do |scope, goa|
+        units = result_in_units(goa[:result], order_article.article)
         rows << [scope,
                  goa[:tolerance] > 0 ? "#{goa[:quantity]} + #{goa[:tolerance]}" : goa[:quantity],
                  goa[:result],
+                 units,
                  number_to_currency(goa[:total_price])]
         dimrows << rows.length if goa[:result] == 0
+        has_units_str = units.to_s if units.to_s.length > has_units_str.length # hack for prawn line-breaking units cell
       end
       next if rows.length == 0
       sum = order_article.group_orders_sum
       rows.unshift I18n.t('documents.order_by_articles.rows').dup # table header
+      rows[0][2] = {content: rows[0][2], colspan: 2}
       rows[0][0] = Ordergroup.human_attribute_name :scope
 
       rows << [I18n.t('documents.order_by_groups.sum'),
                order_article.tolerance > 0 ? "#{order_article.quantity} + #{order_article.tolerance}" : order_article.quantity,
                sum[:quantity],
+               result_in_units(sum[:quantity], order_article.article),
                nil] #number_to_currency(sum[:price])]
 
       text "<b>#{order_article.article.name}</b> " +
@@ -58,9 +62,9 @@ class MultipleOrdersScopeByArticles < OrderPdf
 
         table.column(0).width = 200
         table.columns(1..2).align = :center
-        table.column(2).font_style = :bold
-        table.columns(3).align = :right
-        table.columns(3).width = 60
+        table.column(2..3).font_style = :bold
+        table.columns(3).width = width_of(has_units_str)
+        table.columns(3..4).align = :right
 
         # dim rows which were ordered but not received
         dimrows.each { |ri| table.row(ri).text_color = '999999' }
