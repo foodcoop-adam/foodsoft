@@ -1,5 +1,6 @@
 # encoding: utf-8
 class MultipleOrdersByGroups < OrderPdf
+  include OrdersHelper
 
   def filename
     I18n.t('documents.multiple_orders_by_groups.filename', count: @order.count) + '.pdf'
@@ -31,10 +32,11 @@ class MultipleOrdersByGroups < OrderPdf
         taxes[goa.order_article.price.tax.to_f.round(2)] += goa_totals[:tax_price]
         rows <<  [goa.order_article.article.name,
                   goa.order_article.article.unit,
+                  number_to_currency(price.fc_price(goa.group_order.ordergroup)),
                   goa.group_order.order.name.truncate(10, omission: ''),
                   goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
                   goa.result,
-                  number_to_currency(price.fc_price(goa.group_order.ordergroup)),
+                  result_in_units(goa),
                   number_to_currency(goa_totals[:price]),
                   (goa.order_article.price.unit_quantity if has_tolerance)]
         dimrows << rows.length if goa.result == 0
@@ -42,7 +44,7 @@ class MultipleOrdersByGroups < OrderPdf
       next if rows.length == 0
 
       # total
-      rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 6}, number_to_currency(totals[:fc_price]), nil]
+      rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 7}, number_to_currency(totals[:fc_price]), nil]
       # price details
       price_details = []
       price_details << "#{Article.human_attribute_name :price} #{number_to_currency totals[:net_price]}"
@@ -57,21 +59,23 @@ class MultipleOrdersByGroups < OrderPdf
 
       # table header
       rows.unshift I18n.t('documents.order_by_groups.rows').dup
+      rows.first.insert(3, Article.human_attribute_name(:supplier))
+      rows.first[5] = {content: rows.first[5], colspan: 2}
       if has_tolerance
-        rows.first[6] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
+        rows.first[-1] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
       else
-        rows.first[6] = nil
+        rows.first[-1] = nil
       end
-      rows.first.insert(2, Article.human_attribute_name(:supplier))
 
       text show_group(ordergroup), size: fontsize(9), style: :bold
-      table rows, width: 500, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
+      table rows, width: bounds.width, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
         table.cells.border_width = 0.02
         table.cells.border_color = 'dddddd'
         table.rows(0).border_width = 1
         table.rows(0).border_color = '666666'
+        table.rows(0).column(5).font_style = :bold
         table.row(rows.length-3).border_width = 1
         table.row(rows.length-3).border_color = '666666'
         table.row(rows.length-2).borders = []
@@ -83,19 +87,17 @@ class MultipleOrdersByGroups < OrderPdf
         table.row(rows.length-1).padding = [0, 5, 0, 5]
         table.row(rows.length-1).height = 0 if totals[:fc_price] == 0
 
-        table.column(0).width = 150
+        table.column(0).width = 150 # @todo would like to set minimum width here
         table.column(2).width = 62
-        table.column(4).font_style = :bold
-        table.columns(3..6).align = :center
-        table.column(5).align = :right
-        table.column(6).align = :right
-        table.column(6).font_style = :bold
-        table.column(7).align = :center
+        table.column(5..7).font_style = :bold
+        table.columns(4..5).align = :center
+        table.column(6..7).align = :right
+        table.column(8).align = :center
         # dim rows not relevant for members
         table.column(3).text_color = '999999'
-        table.column(7).text_color = '999999'
+        table.column(8).text_color = '999999'
         # hide unit_quantity if there's no tolerance anyway
-        table.column(7).width = has_tolerance ? 20 : 0
+        table.column(-1).width = has_tolerance ? 20 : 0
 
         # dim rows which were ordered but not received
         dimrows.each { |ri| table.row(ri).text_color = '999999' }
