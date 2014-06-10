@@ -16,6 +16,8 @@ nl:
       no_current_orders: Er zijn momenteel geen open bestellingen.
     edit:
       title: Artikelen
+    order_article:
+      max_quantity: 'van %{amount}'
     order_article_info:
       extra: extra
       origin_in: uit %{origin}
