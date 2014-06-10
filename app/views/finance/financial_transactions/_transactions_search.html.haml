@@ -1,21 +1,25 @@
+- fields ||= ['note', 'created_on', 'amount']
 .well.well-small
   = form_for @q, url: url, html: {data: {'submit-onchange' => true}, method: :get, remote: true, class: 'form-search'} do |f|
     .search-fields
-      = f.text_field :note_contains, class: 'search-query', placeholder: t('.search_placeholder')
+      - if fields.include? 'note'
+        = f.text_field :note_contains, class: 'search-query', placeholder: t('.search_placeholder')
 
-      &nbsp;
-      = label_tag 'search_created_on_gteq', FinancialTransaction.human_attribute_name(:created_on)
-      &nbsp;
-      .input-append.input-prepend
-        = f.text_field :created_on_gteq, class: 'input-small datepicker'
-        %span.add-on -
-        = f.text_field :created_on_lteq, class: 'input-small search-query datepicker'
+      - if fields.include? 'created_on'
+        &nbsp;
+        = label_tag 'search_created_on_gteq', FinancialTransaction.human_attribute_name(:created_on)
+        &nbsp;
+        .input-append.input-prepend
+          = f.text_field :created_on_gteq, class: 'input-small datepicker'
+          %span.add-on -
+          = f.text_field :created_on_lteq, class: 'input-small search-query datepicker'
 
-      &nbsp;
-      = label_tag 'search_amount_gteq', FinancialTransaction.human_attribute_name(:amount)
-      &nbsp;
-      .input-append.input-prepend
-        %span.add-on= t 'number.currency.format.unit'
-        = f.text_field :amount_gteq, class: 'input-mini'
-        %span.add-on -
-        = f.text_field :amount_lteq, class: 'input-mini search-query'
+      - if fields.include? 'amount'
+        &nbsp;
+        = label_tag 'search_amount_gteq', FinancialTransaction.human_attribute_name(:amount)
+        &nbsp;
+        .input-append.input-prepend
+          %span.add-on= t 'number.currency.format.unit'
+          = f.text_field :amount_gteq, class: 'input-mini'
+          %span.add-on -
+          = f.text_field :amount_lteq, class: 'input-mini search-query'

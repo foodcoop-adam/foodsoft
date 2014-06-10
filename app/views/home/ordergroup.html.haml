@@ -15,9 +15,5 @@
       = link_to t('.invite'), new_invite_path(:id => @ordergroup), :remote => true, class: 'btn btn-primary'
   .span8
     %h2= t('.account_summary')
-    .well.well-small
-      = form_tag my_ordergroup_path, :method => :get, :remote => true,
-        'data-submit-onchange' => true, class: 'form-search' do
-        = text_field_tag :query, params[:query], class: 'input-medium search-query',
-          placeholder: t('.search')
+    = render "finance/financial_transactions/transactions_search", url: my_ordergroup_path, fields: ['note']
     #transactions= render "finance/financial_transactions/transactions", with_csv: false
