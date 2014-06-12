@@ -6,11 +6,11 @@ fr:
         availability: l'article est-il disponible?
         availability_short: disp.
         deposit: Consigne
-        fc_price: Prix final
+        fc_price: Prix pour les members
         fc_price_desc: Prix avec TVA, consigne et part de la coop inclus.
-        fc_price_short: Prix pour les membres
+        fc_price_short: Prix final
         fc_share: Marge de la coop
-        fc_share_short: Marge de la coop
+        fc_share_short: Marge
         gross_price: Prix brut
         manufacturer: ProductRICE_eur
         name: Nom
@@ -23,7 +23,7 @@ fr:
         tax: TVA
         unit: Taille des lots proposés
         unit_quantity: Unités par lot
-        unit_quantity_short: U.
+        unit_quantity_short: U/L
         units: Lots
       article_category:
         description: Description
@@ -454,12 +454,12 @@ fr:
       filename: Commande %{name}-%{date} - Répartition par cellules
       rows:
       - Nom de l'article
-      - Commandée
       - Prix
-      - Quantité
-      - Unités par lot
       - Unité
-      - Prix total
+      - Commandée
+      - Quantité
+      - Total
+      - U/L
       sum: prix total
       title: ! 'Répartition par cellules pour la commande: %{name}, close le %{date}'
     order_fax:
@@ -468,7 +468,7 @@ fr:
       - Numéro
       - Quantité
       - Nom
-      - Nombre de lots
+      - Unités/Lot
       - Unité
       - Prix/Unité
       - Prix unitaire
@@ -882,7 +882,7 @@ fr:
     logo: coop
   lib:
     order_pdf:
-      page: page %{number}
+      page: page %{number} / %{count}
   login:
     accept_invitation:
       body: ! '<p>Tu viens d''être invité à rejoindre la cellule "<b>%{group}</b>" de la coopérative d''approvisionnement (bouffe-coop) %{foodcoop} ! </p>

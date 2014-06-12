@@ -493,8 +493,8 @@ en:
       filename: Order %{name}-%{date} - by group
       rows:
       - Article
-      - Unit
       - Price
+      - Unit
       - Ordered
       - Received
       - Sum
@@ -924,7 +924,7 @@ en:
     logo: <span>food</span>soft
   lib:
     order_pdf:
-      page: Page %{number}
+      page: Page %{number} of %{count}
   login:
     accept_invitation:
       invited_into_group: 'You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.'

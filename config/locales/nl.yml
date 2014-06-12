@@ -458,8 +458,8 @@ nl:
       filename: Bestelling %{name}-%{date} - Huishoudenslijst
       rows:
       - Artikel
-      - Eenheid
       - Prijs
+      - Eenheid
       - Besteld
       - Ontvangen
       - Som
@@ -887,7 +887,7 @@ nl:
     logo: <span>food</span>soft
   lib:
     order_pdf:
-      page: Pagina %{number}
+      page: Pagina %{number} van %{count}
   login:
     accept_invitation:
       invited_into_group: Je bent uitgenodigd om lid te worden van %{foodcoop} als deel van de groep <b>%{group}</b>.

@@ -28,8 +28,8 @@ class OrderByGroups < OrderPdf
         total += sub_total
         taxes[goa.order_article.price.tax.to_f.round(2)] += goa.result * goa.order_article.price.tax_price
         rows <<  [goa.order_article.article.name,
-                  goa.order_article.article.unit,
                   number_to_currency(price),
+                  goa.order_article.article.unit,
                   goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
                   goa.result,
                   result_in_units(goa),
@@ -43,12 +43,12 @@ class OrderByGroups < OrderPdf
       rows << [{content: I18n.t('documents.order_by_groups.sum'), colspan: 6}, number_to_currency(total), nil]
       # price details (old orders may not have these details set)
       price_details = []
-      price_details << "#{Article.human_attribute_name :price} #{number_to_currency group_order.net_price}" if group_order.net_price
+      price_details << "#{Article.human_attribute_name :price} #{number_to_currency group_order.net_price}" if group_order.net_price > 0
       price_details << "#{Article.human_attribute_name :deposit} #{number_to_currency group_order.deposit}" if group_order.deposit.to_f > 0
       taxes.each do |tax, tax_price|
         price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
       end
-      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency (group_order.price - group_order.gross_price)}" if group_order.gross_price
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency (group_order.price - group_order.gross_price)}" if group_order.gross_price > 0
       rows << [{content: '  ' + price_details.join('; '), colspan: 7}]
 
       # table header
@@ -60,7 +60,7 @@ class OrderByGroups < OrderPdf
         rows.first[-1] = nil
       end
 
-      text show_group(group_order.ordergroup), size: fontsize(9), style: :bold
+      text show_group(group_order.ordergroup), size: fontsize(13), style: :bold
       table rows, width: bounds.width, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
@@ -80,8 +80,8 @@ class OrderByGroups < OrderPdf
         table.row(rows.length-1).padding = [0, 5, 0, 5]
 
         table.column(0).width = 200 # @todo would like to set minimum width here
-        table.column(2).align = :right
-        table.columns(3..4).align = :center
+        table.column(1).align = :right
+        table.columns(2..4).align = :center
         table.columns(4..6).font_style = :bold
         table.columns(5..6).align = :right
         table.column(7).align = :center
@@ -92,7 +92,10 @@ class OrderByGroups < OrderPdf
         table.column(7).width = has_tolerance ? 25 : 0
 
         # dim rows which were ordered but not received
-        dimrows.each { |ri| table.row(ri).text_color = '999999' }
+        dimrows.each do |ri|
+          table.row(ri).text_color = 'aaaaaa'
+          table.row(ri).columns(0..-1).font_style = nil
+        end
       end
 
       down_or_page 15
