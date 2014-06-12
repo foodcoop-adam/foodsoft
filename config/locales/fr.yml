@@ -23,7 +23,7 @@ fr:
         tax: TVA
         unit: Unité
         unit_quantity: Unités par lot
-        unit_quantity_short: U.
+        unit_quantity_short: U/L
         units: Lots
       article_category:
         description: Description
@@ -564,12 +564,12 @@ fr:
       filename: Commande %{name}-%{date} - Répartition par cellules
       rows:
       - Nom de l'article
-      - Commandée
       - Prix
-      - Quantité
-      - Unités par lot
       - Unité
-      - Prix total
+      - Commandée
+      - Quantité
+      - Total
+      - U/L
       sum: prix total
       title: 'Répartition par cellules pour la commande: %{name}, clôturée le %{date}'
     order_fax:
@@ -577,8 +577,8 @@ fr:
       rows:
       - Numéro
       - Quantité
-      - Nom du produit
-      - Nombre d'unités
+      - Nom
+      - Unités/Lot
       - Unité
       - Prix unitaire
       - Prix
@@ -997,7 +997,7 @@ fr:
     logo: coop
   lib:
     order_pdf:
-      page: page %{number}
+      page: page %{number} / %{count}
   login:
     accept_invitation:
       body: |
