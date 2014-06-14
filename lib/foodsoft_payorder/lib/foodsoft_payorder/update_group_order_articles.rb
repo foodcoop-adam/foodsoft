@@ -43,12 +43,20 @@ module FoodsoftPayorder
             end
           end
 
+        end
+      end
+    end
+
+    module FinancialTransaction
+      def self.included(base) # :nodoc:
+        base.class_eval do
+
           # always recompute after a financial transaction
-          alias_method :foodsoft_payorder_orig_add_financial_transaction!, :add_financial_transaction!
-          def add_financial_transaction!(amount, note, user)
-            result = self.foodsoft_payorder_orig_add_financial_transaction!(amount, note, user)
-            self.update_group_order_articles(financial_transactions.last)
-            result
+          after_save :foodsoft_payorder_update_group_order_articles
+
+          protected
+          def foodsoft_payorder_update_group_order_articles
+            ordergroup.update_group_order_articles(self)
           end
 
         end
@@ -148,4 +156,5 @@ ActiveSupport.on_load(:after_initialize) do
   GroupOrderArticle.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::GroupOrderArticle
   GroupOrderArticleQuantity.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::GroupOrderArticleQuantity
   OrderArticle.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::OrderArticle
+  FinancialTransaction.send :include, FoodsoftPayorder::UpdateGroupOrderArticles::FinancialTransaction
 end
