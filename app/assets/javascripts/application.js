@@ -172,6 +172,18 @@ $(function() {
     $(document).tooltip({
       selector: '[data-toggle~="tooltip"]',
     });
+
+    // Collapse button
+    //   Need to use shown/hidden to make sure 'in' class has updated value.
+    $(document).on('shown hidden', '.collapse', function() {
+      var button = $(this).siblings('.collapse-button');
+      if (button) {
+        var expanded = $(this).hasClass('in');
+        $(button)
+          .toggleClass('icon-caret-right', !expanded)
+          .toggleClass('icon-caret-down', expanded);
+      }
+    });
     
     // See stupidtable.js for initialization of local table sorting
 
