@@ -10,10 +10,20 @@
             %button.add-on.btn.reset-search{:type => :button, :title => t('group_orders.form.reset_article_search')}
               %i.icon.icon-remove
       %li.nav-header= ArticleCategory.model_name.human
-      - @article_categories.each do |article_category|
-        - classes = ('active' if article_category.id==@current_category)
-        %li{data: {category: article_category.id}, class: classes}
-          = link_to article_category.name, url_for(action: :edit, q: {article_article_category_id_eq: article_category.id}, anchor: 'articles_table'), remote: true
+      - item_proc = lambda do |article_category, children|
+        - capture do
+          - is_active = article_category == @current_category
+          - is_active_path = (@current_category.path_ids.include?(article_category.id) rescue nil)
+          - classes = ('active' if is_active)
+          - collapsedata = {toggle: 'collapse', target: "li[data-category=#{article_category.id}] > ul"}
+          %li{data: {category: article_category.id}, class: classes}
+            - unless children.blank?
+              = link_to '', '#', data: collapsedata, class: "collapse-button icon-caret-#{is_active_path ? 'down' : 'right'}"
+            = link_to article_category.name, url_for(action: :edit, article_category_id: article_category.id, anchor: 'articles_table'), remote: true, data: collapsedata
+            - unless children.blank?
+              - classes = "nav nav-list collapse#{' in' if is_active_path}"
+              = content_tag :ul, children.html_safe, class: classes
+      = just_tree @article_categories, render_module: FoodsoftRenderTreeHelper::Block, content: item_proc
 
 - content_for :javascript do
   :javascript

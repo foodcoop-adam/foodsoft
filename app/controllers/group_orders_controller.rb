@@ -34,13 +34,21 @@ class GroupOrdersController < ApplicationController
 
   def edit
     params[:q] ||= params[:search] # for meta_search instead of ransack
+    # @todo custom ransack matcher (after moving to Rails 4)
+    if params[:article_category_id].blank?
+      @current_category_id = nil
+    else
+      @current_category_id = params[:article_category_id].to_i
+      params[:q] ||= {}
+      params[:q][:article_article_category_id_in] = ArticleCategory.find(@current_category_id).subtree_ids
+    end
     @q = OrderArticle.search(params[:q])
     @order_articles = @order_articles.merge(@q.relation)
     @order_articles = @order_articles.includes(:order)
 
-    @current_category = (params[:q][:article_article_category_id_eq].to_i rescue nil)
     compute_order_article_details
     get_article_categories
+    @current_category = ArticleCategory.where(id: @current_category_id).first
   end
 
   def update
@@ -144,7 +152,7 @@ class GroupOrdersController < ApplicationController
     return unless @orders
     @all_order_articles = OrderArticle.joins(:article, :order).merge(@orders)
     @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
-    @order_articles = @order_articles.order(articles: :name)
+    @order_articles = @order_articles.order('articles.name')
     @order_articles = @order_articles.page(params[:page]).per(@per_page) unless action_name == 'show'
   end
 

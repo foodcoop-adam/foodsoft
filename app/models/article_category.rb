@@ -5,6 +5,8 @@ class ArticleCategory < ActiveRecord::Base
   acts_as_list scope: [:ancestry]
   include TheSortableTree::Scopes
 
+  default_scope -> { order('position') }
+
   normalize_attributes :name, :description
 
   validates :name, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
