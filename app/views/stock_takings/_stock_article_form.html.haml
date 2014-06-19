@@ -9,5 +9,5 @@
     %span.add-on %
     -# untested, because this view is currently not included (?)
   = f.input :deposit
-  = f.association :article_category
+  = f.association :article_category, as: :indented_collection_select
   = f.submit
