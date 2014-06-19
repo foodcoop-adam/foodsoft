@@ -35,7 +35,7 @@ GIT
 
 GIT
   remote: git://github.com/wvengen/the_sortable_tree.git
-  revision: 4637e530536c6d31f70bcdf3429def671c4a93a5
+  revision: 22d72ec71b9a07a3b2dbdd2d0e7262f947de0c72
   specs:
     the_sortable_tree (2.5.0)
       rails (>= 3.1)
