@@ -26,8 +26,9 @@
           %td= form.text_field 'unit_quantity', class: 'input-nano'
           %td= form.text_field 'quantity', class: 'input-nano'
           %td= form.text_field 'note', class: 'input-medium'
-          %td= form.collection_select 'article_category_id', ArticleCategory.all,
-            :id, :name, { :include_blank => true }, class: 'input-small'
+          %td= form.select 'article_category_id',
+            indented_options(ArticleCategory.all, title: :name, selected: article.article_category),
+            { :include_blank => true }, class: 'input-small'
           %td.input-append
             = form.text_field 'tax', class: 'input-nano'
             %span.add-on %

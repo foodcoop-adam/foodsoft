@@ -41,8 +41,7 @@
         = t '.import.restrict_region'
       .pull-right{style: 'line-height: 40px'}
         = label_tag :article_category_id, t('.import.category')
-        = collection_select :article_category, :id, ArticleCategory.all, :id, :name,
-          {include_blank: true}, {'data-ignore-onchange' => true}
+        = select_tag :article_category_id, indented_options(ArticleCategory.all, title: :name), include_blank: true, 'data-ignore-onchange' => true
       #search_results.clearfix
     = link_to t('ui.close'), "#import", 'data-toggle-this' => '#import', class: 'btn'
 
