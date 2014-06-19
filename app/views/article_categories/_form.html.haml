@@ -1,9 +1,7 @@
 = simple_form_for @article_category do |f|
   = f.input :name
   = f.input :description, as: :text, input_html: {class: 'input-xxlarge'}
-  = f.input :parent_id do
-    = f.select :parent_id,
-        indented_options(collection.where.not(id: f.object.id), selected: f.object.parent, title: :name)
+  = f.input :parent_id, collection: ArticleCategory.where('id != ?', f.object.id||-1), as: :indented_collection_select
   .form-actions
     = f.submit class: 'btn'
     = link_to t('ui.or_cancel'), article_categories_path
