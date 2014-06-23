@@ -61,16 +61,17 @@ module FoodsoftSignup
     end
   end
 
-  def self.approval_msg(c)
+  def self.approval_msg(c, expand=true)
+    doexpand = lambda {|t,opts| expand ? c.class.helpers.expand_text(t,opts) : t}
     if s = FoodsoftConfig[:ordergroup_approval_payment]
       link = c.class.helpers.link_to(I18n.t('foodsoft_signup.payment.msg_link'), payment_link(c))
       msg = if FoodsoftConfig[:ordergroup_approval_msg]
-        c.class.helpers.expand_text(FoodsoftConfig[:ordergroup_approval_msg], link: link)
+        doexpand.call(FoodsoftConfig[:ordergroup_approval_msg], {link: link})
       else
-        I18n.t('foodsoft_signup.payment.msg', link: link)
+        I18n.t('foodsoft_signup.payment.msg', link: expand ? link : '%{link}')
       end
     else
-      msg = (c.class.helpers.expand_text(FoodsoftConfig[:ordergroup_approval_msg]) or I18n.t('foodsoft_signup.approval.msg'))
+      msg = (doexpand.call(FoodsoftConfig[:ordergroup_approval_msg], {}) or I18n.t('foodsoft_signup.approval.msg'))
     end
     msg
   end

@@ -232,6 +232,26 @@ default: &defaults
   shared_lists: sharedlists
   shared_supplier_assets_path: /www/apps/sharedlists/shared/supplier_assets
   use_orderdoc: true
+  
+  protected:
+    # default
+    multi_coop_install: true
+    default_scope: true
+    notification: true
+    shared_lists: true
+    protected: true
+    database: true
+    # we also want to protect these
+    shared_supplier_assets_path: true
+    unapproved_allow_access: true
+    email_sender: true
+    mollie: true
+    use_orderdoc: true
+    unapproved_allow_access: true
+    send_order_on_finish: true
+    send_order_on_finish_cc: true
+    foodsoft_url: true
+
 
   # http config for this host to generate links in emails (uses environment config when not set)
   #protocol: http

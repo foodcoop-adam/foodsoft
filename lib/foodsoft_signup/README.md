@@ -22,9 +22,9 @@ This plugin is configured in the foodcoop configuration in foodsoft's
   # Membership fee substracted from balance when a new ordergroup is created
   membership_fee: 35
   # The membership fee is fixed by default. If you'd like members to be able
-  # to enter a larger amount, set this to false, and members will be able to
-  # enter a larger amount than the membership_fee on payment.
-  #membership_fee_fixed: false
+  # to enter a larger amount, uncomment the following, and members will be able
+  # to enter a larger amount than the membership_fee on payment.
+  #membership_fee_donate: true
 
   # enable to to allow public signup
   use_signup: true
@@ -48,11 +48,11 @@ This plugin is configured in the foodcoop configuration in foodsoft's
   - group_orders#archive
 
   # In case you'd like to have protected signup form, and allow members who
-  # signup to order directly, you can enable the following instead. This
-  # effectively disables approval, and requires a key in the signup url:
+  # signup to order directly, you can enable the following. This effectively
+  # disables approval, and requires a key in the signup url:
   #   https://foodcoop.test/f/login/signup?key=verySeCrEt123
   #unapproved_allow_access: '*'
-  #use_signup: 'verySeCrEt123'
+  #signup_key: 'verySeCrEt123'
 
   # Message to show when ordergroup is not yet approved. If not set, a concise
   # default message will be shown.

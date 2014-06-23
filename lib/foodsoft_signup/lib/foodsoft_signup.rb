@@ -35,7 +35,12 @@ module FoodsoftSignup
   # checks signup key - or returns true no key is required
   def self.check_signup_key(key)
     cfg = enabled?(:signup)
-    cfg == true or cfg == key
+    if FoodsoftConfig[:signup_key].nil?
+      # either no key, or legacy when key was set in use_signup
+      cfg == true or cfg == key
+    else
+      cfg == true and FoodsoftConfig[:signup_key] == key
+    end
   end
 
   def self.payment_link(c)
@@ -51,7 +56,7 @@ module FoodsoftSignup
       title: FoodsoftConfig[:ordergroup_approval_payment_title] || I18n.t('foodsoft_signup.payment.pay_title')
     }
     params[:text] = c.class.helpers.expand_text(FoodsoftConfig[:ordergroup_approval_payment_text], params) if FoodsoftConfig[:ordergroup_approval_payment_text]
-    if FoodsoftConfig[:membership_fee_fixed] == false
+    if FoodsoftConfig[:membership_fee_fixed] == false or FoodsoftConfig[:membership_fee_donate]
       params[:min] = FoodsoftConfig[:membership_fee]
     else
       params[:fixed] = 'true'

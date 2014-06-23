@@ -1,0 +1,19 @@
+%fieldset
+  %label
+    %h4
+      Admins can create and invite members
+      = check_box_tag nil, nil, true, disabled: true
+    - if defined? FoodsoftSignup
+      = config_input form, :membership_fee do
+        .input-prepend
+          %span.add-on= t 'number.currency.format.unit'
+          = config_input_field form, :membership_fee, as: :decimal, class: 'input-mini'
+        %label
+          = config_input_field form, :membership_fee_donate, as: :boolean
+          = config_input_label form, :membership_fee_donate
+  = config_input form, :invitation_form_message, as: :text, input_html: {rows: 5, class: 'input-xxlarge', placeholder: t('login.accept_invitation_form.body')}
+- if defined? FoodsoftSignup
+  = config_use_heading form, :use_signup do
+    = config_input form, :ordergroup_approval_msg, as: :text, input_html: {rows: 2, class: 'input-xxlarge', placeholder: FoodsoftSignup.approval_msg(controller, false)}
+    = config_input form, :signup_key, input_html: {class: 'input-large'}
+    = config_input form, :use_approval, as: :boolean, checked_value: :signup

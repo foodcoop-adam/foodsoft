@@ -4,6 +4,23 @@ en:
       ordergroup:
         approved: Membership approved
         approved_short: Approved
+  config:
+    hints:
+      use_signup: Allow prospective members to signup for a new account. If there is a membership fee, members can only order after they have paid the amount.
+      use_approval: "Members need approval before they can fully participate. Normally, this means that they can only order after they're approved (either by paying the membership fee, or by an administrator)."
+      invitation_form_message: Message shown on top of invitation and signup form. Explain here what members may expect when joining the foodcoop.
+      membership_fee: When set, new members start with a negative balance.
+      membership_fee_donate: Allow members to enter a larger membership fee for donation.
+      ordergroup_approval_msg: Show notice on dashboard when member is not yet approved.
+      signup_key: When you want to protect signup with a key, enter this key here. You will then need to append ?key={your_signup_key} to the signup URL to access the page.
+    keys:
+      use_signup: Member signup
+      use_approval: Approval needed
+      invitation_form_message: Invitation form text
+      membership_fee: Membership fee
+      membership_fee_donate: Allow donations
+      ordergroup_approval_msg: Approval notice on dashboard
+      signup_key: Signup key
   foodsoft_signup:
     approval:
       msg: Your membership needs to be approved before you can participate.
