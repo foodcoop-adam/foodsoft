@@ -310,6 +310,12 @@ GEM
     rake (10.3.2)
     rdoc (3.12.2)
       json (~> 1.4)
+    recurring_select (1.2.0)
+      coffee-rails (>= 3.1)
+      ice_cube (>= 0.8)
+      jquery-rails
+      rails (>= 3.1)
+      sass-rails (>= 3.1)
     redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
@@ -476,6 +482,7 @@ DEPENDENCIES
   rails-assets-listjs (= 0.2.0.beta.4)
   rails-i18n
   rails-settings-cached (= 0.2.4)
+  recurring_select
   resque
   rspec-core
   rspec-expectations

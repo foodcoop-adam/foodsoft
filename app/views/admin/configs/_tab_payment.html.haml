@@ -1,7 +1,23 @@
-= config_input form, :price_markup do
-  .input-append
-    = config_input_field form, :price_markup, as: :decimal, class: 'input-mini'
-    %span.add-on %
+-# @todo allow to switch between single and multiple margins from here
+- if @cfg[:price_markup_list]
+  -# either a selectbox + list of margins
+  = config_input form, :price_markup, collection: @cfg[:price_markup_list].map{|k,v| [v['name']||k, k]}, input_html: {class: 'plain'}
+  = form.simple_fields_for :price_markup_list do |fields|
+    - for markup_key, markup in @cfg[:price_markup_list] do
+      .fold-line
+        = fields.simple_fields_for markup_key do |fields|
+          = config_input fields, 'name', label: '&nbsp;'.html_safe, input_html: {value: (@cfg[:price_markup_list][markup_key]['name']||markup_key), class: 'input-medium'}
+          = config_input fields, 'markup', label: Article.human_attribute_name(:fc_share_short) do
+            .input-append
+              = config_input_field fields, 'markup', as: :decimal, class: 'input-mini'
+              %span.add-on %
+- else
+  -# or a single margin
+  = config_input form, :price_markup do
+    .input-append
+      = config_input_field form, :price_markup, as: :decimal, class: 'input-mini'
+      %span.add-on %
+
 = config_input form, :tax_default do
   .input-append
     = config_input_field form, :tax_default, as: :decimal, class: 'input-mini'
@@ -10,3 +26,4 @@
   .input-prepend
     %span.add-on= t 'number.currency.format.unit'
     = config_input_field form, :minimum_balance, as: :decimal, class: 'input-small'
+= config_input form, :use_paymanual, as: :boolean

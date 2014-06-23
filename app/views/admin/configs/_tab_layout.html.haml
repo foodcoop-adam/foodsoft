@@ -1,4 +1,8 @@
+= config_input form, :sub_name, input_html: {class: 'input-xlarge'}
 = config_input form, :page_footer, as: :text, input_html: {class: 'input-xxlarge', rows: 2, placeholder: "#{link_to(FoodsoftConfig[:name], FoodsoftConfig[:homepage])}"}
+
+%h4= t '.dashboard_title'
+= config_input form, :home_notice, as: :text, input_html: {class: 'input-xxlarge', rows: 4}
 
 %h4= t '.pdf_title'
 .fold-line

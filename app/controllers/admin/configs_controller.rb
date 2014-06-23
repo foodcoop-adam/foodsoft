@@ -15,6 +15,16 @@ class Admin::ConfigsController < Admin::BaseController
   end
 
   def update
+    # turn recurring rules into something palatable
+    if p = params[:config][:order_schedule]
+      for k in [:pickup, :ends] do
+        if p[k] and p[k][:recurr]
+          p[k][:recurr] = ActiveSupport::JSON.decode(p[k][:recurr])
+          p[k][:recurr] = FoodsoftDateUtil.rule_from(p[k][:recurr]).to_ical if p[k][:recurr]
+        end
+      end
+    end
+    # store configuration
     ActiveRecord::Base.transaction do
       # TODO support nested configuration keys
       params[:config].each do |key, val|
@@ -29,7 +39,7 @@ class Admin::ConfigsController < Admin::BaseController
 
   # Set configuration tab names as `@tabs`
   def get_tabs
-    @tabs = %w(foodcoop payment tasks messages layout language others)
+    @tabs = %w(foodcoop schedule payment messages layout language others) # removed tasks for now
     # allow engines to modify this list
     engines = Rails::Engine.subclasses.map(&:instance).select { |e| e.respond_to?(:configuration) }
     engines.each { |e| e.configuration(@tabs, self) }

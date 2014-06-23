@@ -43,6 +43,7 @@ gem 'resque'
 gem 'whenever', require: false # For defining cronjobs, see config/schedule.rb
 gem 'ruby-units'
 gem 'ice_cube', github: 'greenriver/ice_cube', branch: 'issues/50-from_ical' # fork until seejohnrun/ice_cube#50 is merged
+gem 'recurring_select'
 gem 'charlock_holmes'
 gem 'attribute_normalizer'
 gem 'version_info'

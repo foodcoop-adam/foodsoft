@@ -1,4 +1,35 @@
 en:
+  admin:
+    configs:
+      tab_layout:
+        dashboard_title: Dashboard
+  config:
+    hints:
+      sub_name: Sub-title shown below the foodcoop name (optional).
+      home_notice: Show message on top of the dashboard frontpage (html allowed).
+      skip_order_finished_mails: Do not send members an email with the order results when an order closes (regardless of their own preference).
+      use_paymanual: Allow entering ordergroup payments manually.
+      order_schedule:
+        initial: Schedule starts at this date.
+        ends:
+          recurr: Schedule for order closing date.
+          time: Default time when orders are closed.
+        pickup:
+          recurr: Schedule for pickup day date.
+          time: Default time when pickup starts.
+    keys:
+      sub_name: Subtitle
+      home_notice: Dashboard notice
+      skip_order_finished_mails: Skip member mails when closing an order
+      use_paymanual: Allow manual payments
+      order_schedule:
+        initial: Start date
+        ends:
+          recurr: Order end schedule
+          time: time
+        pickup:
+          recurr: Pickup schedule
+          time: time
   documents:
     order_by_groups:
       multiple:
