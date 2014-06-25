@@ -11,7 +11,13 @@ default: &defaults
   # without these settings Foodsoft breaks
   name: FC Test
   contact:
-    email: f@c.test
+    email: fc@minimal.test
+
+  # required by configuration form (but otherwise not)
+  homepage: http://www.minimal.test/
+
+  # true by default to keep compat with older installations, but test with false here
+  use_nick: false
 
   # do we really need the following ones?
   price_markup: 5.0

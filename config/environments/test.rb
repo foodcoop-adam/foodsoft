@@ -11,6 +11,14 @@ Foodsoft::Application.configure do
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
 
+  # We clear the cache for each test, let's do that in memory.
+  config.cache_store = :memory_store
+
+  # Do not eager load code on boot. This avoids loading your whole application
+  # just for the purpose of running a single test. If you are using a tool that
+  # preloads Rails for running tests, you may have to set it to true.
+  config.eager_load = false
+
   # Required for i18n-js
   config.assets.initialize_on_precompile = true
 
