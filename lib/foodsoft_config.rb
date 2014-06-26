@@ -49,9 +49,7 @@ class FoodsoftConfig
   # Rails.logger isn't ready yet - and we don't want to litter rspec invocation with this msg
   puts "-> Loading app configuration from #{APP_CONFIG_FILE}" unless defined? RSpec
   # Loaded configuration
-  APP_CONFIG = ActiveSupport::HashWithIndifferentAccess.new(
-    YAML.load(File.read(File.expand_path(APP_CONFIG_FILE, Rails.root)))
-  )
+  APP_CONFIG = YAML.load(File.read(File.expand_path(APP_CONFIG_FILE, Rails.root)))
 
   class << self
 
@@ -89,12 +87,15 @@ class FoodsoftConfig
     # @param key [String, Symbol]
     # @return [Object] Value of the key.
     def [](key)
+      key = key.to_sym
       if RailsSettings::CachedSettings.table_exists? and allowed_key?(key)
         value = RailsSettings::CachedSettings["foodcoop.#{self.scope}.#{key}"]
+        value == 'false' and value = false
+        value == 'true' and value = true
         value = config[key] if value.nil?
-        value
+        fix_value value
       else
-        config[key]
+        fix_value config[key]
       end
     end
 
@@ -105,11 +106,12 @@ class FoodsoftConfig
     # @param value [Object] Value
     # @return [Boolean] Whether storing succeeded (fails when key is not allowed to be set in database).
     def []=(key, value)
+      key = key.to_sym
       return false unless allowed_key?(key)
       # try to figure out type ...
       value = case value
-                when 'true' then true
-                when 'false' then false
+                when false then 'false'  # Rails 3 version of +CachedSettings+ destroys key when +false+
+                when true then 'true'
                 when /^[-+0-9]+$/ then value.to_i
                 when /^[-+0-9.]+([eE][-+0-9]+)?$/ then value.to_f
                 when '' then nil
@@ -152,7 +154,7 @@ class FoodsoftConfig
     # @return [Boolean] Whether this key may be set in the database
     def allowed_key?(key)
       # fast check for keys without nesting
-      return !self.config[:protected][key]
+      return !self.config[:protected][key.to_sym]
       # @todo allow to check nested keys as well
     end
 
@@ -198,7 +200,7 @@ class FoodsoftConfig
 
     def set_config(foodcoop)
       raise "No config for this environment (#{foodcoop}) available!" if APP_CONFIG[foodcoop].nil?
-      self.config = APP_CONFIG[foodcoop]
+      self.config = APP_CONFIG[foodcoop].symbolize_keys
       self.scope = foodcoop
       set_missing
     end
@@ -213,6 +215,7 @@ class FoodsoftConfig
     # @see #foodsoft_config
     def set_missing
       config.replace(default_config.deep_merge(config))
+      config
     end
 
     # Returns program-default configuration.
@@ -249,6 +252,16 @@ class FoodsoftConfig
     # return list of foodcoop scopes
     def scopes
       APP_CONFIG.keys.reject { |scope| scope =~ /^(default|development|test|production)$/ }
+    end
+
+    # returns HashWithIndifferentAccess if Hash
+    #   workaround for Rails 3
+    def fix_value(v)
+      if v.is_a? Hash and not v.is_a? ActiveSupport::HashWithIndifferentAccess
+        v = ActiveSupport::HashWithIndifferentAccess.new(v)
+        v.values.map! {|v| fix_value(v)}
+      end
+      v
     end
 
   end

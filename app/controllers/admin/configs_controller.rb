@@ -1,6 +1,6 @@
 class Admin::ConfigsController < Admin::BaseController
 
-  before_action :get_tabs, only: [:show, :list]
+  before_filter :get_tabs, only: [:show, :list]
 
   def show
     @current_tab = @tabs.include?(params[:tab]) ? params[:tab] : @tabs.first

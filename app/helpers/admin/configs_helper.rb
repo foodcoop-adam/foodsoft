@@ -44,7 +44,7 @@ module Admin::ConfigsHelper
   # @option options [String] :unchecked_value Value for boolean when not checked (default +false+)
   # @todo find out how to pass +checked_value+ and +unchecked_value+ to +input_field+
   def config_input_field(form, key, options = {})
-    return unless @cfg.allowed_key? :key
+    return unless @cfg.allowed_key? key
     options[:required] ||= false
     config_input_field_options form, key, options
     config_input_tooltip_options form, key, options
@@ -72,7 +72,7 @@ module Admin::ConfigsHelper
        content_tag :span, (lbl + field).html_safe, config_input_tooltip_options(form, key, {})
      end
     end
-    fields = content_tag(:fieldset, id: "#{key}-fields", class: "collapse#{' in' if @cfg[key]}") do
+    fields = content_tag(:fieldset, id: "#{key}-fields", class: "collapse#{' in' if @cfg[key.to_sym]}") do
       yield
     end
     head + fields
@@ -122,7 +122,7 @@ module Admin::ConfigsHelper
     cfg_path = form.lookup_model_names[1..-1] + [key]
     # set current value
     value = @cfg
-    cfg_path.each {|n| value = value[n]}
+    cfg_path.each {|n| value = value[n.to_sym] unless value.nil? }
     options[:value] ||= value
     options
   end
