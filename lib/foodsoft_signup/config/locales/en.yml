@@ -13,6 +13,7 @@ en:
       membership_fee_donate: Allow members to enter a larger membership fee for donation.
       ordergroup_approval_msg: Show notice on dashboard when member is not yet approved.
       signup_key: When you want to protect signup with a key, enter this key here. You will then need to append ?key={your_signup_key} to the signup URL to access the page.
+      signup_ordergroup_limit: When your foodcoop has reached this number of approved members, no new members can signup. Leave empty for no limit.
     keys:
       use_signup: Member signup
       use_approval: Approval needed
@@ -21,6 +22,7 @@ en:
       membership_fee_donate: Allow donations
       ordergroup_approval_msg: Approval notice on dashboard
       signup_key: Signup key
+      signup_ordergroup_limit: Member limit
   foodsoft_signup:
     approval:
       msg: Your membership needs to be approved before you can participate.
@@ -43,6 +45,8 @@ en:
     new:
       signup_text: No account yet?
       signup_link: Signup for %{name}
+      signup_full: '%{name} is not accepting new members at the moment.'
+      signup_protected: 'Signup for %{name} is by invitation only.'
   signup:
     controller:
       disabled: You cannot signup yourself for %{foodcoop}. Please contact us to become a member.
