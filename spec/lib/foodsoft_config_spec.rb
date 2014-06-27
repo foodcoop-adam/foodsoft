@@ -60,6 +60,20 @@ describe FoodsoftConfig do
     end
   end
 
+  it 'can protect all values' do
+    old_name = FoodsoftConfig[:name]
+    FoodsoftConfig.config[:protected][:all] = true
+    FoodsoftConfig[:name] = name
+    expect(FoodsoftConfig[:name]).to eq old_name
+  end
+
+  it 'can whitelist a value' do
+    FoodsoftConfig.config[:protected][:all] = true
+    FoodsoftConfig.config[:protected][:name] = false
+    FoodsoftConfig[:name] = name
+    expect(FoodsoftConfig[:name]).to eq name
+  end
+
   describe 'has indifferent access', type: :feature do
     it 'with symbol' do
       FoodsoftConfig[:name] = name
