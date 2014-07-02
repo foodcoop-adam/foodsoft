@@ -3,9 +3,11 @@ require 'uri'
 
 module FoodsoftVokomokum
 
-  class AuthnException < Exception; end
+  class VokomokumException < Exception; end
+  class AuthnException < VokomokumException; end
+  class UploadException < VokomokumException; end
 
-  # Validate user at Vokomokum member system from existing cookies, return user info
+  # Validate user at Vokomokum member system from existing cookies, return user info.
   #   When an unexpected condition occurs, raises FoodsoftVokomokum::AuthnException.
   #   When the user was not logged in, returns `nil`.
   def self.check_user(cookies)
@@ -24,26 +26,39 @@ module FoodsoftVokomokum
     raise AuthnException.new('Vokomokum login returned an invalid response: ' + error.message)
   end
 
-  # upload ordergroup totals to vokomokum system
-  #   this is a hash of {ordergroup_id: sum}
-  #   type can be one of 'Groente', 'Kaas', 'Misc.'
+  # Upload ordergroup totals to Vokomokum system.
+  #   This is a hash of {ordergroup_id: sum}
+  #   Type can be one of 'Groente', 'Kaas', 'Misc.'
   def self.upload_amounts(amounts, type)
     Rails.logger.debug "Vokomokum update for #{type}: #{amounts.inspect}"
+
+    # first submit as CSV to see if there are any errors
+    self.upload_amounts_csv(amounts, type)
+
     type = type.downcase.gsub '.',''
     parms = {submit: 'Submit', which: type, column: "mo_vers_#{type}"}
     amounts.each_pair do |ordergroup,sum|
       parms["mo_vers_#{type}_#{ordergroup.to_i}"] = sum
     end
+
     res = order_req('/cgi-bin/vers_upload.cgi', parms);
+    if res.body =~ /<h2\s+class="errmsg"[^>]*>(.*?)<\/h2>/m
+      raise UploadException.new("Vokomokum upload failed: #{$1}")
+    end
   end
 
+  # Submit amounts as CSV.
+  # An UploadException is raised if there are any errors in the data.
   def self.upload_amounts_csv(amounts, type)
     # submit fresh page
     res = order_req('/cgi-bin/vers_upload.cgi', {
-                      submit: type,
+                      type => type,
                       paste: export_amounts(amounts)
     });
-    # TODO check the form for errors
+    if res.body =~ /<h2\s+class="errmsg"[^>]*>(.*?)<\/h2>/m
+      raise UploadException.new("Vokomokum upload failed: #{$1}")
+    end
+
     # TODO submit the form, or it won't be saved at all
   end
 
@@ -73,8 +88,20 @@ module FoodsoftVokomokum
     end
     # TODO cookie-encode the key and value
     req['Cookie'] = cookies.to_a.map {|v| "#{v[0]}=#{v[1]}"}.join('; ') #
-    res = Net::HTTP.start(uri.hostname, uri.port) {|http| http.request(req) }
-    res.code.to_i == 200 or raise AuthnException.new("Could not access Vokomokum, status #{res.code}")
+
+    begin
+      res = Net::HTTP.start(uri.hostname, uri.port) {|http| http.request(req) }
+    rescue Timeout::Error => exc
+      raise AuthnException.new("Timeout while connecting to Vokomokum: #{exc.message}")
+    rescue Errno::ETIMEDOUT => exc
+      raise AuthnException.new("Timeout while connecting to Vokomokum: #{exc.message}")
+    rescue Errno::ECONNREFUSED => exc
+      raise AuthnException.new("Could not connect to Vokomokum: #{exc.message}")
+    rescue Exception => exc
+      raise AuthnException.new("Could not connect to Vokomokum: #{exc.message}")
+    end
+
+    res.code.to_i == 200 or raise AuthnException.new("Vokomokum upload returned with HTTP error #{res.code}")
     res
   end
 
