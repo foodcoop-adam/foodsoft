@@ -37,8 +37,16 @@ module FoodsoftVokomokum
 
     type = type.downcase.gsub '.',''
     parms = {submit: 'Submit', which: type, column: "mo_vers_#{type}"}
-    amounts.each_pair do |ordergroup,sum|
-      parms["mo_vers_#{type}_#{ordergroup.to_i}"] = sum
+
+    amounts.each_pair do |ordergroup, amount|
+      user = user_for_ordergroup(ordergroup)
+      if user.nil?
+        if 0 != amount
+          Rails.logger.warn "Ordergroup ##{ordergroup} has no users, cannot book amount: #{amount}"
+        end
+      elsif user.id < 20000 # only upload amounts for vokomokum users
+        parms["mo_vers_#{type}_#{user.id}"] = amount
+      end
     end
 
     res = order_req('/cgi-bin/vers_upload.cgi', parms);
@@ -92,16 +100,16 @@ module FoodsoftVokomokum
     begin
       res = Net::HTTP.start(uri.hostname, uri.port) {|http| http.request(req) }
     rescue Timeout::Error => exc
-      raise AuthnException.new("Timeout while connecting to Vokomokum: #{exc.message}")
+      raise UploadException.new("Timeout while connecting to Vokomokum: #{exc.message}")
     rescue Errno::ETIMEDOUT => exc
-      raise AuthnException.new("Timeout while connecting to Vokomokum: #{exc.message}")
+      raise UploadException.new("Timeout while connecting to Vokomokum: #{exc.message}")
     rescue Errno::ECONNREFUSED => exc
-      raise AuthnException.new("Could not connect to Vokomokum: #{exc.message}")
+      raise UploadException.new("Could not connect to Vokomokum: #{exc.message}")
     rescue Exception => exc
-      raise AuthnException.new("Could not connect to Vokomokum: #{exc.message}")
+      raise UploadException.new("Could not connect to Vokomokum: #{exc.message}")
     end
 
-    res.code.to_i == 200 or raise AuthnException.new("Vokomokum upload returned with HTTP error #{res.code}")
+    res.code.to_i == 200 or raise UploadException.new("Vokomokum upload returned with HTTP error #{res.code}")
     res
   end
 
