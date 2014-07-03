@@ -8,10 +8,10 @@ module FoodsoftVokomokum
         def update_price!
           ret = orig_update_price!
 
-          if ret and order.finished?
+          if ret and order.finished? and not order.vokomokum_finishing
             group_orders = ordergroup.group_orders.includes(:order).where(orders: {state: 'finished'})
             amounts = {ordergroup => group_orders.sum(:price)}
-            FoodsoftVokomokum.upload_amounts(amounts, 'Groente')
+            FoodsoftVokomokum.upload_amounts(amounts)
           else
             ret
           end

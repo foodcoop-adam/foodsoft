@@ -34,9 +34,7 @@ class VokomokumController < ApplicationController
   end
 
   def export_amounts
-    group_orders = GroupOrder.includes(:order, :ordergroup).where(orders: {state: 'finished'})
-    amounts = group_orders.group_by(&:ordergroup).map {|a| [a[0], a[1].map(&:price).sum]}
-    send_data FoodsoftVokomokum.export_amounts(amounts), filename: 'vers.csv', type: 'text/plain; charset=utf-8', disposition: 'inline'
+    send_data FoodsoftVokomokum.export_amounts, filename: 'vers.csv', type: 'text/plain; charset=utf-8', disposition: 'inline'
   end
 
 

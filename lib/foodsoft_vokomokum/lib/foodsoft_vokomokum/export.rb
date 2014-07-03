@@ -1,8 +1,13 @@
 # encoding: utf-8
 module FoodsoftVokomokum
 
+  def self.all_amounts
+    group_orders = GroupOrder.includes(:order, :ordergroup).where(orders: {state: 'finished'})
+    return group_orders.group_by(&:ordergroup).map {|a| [a[0], a[1].map(&:price).sum]}
+  end
+
   # create text blob for uploading ordergroup totals to vokomokum system
-  def self.export_amounts(amounts)
+  def self.export_amounts(amounts = all_amounts)
     lines = []
     amounts.map do |ordergroup, amount|
       user = user_for_ordergroup ordergroup

@@ -29,7 +29,7 @@ module FoodsoftVokomokum
   # Upload ordergroup totals to Vokomokum system.
   #   This is a hash of {ordergroup_id: sum}
   #   Type can be one of 'Groente', 'Kaas', 'Misc.'
-  def self.upload_amounts(amounts, type)
+  def self.upload_amounts(amounts = all_amounts, type = 'Groente')
     Rails.logger.debug "Vokomokum update for #{type}: #{amounts.inspect}"
 
     # first submit as CSV to see if there are any errors
@@ -57,7 +57,7 @@ module FoodsoftVokomokum
 
   # Submit amounts as CSV.
   # An UploadException is raised if there are any errors in the data.
-  def self.upload_amounts_csv(amounts, type)
+  def self.upload_amounts_csv(amounts = all_amounts, type = 'Groente')
     # submit fresh page
     res = order_req('/cgi-bin/vers_upload.cgi', {
                       type => type,
