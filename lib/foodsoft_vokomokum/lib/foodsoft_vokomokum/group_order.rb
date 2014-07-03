@@ -10,8 +10,7 @@ module FoodsoftVokomokum
 
           if ret and order.finished?
             group_orders = ordergroup.group_orders.includes(:order).where(orders: {state: 'finished'})
-            user = FoodsoftVokomokum.user_for_ordergroup ordergroup
-            amounts = {user.id => group_orders.sum(:price)}
+            amounts = {ordergroup => group_orders.sum(:price)}
             FoodsoftVokomokum.upload_amounts(amounts, 'Groente')
           else
             ret
