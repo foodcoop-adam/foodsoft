@@ -1,0 +1,57 @@
+= render layout: 'layouts/header' do
+  %ul.nav.nav-pills.pull-left
+    %li= link_to t('navigation.dashboard'), root_path(anchor: '')
+    %li.dropdown
+      %a.dropdown-toggle(data-toggle="dropdown" href="#")
+        = show_user current_user
+        %b.caret
+      %ul.dropdown-menu
+        %li= link_to t('.profile'), my_profile_path
+        %li= link_to t('.ordergroup'), my_ordergroup_path
+        - if defined? FoodsoftMessages and FoodsoftMessages.enabled?
+          %li= link_to t('navigation.messages'), messages_path
+  %ul.nav.nav-pills.pull-right
+    %li= link_to 'Admin', admin_path_sensible if admin_path_sensible
+    %li= link_to t('.logout'), logout_path
+  .logo
+    = FoodsoftConfig[:name]
+    - if FoodsoftConfig[:sub_name]
+      .sub-logo= expand_text FoodsoftConfig[:sub_name]
+  .clearfix
+
+  -# XXX only show dashboard on non-admin items
+  - unless ['home', 'group_orders', 'invites', 'adyen_hpp', 'mollie_ideal', 'messages'].include?(controller.controller_name)
+    .navbar
+      .navbar-inner
+        .container
+          %a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          .nav-collapse.collapse
+            = render_navigation expand_all: true, renderer: :bootstrap
+
+  .container-fluid
+    .row-fluid
+      - if content_for?(:sidebar)
+        .span3
+          = yield(:sidebar)
+        .span9
+          = bootstrap_flash
+          - if content_for?(:actionbar)
+            .btn-toolbar.pull-right= yield(:actionbar)
+          - if show_title?
+            .page-header
+              %h1= yield(:title)
+          = yield
+      - else
+        = bootstrap_flash
+        - if content_for?(:actionbar)
+          .btn-toolbar.pull-right= yield(:actionbar)
+        - if show_title?
+          .page-header
+            %h1= yield(:title)
+        = yield
+
+    = render 'layouts/footer'
+  #modalContainer.modal.hide.fade(tabindex="-1" role="dialog")

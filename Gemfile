@@ -65,6 +65,7 @@ gem 'foodsoft_mailall', path: 'lib/foodsoft_mailall'
 gem 'foodsoft_orderdoc', path: 'lib/foodsoft_orderdoc'
 
 group :production do
+  gem 'better_exception_app', github: 'wvengen/better_exception_app'
   gem 'exception_notification'
 end
 
