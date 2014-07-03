@@ -44,9 +44,22 @@ class User < ActiveRecord::Base
 
   before_validation :set_password
   after_initialize do
-    settings.defaults['profile']  = { 'language' => FoodsoftConfig[:default_locale] || I18n.default_locale } unless settings.profile
-    settings.defaults['messages'] = { 'send_as_email' => true }           unless settings.messages
-    settings.defaults['notify']   = { 'upcoming_tasks' => true  }         unless settings.notify
+    settings.defaults.merge!({
+      profile: {
+        language: FoodsoftConfig[:default_locale] || I18n.default_locale,
+      },
+      messages: {
+        send_as_email: true,
+      },
+      notify: {
+        upcoming_tasks: true,
+        order_finished: false,
+        negative_balance: false,
+      }
+    })
+    if FoodsoftConfig[:user_defaults]
+      settings.defaults.merge!(FoodsoftConfig[:user_defaults])
+    end
   end
   
   after_save do

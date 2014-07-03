@@ -146,6 +146,15 @@ default: &defaults
   # require captcha for public signup (we've seen spam accounts already)
   use_signup_captcha: true
 
+  # Default settings for new users
+  #user_defaults:
+  #  messages:
+  #    send_as_email: true
+  #  notify:
+  #    upcoming_tasks: true
+  #    order_finished: false
+  #    negative_balance: false
+
   # Array of which pages are accesible to ordergroups that are not approved.
   # Values are controller names (`pages`) or actions combined with controller
   # names (`pages#show`). If not set, the default is:
