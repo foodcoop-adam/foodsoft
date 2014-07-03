@@ -44,7 +44,7 @@ module FoodsoftVokomokum
         if 0 != amount
           Rails.logger.warn "Ordergroup ##{ordergroup} has no users, cannot book amount: #{amount}"
         end
-      elsif user.id < 20000 # only upload amounts for vokomokum users
+      elsif user.id < ID_OFFSET # only upload amounts for vokomokum users
         parms["mo_vers_#{type}_#{user.id}"] = amount
       end
     end

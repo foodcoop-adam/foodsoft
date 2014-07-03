@@ -10,7 +10,7 @@ module FoodsoftVokomokum
         if 0 != amount
           lines << "# Ordergroup ##{ordergroup} has no users, cannot book amount: #{amount}"
         end
-      elsif user.id < 20000  # only upload amounts for vokomokum users
+      elsif user.id < ID_OFFSET  # only upload amounts for vokomokum users
         lines << "#{user.id}\t#{user.display}\t€ #{'%.02f'%amount}\tAfgewogen"
       end
     end

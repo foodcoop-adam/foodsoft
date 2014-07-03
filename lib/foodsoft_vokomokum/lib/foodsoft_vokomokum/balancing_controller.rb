@@ -5,6 +5,8 @@ module FoodsoftVokomokum
       base.class_eval do
         alias_method :orig_confirm, :confirm
 
+        # Balancing happens in the vokomokum system,
+        # close order without charging accounts.
         def confirm
           close_direct
         end

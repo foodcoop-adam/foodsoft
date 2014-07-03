@@ -6,18 +6,18 @@
 # that is not expected to be reached by Vokomokum.
 
 module FoodsoftVokomokum
+  # User and group ID offset for local users.
+  ID_OFFSET = 20000
 
   module IncreaseStartId
 
     def self.included(base) # :nodoc:
       base.class_eval do
 
-        @@_id_offset = 20000
         @@_id_cls = self.class
-
         # when creating a new record, start at the offset by default
         before_create do
-          self.id = [@@_id_offset, (@@_id_cls.maximum(:id) or 0) + 1].max if self.id.nil?
+          self.id = [FoodsoftVokomokum::ID_OFFSET, (@@_id_cls.maximum(:id) or 0) + 1].max if self.id.nil?
         end
 
       end
