@@ -1,0 +1,2 @@
+/ insert_bottom '#orders_finished_toolbar ul.dropdown-menu'
+%li= link_to t('finance.balancing.new.export_amounts'), finance_vokomokum_export_amounts_path
