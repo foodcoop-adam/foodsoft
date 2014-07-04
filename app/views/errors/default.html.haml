@@ -1,0 +1,4 @@
+.alert.alert-warning
+  %h2= t '.title'
+  %p= @error_message
+= link_to t('.go_back'), 'javascript:history.go(-1)', class: 'btn btn-default'

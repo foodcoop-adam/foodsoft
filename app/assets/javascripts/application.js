@@ -140,7 +140,7 @@ $(function() {
     //     render json: {error: "can't except this!"}, status: :unprocessable_entity
     $(document).ajaxError(function(ev, xhr, settings, exception) {
         try {
-            msg = xhr.responseJSON.error;
+            msg = $.parseJSON(xhr.responseText).error;
         } catch(err) {
             msg = I18n.t('errors.general');
         }

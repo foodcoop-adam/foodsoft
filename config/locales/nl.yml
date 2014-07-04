@@ -494,6 +494,9 @@ nl:
     general: Er is een probleem opgetreden.
     general_again: Er is een fout opgetreden. Probeer het opnieuw.
     general_msg: ! 'Er is een probleem opgetreden: %{msg}'
+    default:
+      title: Oeps
+      go_back: Terug
   feedback:
     create:
       notice: Bericht verstuurd. Vriendelijk bedankt!

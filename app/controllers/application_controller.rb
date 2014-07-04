@@ -1,6 +1,7 @@
 # encoding: utf-8
 class ApplicationController < ActionController::Base
   include Foodsoft::ControllerExtensions::Locale
+  include Foodsoft::ControllerExtensions::ExceptionHandler
   helper_method :available_locales
 
   protect_from_forgery

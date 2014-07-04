@@ -514,6 +514,9 @@ en:
     general: A problem has occured.
     general_again: A problem has occured. Please try again.
     general_msg: ! 'A problem has occured: %{msg}'
+    default:
+      title: Whoops
+      go_back: Go back
   feedback:
     create:
       notice: Your feedback was sent successfully. Thanks a lot!
