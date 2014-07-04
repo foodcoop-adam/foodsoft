@@ -1,5 +1,5 @@
 module FoodsoftVokomokum
-  module Order
+  module FinishOrder
 
     def self.included(base) # :nodoc:
       base.class_eval do
@@ -25,5 +25,5 @@ module FoodsoftVokomokum
 end
 
 ActiveSupport.on_load(:after_initialize) do
-  Order.send :include, FoodsoftVokomokum::Order
+  Order.send :include, FoodsoftVokomokum::FinishOrder
 end

@@ -1,5 +1,5 @@
 module FoodsoftVokomokum
-  module GroupOrder
+  module GroupOrderUpload
 
     def self.included(base) # :nodoc:
       base.class_eval do
@@ -24,5 +24,5 @@ module FoodsoftVokomokum
 end
 
 ActiveSupport.on_load(:after_initialize) do
-  GroupOrder.send :include, FoodsoftVokomokum::GroupOrder
+  GroupOrder.send :include, FoodsoftVokomokum::GroupOrderUpload
 end
