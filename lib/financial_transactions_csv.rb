@@ -19,7 +19,7 @@ class FinancialTransactionsCsv < RenderCSV
       yield [
               t.created_on,
               t.ordergroup_id,
-              t.ordergroup.name,
+              show_group(t.ordergroup),
               show_user(t.user),
               t.note,
               (number_to_currency(t.amount) if t.amount)

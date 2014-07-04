@@ -219,15 +219,19 @@ module ApplicationHelper
     show_user user
   end
 
-  # render a group (plugins can override this)
+  # Render a group (plugins can override this).
+  # @param group [Group] Group to show.
+  # @return [String] Name of group.
   def show_group(group, options = {})
-    if group
-      group.name
-    elsif group.is_a? Ordergroup
-      I18n.t('model.user.no_ordergroup')
-    else
-      '?'
-    end
+    s = if group
+          group.name
+        elsif group.is_a? Ordergroup
+          I18n.t('model.user.no_ordergroup')
+        else
+          '?'
+        end
+    s += "\u202f†" if group and group.deleted?
+    s
   end
 
   # render group presentation linking to default action

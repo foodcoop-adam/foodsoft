@@ -1,4 +1,4 @@
-- title t '.title', name: @ordergroup.name
+- title t '.title', name: show_group(@ordergroup)
 
 %section= render 'shared/group', group: @ordergroup
 = link_to t('ui.edit'), edit_admin_ordergroup_path(@ordergroup), class: 'btn'
