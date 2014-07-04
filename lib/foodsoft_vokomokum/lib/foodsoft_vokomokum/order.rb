@@ -8,10 +8,10 @@ module FoodsoftVokomokum
         attr_reader :vokomokum_finishing
         @vokomokum_finishing = false
 
-        def finish!
+        def finish!(user, options={})
           Order.transaction do
             @vokomokum_finishing = true
-            ret = orig_finish!
+            ret = orig_finish!(user, options)
             @vokomokum_finishing = false
             FoodsoftVokomokum.upload_amounts
             ret
