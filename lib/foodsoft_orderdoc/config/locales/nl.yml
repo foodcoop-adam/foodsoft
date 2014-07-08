@@ -3,4 +3,5 @@ nl:
     foodsoft_orderdoc:
       error_no_srcdata: Eén of meer artikelen hebben geen spreadsheet. Mogelijk moeten de artikelen eerst gesynchroniseerd worden.
       error_spreadsheet_none: Er is geen spreadsheet voor de artikelen. Mogelijk moeten de artikelen eerst gesynchroniseerd worden.
+      error_spreadsheet_notfound: Spreadsheet not gevonden. Neem contact op met de technische helpdesk.
       error_spreadsheet_multiple: Artikelen behoren tot verschillende spreadsheets. Mogelijk moeten de artikelen eerst gesynchroniseerd worden.

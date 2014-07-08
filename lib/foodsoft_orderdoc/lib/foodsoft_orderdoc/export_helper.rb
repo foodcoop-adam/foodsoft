@@ -36,6 +36,7 @@ module FoodsoftOrderdoc::ExportHelper
     end
 
     src = find_file(fns[0], search_path) # TODO sanitize filename!
+    raise OrderdocException.new(I18n.t('lib.foodsoft_orderdoc.error_spreadsheet_notfound')) if src.nil?
     return src
   end
 
