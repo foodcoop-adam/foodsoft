@@ -33,6 +33,10 @@ class Article < ActiveRecord::Base
   def title
     "#{name} (#{unit})"
   end
+
+  def tax_price
+    ArticlePrice.tax_price(self)
+  end
   
   # The financial gross, net plus tax and deposti
   def gross_price(group=nil)

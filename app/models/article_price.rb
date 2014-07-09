@@ -10,6 +10,10 @@ class ArticlePrice < ActiveRecord::Base
 
   localize_input_of :price, :tax, :deposit
 
+  def tax_price
+    ArticlePrice.tax_price(self)
+  end
+
   def gross_price(group=nil)
     ArticlePrice.gross_price(self, group)
   end
@@ -18,6 +22,10 @@ class ArticlePrice < ActiveRecord::Base
     ArticlePrice.fc_price(self, group)
   end
 
+  # Amount going to tax
+  def self.tax_price(price)
+    (price.price + price.deposit) * (price.tax / 100)
+  end
 
   # The financial gross, net plus tax and deposit.
   def self.gross_price(price, group=nil)

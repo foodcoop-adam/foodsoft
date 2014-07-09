@@ -466,17 +466,12 @@ nl:
       sum: Som
       title: ! 'Huishoudenslijst van bestelling: %{name}, gesloten op %{date}'
     order_fax:
-      date: verzonden %{date}
-      filename: Bestelling %{name}-%{date}
-      rows:
-      - Nummer
-      - Aantal
-      - Naam
-      - Gr.Eenh.
-      - Eenheid
-      - Prijs/eenh.
-      - Subtotaal
-      total: Totaal
+      date: gemaakt op %{date}
+      filename: Bestelling van %{foodcoop} voor %{supplier} op %{date}
+      price: Prijs/eenh.
+      subtotal: Subtotaal
+      total_net: Totaal (netto)
+      total_gross: Totaal (bruto)
     order_matrix:
       filename: Bestelling %{name}-%{date} - Sorteermatrix
       heading: Artikeloverzicht

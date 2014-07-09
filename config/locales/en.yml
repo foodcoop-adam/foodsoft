@@ -486,17 +486,12 @@ en:
       sum: Sum
       title: ! 'Order sorted by group: %{name}, closed at %{date}'
     order_fax:
-      date: sent %{date}
-      filename: Order %{name}-%{date}
-      rows:
-      - Order Number
-      - Amount
-      - Name
-      - Unit quantity
-      - Unit
-      - Price/Unit
-      - Subtotal
-      total: Total
+      date: created at %{date}
+      filename: Order from %{foodcoop} to %{supplier} at %{date}
+      price: Price/unit
+      subtotal: Subtotal
+      total_net: Total (net)
+      total_gross: Total (gross)
     order_matrix:
       filename: Order %{name}-%{date} - sorting matrix
       heading: Article overview

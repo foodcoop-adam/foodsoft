@@ -2,7 +2,7 @@
 class OrderFax < OrderPdf
 
   def filename
-    I18n.t('documents.order_fax.filename', :name => @order.name, :date => @order.ends.to_date) + '.pdf'
+    I18n.t('documents.order_fax.filename', foodcoop: FoodsoftConfig[:name], supplier: @order.name, date: @order.ends.to_date) + '.pdf'
   end
 
   def title
@@ -44,8 +44,8 @@ class OrderFax < OrderPdf
       end
     end
 
-    move_down 5
     text I18n.t('documents.order_fax.date', date: Date.today.strftime(I18n.t('date.formats.default'))), align: :right, size: fontsize(9)
+    move_down 5
 
     if @options[:delivered_before]
       move_down 10
@@ -79,37 +79,69 @@ class OrderFax < OrderPdf
     end
 
     # Articles
-    total = 0
-    data = [I18n.t('documents.order_fax.rows')]
+    total_net = total_deposit = total_tax = total_gross = 0
+    data = [[
+      Article.human_attribute_name(:order_number_short),
+      Article.human_attribute_name(:name),
+      I18n.t('documents.order_fax.price'),
+      Article.human_attribute_name(:deposit),
+      Article.human_attribute_name(:tax),
+      Article.human_attribute_name(:unit),
+      {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center},
+      OrderArticle.human_attribute_name(:units_to_order_short),
+      I18n.t('documents.order_fax.subtotal')]]
     data += @order.order_articles.ordered.all(include: :article).collect do |a|
       subtotal = a.units_to_order * a.price.unit_quantity * a.price.price
-      total += subtotal
+      total_net += subtotal
+      total_deposit += a.units_to_order * a.price.unit_quantity * a.price.deposit
+      total_tax += a.units_to_order * a.price.unit_quantity * a.price.tax_price
+      total_gross += a.units_to_order * a.price.unit_quantity * a.price.gross_price
       [a.article.order_number,
-       a.units_to_order,
        a.article.name,
-       a.price.unit_quantity,
-       a.article.unit,
        number_to_currency(a.price.price),
+       a.price.deposit != 0 ? number_to_currency(a.price.deposit) : nil,
+       number_to_percentage(a.price.tax),
+       a.article.unit,
+       a.article.unit_quantity > 1 ? "× #{a.article.unit_quantity}" : nil,
+       a.units_to_order,
        number_to_currency(subtotal)]
     end
-    data << [I18n.t('documents.order_fax.total'), nil, nil, nil, nil, nil, number_to_currency(total)]
-    table data, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
-      table.header = true
-      table.cells.border_width = 1
-      table.cells.border_color = '666666'
 
-      table.row(0).border_bottom_width = 2
-      table.columns(1).align = :right
-      table.columns(3..6).align = :right
-      table.row(data.length-1).columns(0..5).borders = [:top, :bottom]
-      table.row(data.length-1).columns(0).borders = [:top, :bottom, :left]
-      table.row(data.length-1).border_top_width = 2
+    # Hide columns if no data present
+    data[0][3] = nil unless data[1..-1].select {|r| r[3].present?}.any?
+    data[0][6] = nil unless data[1..-1].select {|r| r[6].present?}.any?
+
+    foot = []
+    foot << [{colspan: 8, content: I18n.t('documents.order_fax.total_net')}, number_to_currency(total_net)]
+    foot << [{colspan: 8, content: Article.human_attribute_name(:deposit)}, number_to_currency(total_deposit)] if total_deposit > 0
+    foot << [{colspan: 8, content: Article.human_attribute_name(:tax)}, number_to_currency(total_tax)] if total_tax > 0
+    foot << [{colspan: 8, content: I18n.t('documents.order_fax.total_gross')}, number_to_currency(total_gross)] if total_gross != total_net
+
+    table data+foot, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do
+      cells.borders        = [:bottom]
+      cells.border_width   = 0.02
+      cells.border_color   = 'dddddd'
+
+      header = true
+      rows(0).border_width   = 1
+      rows(0).border_color   = '666666'
+      rows(0).font_style     = :bold
+      row(-foot.count).borders      = [:top]
+      row(-foot.count).border_width = 1
+      row(-foot.count).border_color = '666666'
+      row(-foot.count).font_style   = :bold
+      row(-1).font_style            = :bold
+      rows((-foot.count+1)..-1).borders     = [] unless foot.count==1
+      rows((-foot.count+2)..-1).padding_top = 0 unless foot.count==1
+
+      columns(5).align        = :right
+      columns(6).padding_left = 0
+      columns(7).font_style   = :bold
+      columns(7).align        = :center
+      columns(7).rows(0..(-foot.count-1)).background_color = 'eeeeee'
+      columns(2..4).align     = :right
+      columns(-1).align       = :right
     end
-              #font_size: fontsize(8),
-              #vertical_padding: 3,
-              #border_style: :grid,
-              #headers: ["BestellNr.", "Menge","Name", "Gebinde", "Einheit","Preis/Einheit"],
-              #align: {0 => :left}
   end
 
 end
