@@ -2,7 +2,7 @@ nl:
   current_orders:
     articles:
       article:
-        no_selection: Kies een artikel om te zien wie het besteld heeft.
+        no_selection: Kies een artikel om te zien wie het besteld heeft, of download verdeellijsten rechtsboven.
       article_info:
         from: van %{supplier}
         unit: per %{unit}
@@ -32,7 +32,6 @@ nl:
       show:
         title: Artikelen voor %{name}
     orders:
-      combined_pdf: Gecombineerde PDF
       receive:
         title: Bestellingen ontvangen
         no_finished_orders: Er zijn momenteel geen bestellingen die ontvangen hoeven te worden.

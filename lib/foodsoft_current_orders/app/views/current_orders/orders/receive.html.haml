@@ -4,14 +4,6 @@
   - if @orders.empty?
     = t '.no_finished_orders'
   - else
-    .pull-right
-      .btn-group
-        = link_to '#', data: {toggle: 'dropdown'}, class: 'btn dropdown-toggle' do
-          = t 'current_orders.orders.combined_pdf'
-          %span.caret
-        %ul.dropdown-menu
-          %li= link_to t('orders.show.download.group_pdf'), current_orders_orders_path(document: :groups, format: :pdf)
-          %li= link_to t('orders.show.download.article_pdf'), current_orders_orders_path(document: :articles, format: :pdf)
     %table.table.table-striped
       %thead
         %tr
@@ -25,11 +17,8 @@
             %td= order.name
             %td= format_time(order.ends)
             %td= truncate(order.note)
-            %td
-              - unless order.stockit?
-                -# TODO btn-success class only if not received before
-                = link_to t('orders.index.action_receive'), receive_order_path(order), class: 'btn btn-small btn-success'
-
+            %td= receive_button order, class: 'btn-small' unless order.stockit?
             %td
               = link_to t('ui.show'), order, class: 'btn btn-small'
+              = order_pdf order, :fax, t('orders.show.download.fax_pdf'), class: 'btn btn-small'
 
