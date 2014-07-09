@@ -461,7 +461,7 @@ de:
       sum: Summe
       title: ! 'Gruppensortierung der Bestellung: %{name}, beendet am %{date}'
     order_fax:
-      filename: Bestellung %{name}-%{date} - Fax
+      filename: Bestellung %{name}-%{date}
       rows:
       - BestellNr.
       - Menge
@@ -1176,8 +1176,8 @@ de:
       download:
         article_pdf: Artikel PDF
         download_file: Download file
-        fax_pdf: Fax PDF
-        fax_txt: Fax Text
+        fax_pdf: Bestellung PDF
+        fax_txt: Bestellung Text
         group_pdf: Gruppen PDF
         matrix_pdf: Matrix PDF
         title: Download

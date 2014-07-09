@@ -10,10 +10,11 @@ module OrdersHelper
   # @param order [Order]
   # @param document [String] Document to display, one of +groups+, +articles+, +fax+, +matrix+
   # @param text [String] Link text
+  # @param options [Hash] Options passed to +link_to+
   # @return [String] Link to order document
   # @see OrdersController#show
-  def order_pdf(order, document, text)
-    link_to text, order_path(order, document: document, format: :pdf), title: I18n.t('helpers.orders.order_pdf')
+  def order_pdf(order, document, text, options={})
+    link_to text, order_path(order, document: document, format: :pdf), {title: I18n.t('helpers.orders.order_pdf')}.merge(options)
   end
 
   def options_for_suppliers_to_select
@@ -164,6 +165,20 @@ module OrdersHelper
       'unused'
     else
       'unavailable'
+    end
+  end
+
+  # Button for receiving an order.
+  #   If the order hasn't been received before, the button is shown in green.
+  # @param order [Order]
+  # @option options [String] :class Classes added to the button's class attribute.
+  # @return [String] Order receive button.
+  def receive_button(order, options={})
+    if order.stockit?
+      content_tag :div, t('orders.index.action_receive'), class: "btn disabled #{options[:class]}"
+    else
+      was_received = order.order_articles.where('units_received IS NOT NULL').any?
+      link_to t('orders.index.action_receive'), receive_order_path(order), class: "btn#{' btn-success' unless was_received} #{options[:class]}"
     end
   end
 end

@@ -487,7 +487,7 @@ en:
       title: ! 'Order sorted by group: %{name}, closed at %{date}'
     order_fax:
       date: sent %{date}
-      filename: Order %{name}-%{date} - Fax
+      filename: Order %{name}-%{date}
       rows:
       - Order Number
       - Amount
@@ -1236,9 +1236,9 @@ en:
       download:
         article_pdf: Article PDF
         download_file: Download file
-        fax_csv: Fax CSV
-        fax_pdf: Fax PDF
-        fax_txt: Fax text
+        fax_csv: Order CSV
+        fax_pdf: Order PDF
+        fax_txt: Order text
         group_pdf: Group PDF
         matrix_pdf: Matrix PDF
         title: Download
