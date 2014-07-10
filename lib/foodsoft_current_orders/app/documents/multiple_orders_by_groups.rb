@@ -12,7 +12,7 @@ class MultipleOrdersByGroups < OrderPdf
 
   def body
     # Start rendering
-    @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select(:name).select(:price_markup_key).reorder(:name)
+    @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
     @ordergroups.each do |ordergroup|
 
       totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0}
