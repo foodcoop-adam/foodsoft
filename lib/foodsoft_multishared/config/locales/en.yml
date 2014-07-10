@@ -38,8 +38,8 @@ en:
       text: "Select which foodcoop you'd like to join:"
       submit: to signup
     orders:
-      fc_articles_pdf: Foodcoop article PDF
-      fc_group_pdf: Foodcoop group PDF
+      fc_articles_pdf: Article-foodcoop PDF
+      fc_group_pdf: Foodcoop PDF
     profile:
       subtitle: You are part of foodcoop
     select_foodcoop:

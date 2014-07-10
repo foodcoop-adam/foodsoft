@@ -38,8 +38,8 @@ nl:
       text: "Kies een foodcoop om lid van te worden:"
       submit: naar inschrijven
     orders:
-      fc_articles_pdf: Foodcoop artikelen PDF
-      fc_group_pdf: Foodcoop huishoudens PDF
+      fc_articles_pdf: Artikelen-foodcoop PDF
+      fc_group_pdf: Foodcoop PDF
     profile:
       subtitle: Je bent deel van foodcoop
     select_foodcoop:
