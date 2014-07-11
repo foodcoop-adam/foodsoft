@@ -155,10 +155,8 @@ class Payments::MollieIdealController < ApplicationController
     payment = get_mollie.payments.get transaction.payment_id
     logger.debug "Mollie update_status: #{payment.inspect}"
     # update some attributes when available
-    if payment.details
-      transaction.payment_acct_number = payment.details.consumerAccount if payment.details.consumerAccount
-      transaction.payment_acct_name = payment.details.consumerName if payment.details.consumerName
-    end
+    transaction.payment_acct_number = (payment.details.consumerAccount rescue nil)
+    transaction.payment_acct_name = (payment.details.consumerName rescue nil)
     # update status
     case payment.status
     when 'cancelled', 'refunded'
