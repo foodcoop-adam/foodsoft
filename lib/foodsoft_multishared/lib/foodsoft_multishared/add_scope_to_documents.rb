@@ -15,7 +15,7 @@ module FoodsoftMultishared
               elsif row[0] == I18n.t('documents.order_by_groups.sum')
                 s = nil
               else
-                s = Ordergroup.find_by_name(row[0]).scope
+                s = FoodsoftMultishared.find_ordergroup_by_display(s).try(:scope)
               end
               row << s
             end
@@ -42,7 +42,7 @@ module FoodsoftMultishared
 
           alias_method :foodsoft_multishared_orig_text, :text
           def text(s, options={})
-            if g = Ordergroup.find_by_name(s)
+            if g = FoodsoftMultishared.find_ordergroup_by_display(s)
               table [[s, g.scope]], width: 500 do |table|
                 table.cells.borders = []
                 table.cells.font_style = options[:style] if options[:style]

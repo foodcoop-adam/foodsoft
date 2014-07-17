@@ -72,4 +72,11 @@ module FoodsoftMultishared
     contact = contact.stringify_keys
     %w(street zip_code city).map{|p| contact[p]}.compact.join(', ')
   end
+
+  # Find ordergroup by display name
+  # @todo pass ordergroup to functions that need it instead of trying to reverse `display_group`
+  # @return [Ordergroup]
+  def self.find_ordergroup_by_display(s)
+    Ordergroup.find_by_name(s.gsub(/(\u202f|\s)*†$/, '')) if s
+  end
 end
