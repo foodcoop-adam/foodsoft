@@ -5,13 +5,16 @@ class Admin::MailallController < Admin::BaseController
     @users = select_users(:all)
     fields = [:id, :name, :email, :phone, :ordergroup]
     fields << :approved if defined? FoodsoftSignup
-    out = CSV.generate do |csv|
+    fields << :scope if defined? FoodsoftMultishared
+    # @todo use {RenderCsv}
+    out = CSV.generate(col_sep: ';') do |csv|
       csv << fields.map {|f| User.human_attribute_name f}
       @users.all.each do |user|
         csv << fields.map do |f|
           case f
           when :approved then user.ordergroup and user.ordergroup.approved?
           when :ordergroup then user.ordergroup and user.ordergroup.name
+          when :scope then user.ordergroup and user.ordergroup.scope
           else user.send f
           end
         end
