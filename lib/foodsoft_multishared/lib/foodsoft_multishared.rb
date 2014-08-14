@@ -7,6 +7,7 @@ require 'foodsoft_multishared/fix_foodcoop_group_uniqueness'
 require 'foodsoft_multishared/default_sub_name'
 require 'foodsoft_multishared/add_scope_to_documents'
 require 'foodsoft_multishared/order_by_scope'
+require 'foodsoft_multishared/mollie_check'
 if defined? FoodsoftSignup
   require 'underscore-rails'
   require 'gmaps4rails'
