@@ -11,6 +11,7 @@
         - if defined? FoodsoftMessages and FoodsoftMessages.enabled?
           %li= link_to t('navigation.messages'), messages_path
   %ul.nav.nav-pills.pull-right
+    %li= link_to glyph('question-sign'), FoodsoftConfig[:help_url], target: '_blank' unless FoodsoftConfig[:help_url].blank?
     %li= link_to 'Admin', admin_path_sensible if admin_path_sensible
     %li= link_to t('.logout'), logout_path
   .logo
