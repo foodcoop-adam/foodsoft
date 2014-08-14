@@ -12,9 +12,9 @@ describe Article do
   it 'computes the gross price correctly' do
     article.deposit = 0
     article.tax = 12
-    expect(article.gross_price).to eq((article.price * 1.12).round(2))
+    expect(article.gross_price.round(2)).to eq((article.price * 1.12).round(2))
     article.deposit = 1.20
-    expect(article.gross_price).to eq(((article.price + 1.20) * 1.12).round(2))
+    expect(article.gross_price.round(2)).to eq(((article.price + 1.20) * 1.12).round(2))
   end
 
   it 'gross price >= net price' do

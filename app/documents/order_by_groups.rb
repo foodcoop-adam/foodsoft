@@ -13,9 +13,10 @@ class OrderByGroups < OrderPdf
 
   def body
     # Start rendering
-    @order.group_orders.ordered.each do |group_order|
+    @order.group_orders.ordered.includes(:ordergroup).each do |group_order|
       total = 0
       taxes = Hash.new {0}
+      fc_markup_price = 0
       rows = []
       dimrows = []
 
@@ -26,7 +27,8 @@ class OrderByGroups < OrderPdf
         price = goa.order_article.price.fc_price(group_order.ordergroup)
         sub_total = price * goa.result
         total += sub_total
-        taxes[goa.order_article.price.tax.to_f.round(2)] += goa.result * goa.order_article.price.tax_price
+        taxes[goa.order_article.price.tax.to_f.round(2)] += goa.result * goa.order_article.price.fc_tax_price(group_order.ordergroup)
+        fc_markup_price += goa.result * goa.order_article.price.fc_markup_price(group_order.ordergroup)
         rows <<  [goa.order_article.article.name,
                   number_to_currency(price),
                   goa.order_article.article.unit,
@@ -48,7 +50,7 @@ class OrderByGroups < OrderPdf
       taxes.each do |tax, tax_price|
         price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
       end
-      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency (group_order.price - group_order.gross_price)}" if group_order.gross_price > 0
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage group_order.ordergroup.markup_pct} #{number_to_currency fc_markup_price}" if fc_markup_price > 0
       rows << [{content: '  ' + price_details.join('; '), colspan: 7}]
 
       # table header

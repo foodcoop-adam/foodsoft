@@ -72,6 +72,14 @@ default: &defaults
   # percentage to add to supplier's price when importing from the shared database
   #price_markup_shared: 3.0
 
+  # Whether to pay taxes over the price markup. Tax-exempt non-profits use `false` here
+  # (which is the default), organisations that need to pay VAT over their markup use
+  # `true` here.
+  #price_markup_tax: false
+  # Whether to tax deposit. When deposit is tax-exempt, enter `false` here.
+  # (default `true`, which is valid for Germany)
+  #deposit_tax: true
+
   # default vat percentage for new articles
   tax_default: 6.0
 

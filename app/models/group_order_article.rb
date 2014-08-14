@@ -209,11 +209,12 @@ class GroupOrderArticle < ActiveRecord::Base
                result
              end
     {
-      net_price:   amount * price.price,
-      gross_price: amount * price.gross_price(group_order.ordergroup),
-      deposit:     amount * price.deposit,
-      price:       amount * price.fc_price(group_order.ordergroup),
-      tax_price:   amount * price.tax_price(group_order.ordergroup)
+      net_price:    amount * price.price,
+      gross_price:  amount * price.gross_price(group_order.ordergroup),
+      deposit:      amount * price.deposit,
+      price:        amount * price.fc_price(group_order.ordergroup),
+      tax_price:    amount * price.tax_price(group_order.ordergroup),
+      fc_tax_price: amount * price.fc_tax_price(group_order.ordergroup)
     }
   end
 

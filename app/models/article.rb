@@ -44,7 +44,7 @@ class Article < ActiveRecord::Base
     ArticlePrice.gross_price(self, group)
   end
 
-  # The price part which is tax
+  # The price part which is tax (excl. any tax on markup)
   def tax_price(group=nil)
     ArticlePrice.tax_price(self, group)
   end
@@ -52,6 +52,16 @@ class Article < ActiveRecord::Base
   # The price for the foodcoop-member.
   def fc_price(group=nil)
     ArticlePrice.fc_price(self, group)
+  end
+
+  # The amount of tax in the price for the foodcoop-member (incl. any taxes over the markup).
+  def fc_tax_price(group=nil)
+    ArticlePrice.fc_tax_price(self, group)
+  end
+
+  # The amount of tax in the price for the foodcoop-member (incl. any taxes over the markup).
+  def fc_markup_price(group=nil)
+    ArticlePrice.fc_markup_price(self, group)
   end
 
   # @return [Unit] Unit class for article unit, or +nil+ when unparsable.

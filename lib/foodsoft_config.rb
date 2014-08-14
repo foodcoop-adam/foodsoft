@@ -240,6 +240,8 @@ class FoodsoftConfig
         default_locale: 'en',
         currency_unit: '€',
         currency_space: true,
+        price_markup_tax: false,
+        deposit_tax: true,
         foodsoft_url: 'https://github.com/foodcoops/foodsoft',
         # The following keys cannot, by default, be set by foodcoops themselves.
         protected: {
