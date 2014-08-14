@@ -15,7 +15,7 @@ class MultipleOrdersByGroups < OrderPdf
     @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
     @ordergroups.each do |ordergroup|
 
-      totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0}
+      totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0, fc_markup_price: 0}
       taxes = Hash.new {0}
       rows = []
       dimrows = []
@@ -29,7 +29,8 @@ class MultipleOrdersByGroups < OrderPdf
         totals[:deposit] += goa_totals[:deposit]
         totals[:gross_price] += goa_totals[:gross_price]
         totals[:fc_price] += goa_totals[:price]
-        taxes[goa.order_article.price.tax.to_f.round(2)] += goa_totals[:tax_price]
+        totals[:fc_markup_price] += goa_totals[:fc_markup_price]
+        taxes[goa.order_article.price.tax.to_f.round(2)] += goa_totals[:fc_tax_price]
         rows <<  [goa.order_article.article.name,
                   goa.group_order.order.name.truncate(10, omission: ''),
                   number_to_currency(price.fc_price(goa.group_order.ordergroup)),
@@ -52,7 +53,7 @@ class MultipleOrdersByGroups < OrderPdf
       taxes.each do |tax, tax_price|
         price_details << "#{Article.human_attribute_name :tax} #{number_to_percentage tax} #{number_to_currency tax_price}" if tax_price > 0
       end
-      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage ordergroup.markup_pct} #{number_to_currency (totals[:fc_price] - totals[:gross_price])}"
+      price_details << "#{Article.human_attribute_name :fc_share_short} #{number_to_percentage ordergroup.markup_pct} #{number_to_currency totals[:fc_markup_price]}"
       rows << [{content: ('  ' + price_details.join('; ') if totals[:fc_price] > 0), colspan: 8}]
 
       # table header

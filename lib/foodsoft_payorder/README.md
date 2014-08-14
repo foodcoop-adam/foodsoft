@@ -24,4 +24,9 @@ This plugin is configured in the foodcoop configuration in foodsoft's
   # This will be added to all payorder transactions. The real payment fee may
   # still be different, so make sure to choose a default level that is sufficient.
   #payorder_payment_fee: 1.20
+
+  # When the member would only need to pay a couple of cents to get its items, it
+  # is better to charge the article and pay the difference next ordering round.
+  # These are the maximum 'grace' couple of cents.
+  #payorder_grace_price: 0.10
 ```

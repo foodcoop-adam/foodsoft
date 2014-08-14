@@ -20,7 +20,7 @@ module FoodsoftPayorder
                     .merge(Order.where(state: :open)).order('created_on ASC').each do |goaq|
                 goa = goaq.group_order_article
                 goaq_price = goa.total_price(goa.order_article, goaq.quantity, goaq.tolerance)
-                if sum + goaq_price <= max_sum
+                if sum + goaq_price <= max_sum + (FoodsoftConfig[:payorder_grace_price]||0.1)
                   sum += goaq_price
                   if goaq.financial_transaction.blank?
                     goaq.financial_transaction = transaction
