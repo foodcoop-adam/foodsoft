@@ -271,7 +271,7 @@ module ApplicationHelper
   def expand_text(txt, options = {})
     return if txt.blank?
     txt = txt.gsub(/%{contact\.([_a-zA-Z0-9]+)}/) {|s| FoodsoftConfig[:contact][$1]}
-    txt = txt.gsub(/%{(homepage|name|sub_name)}/) { |s| FoodsoftConfig[$1.to_sym] }
+    txt = txt.gsub(/%{(homepage|name|sub_name|list_desc)}/) { |s| FoodsoftConfig[$1.to_sym] }
     options.each { |k,v| txt = txt.gsub(/%{#{k}}/) {|s| options[k]} }
     txt
   end
