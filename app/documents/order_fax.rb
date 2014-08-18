@@ -90,7 +90,7 @@ class OrderFax < OrderPdf
       {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center},
       OrderArticle.human_attribute_name(:units_to_order_short),
       I18n.t('documents.order_fax.subtotal')]]
-    data += @order.order_articles.ordered.all(include: :article).collect do |a|
+    data += @order.order_articles.ordered.includes(:article).order('articles.order_number, articles.name').collect do |a|
       subtotal = a.units_to_order * a.price.unit_quantity * a.price.price
       total_net += subtotal
       total_deposit += a.units_to_order * a.price.unit_quantity * a.price.deposit
