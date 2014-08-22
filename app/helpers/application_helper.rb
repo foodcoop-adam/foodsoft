@@ -244,5 +244,18 @@ module ApplicationHelper
     options.each { |k,v| txt = txt.gsub(/%{#{k}}/) {|s| options[k]} }
     txt
   end
+
+  # @return [String] path to foodcoop CSS style (with MD5 parameter for caching)
+  def foodcoop_css_path(options={})
+    super(options.merge({md5: Digest::MD5.hexdigest(FoodsoftConfig[:custom_css])}))
+  end
+
+  # @return [String] stylesheet tag for foodcoop CSS style (+custom_css+ foodcoop config)
+  # @see #foodcoop_css_path
+  def foodcoop_css_tag(options={})
+    unless FoodsoftConfig[:custom_css].blank?
+      stylesheet_link_tag foodcoop_css_path, media: 'all'
+    end
+  end
   
 end

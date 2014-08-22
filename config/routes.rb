@@ -25,6 +25,8 @@ Foodsoft::Application.routes.draw do
     match '/login/accept_invitation/:token' => 'login#accept_invitation', as: :accept_invitation
     resources :sessions, :only => [:new, :create, :destroy]
 
+    get '/foodcoop.css' => 'styles#foodcoop', :as => 'foodcoop_css'
+
     ########### User specific
 
     match '/home/profile' => 'home#profile', :as => 'my_profile'
