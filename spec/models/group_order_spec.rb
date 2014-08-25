@@ -1,8 +1,11 @@
 require_relative '../spec_helper'
 
 describe GroupOrder do
-  let(:go)  { create :group_order, order: order }
+  let(:admin) { create :user }
   let(:order) { create :order, article_count: 2 }
+  let(:oa)    { order.order_articles.first }
+  let(:go)    { create :group_order, order: order }
+  let(:goa)   { create :group_order_article, group_order: go, order_article: oa }
 
   # the following two tests are currently disabled - https://github.com/foodcoops/foodsoft/issues/158
 
@@ -18,10 +21,16 @@ describe GroupOrder do
     expect(go.price).to eq(0)
   end
 
+  it 'is removed when no group_order_articles are present' do
+    goa
+    expect(order.group_orders.count).to eq 1
+    goa.destroy
+    order.finish! admin
+    expect(order.reload.group_orders.count).to eq 0
+  end
+
 
   describe 'computes total' do
-    let(:go) { create :group_order, order: order }
-    let(:oa) { order.order_articles.first }
     let(:goa) { create :group_order_article, group_order: go, order_article: oa }
     let(:oa2) { order.order_articles.second }
     let(:goa2) { create :group_order_article, group_order: go, order_article: oa2 }
@@ -43,10 +52,7 @@ describe GroupOrder do
 
 
   describe 'with ordergroup price markup' do
-    let(:admin) { create :admin }
-    let(:oa) { order.order_articles.first }
     let(:go2) { create :group_order, order: order }
-    let(:goa) { create :group_order_article, group_order: go, order_article: oa }
     let(:goa2) { create :group_order_article, group_order: go2, order_article: oa }
 
     before do

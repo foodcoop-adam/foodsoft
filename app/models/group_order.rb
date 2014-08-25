@@ -25,6 +25,7 @@ class GroupOrder < ActiveRecord::Base
 
   # Updates the "price" attribute.
   def update_price!
+    destroyed? and return # to work with GroupOrderArticle#destroy_empty_group_order
     goas = group_order_articles.includes(:order_article => [:article, :article_price])
     prices = goas.reduce({price: 0, gross_price: 0, net_price: 0, deposit: 0}) do |sum, goa|
       totals = goa.total_prices

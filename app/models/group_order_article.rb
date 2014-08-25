@@ -17,6 +17,8 @@ class GroupOrderArticle < ActiveRecord::Base
 
   localize_input_of :result
 
+  after_destroy :destroy_empty_group_order
+
   # Setter used in group_order_article#new
   # We have to create an group_order, if the ordergroup wasn't involved in the order yet
   def ordergroup_id=(id)
@@ -242,6 +244,14 @@ class GroupOrderArticle < ActiveRecord::Base
       end
     end
     quantities
+  end
+
+
+  protected
+
+  # if this is the GroupOrder's last article, destroy that as well
+  def destroy_empty_group_order
+    group_order.group_order_articles.count == 0 and group_order.destroy
   end
 
 end
