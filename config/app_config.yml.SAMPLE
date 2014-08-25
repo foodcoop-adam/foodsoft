@@ -196,6 +196,7 @@ default: &defaults
   # When the payorder plugin is enabled, use Mollie to pay
   #use_payorder: true
   payorder_payment: new_payments_mollie_path
+  payorder_remove_unpaid: true
 
   # Mollie payment settings
   mollie:

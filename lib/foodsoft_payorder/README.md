@@ -29,4 +29,8 @@ This plugin is configured in the foodcoop configuration in foodsoft's
   # is better to charge the article and pay the difference next ordering round.
   # These are the maximum 'grace' couple of cents.
   #payorder_grace_price: 0.10
+
+  # Unpaid articles remain present, but have a zero result. To remove them from
+  # the system when the order closes, uncomment the following line. (default `false`)
+  #payorder_remove_unpaid: true
 ```

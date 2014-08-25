@@ -27,9 +27,15 @@ if defined? FoodsoftPayorder
       goa = [goa] unless goa.is_a? Array
       result = [result] unless result.is_a? Array
       goa.map(&:order_article).map(&:order).uniq.map {|order| order.finish! admin}
-      goa.map(&:reload)
-      expect(goa.map(&:result)).to eq result
-      expect(goa.map(&:order_article).map(&:units_to_order)).to eq result
+      goa.map! do |goa|
+        begin
+          goa.reload
+        rescue ActiveRecord::RecordNotFound
+          nil
+        end
+      end
+      expect(goa.map {|goa| goa ? goa.result : nil}).to eq result
+      expect(goa.map {|goa| goa ? goa.order_article.units_to_order : nil}).to eq result
     end
 
     describe :ordergroup do
@@ -169,6 +175,31 @@ if defined? FoodsoftPayorder
           sleep 1.2
           update_quantities goa, 2, 0
           expect(goa.reload.group_order_article_quantities.count).to eq 2
+        end
+      end
+
+      describe 'with remove unpaid' do
+        let(:article2)  { create :article, unit_quantity: 1 }
+        let(:order)     { create :order, article_ids: [article.id, article2.id] }
+        let(:goa2)      { create :group_order_article, group_order: go, order_article: order.order_articles.second }
+
+        before do
+          FoodsoftConfig.config[:payorder_remove_unpaid] = true
+        end
+
+        it 'removes second article when only paid first' do
+          update_quantities goa,  1, 0
+          update_quantities goa2, 2, 0
+          credit go.ordergroup, article.fc_price
+          finish_and_check_result [goa, goa2], [1, nil]
+          expect(article.order_articles.first.group_order_articles.count).to eq 1
+        end
+
+        it 'removes group order when unpaid' do
+          update_quantities goa, 1, 0
+          finish_and_check_result [goa], [nil]
+          expect(order.sum).to eq 0
+          expect(article.order_articles.first.group_order_articles.count).to eq 0
         end
 
       end
