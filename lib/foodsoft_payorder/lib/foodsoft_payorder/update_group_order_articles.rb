@@ -10,7 +10,7 @@ module FoodsoftPayorder
           # Go through all GroupOrderArticles of open/finished orders of this ordergroup,
           # and associate them with the financial transaction, as far as the account balance
           # suffices.
-          def update_group_order_articles(transaction = financial_transactions.where('amount > 0').last)
+          def update_group_order_articles(transaction = financial_transactions.order('created_on').where('amount > 0').last)
             FoodsoftPayorder.enabled? or return
             transaction do
               sum = 0
@@ -118,8 +118,8 @@ module FoodsoftPayorder
             funds_avail = ordergroup.get_available_funds
             funds_avail += goa.total_price(goa.order_article, goa.quantity_was, goa.tolerance_was) - goa.total_price
 
-            if funds_avail >= 0
-              self.financial_transaction = ordergroup.financial_transactions.order('created_on DESC').where('amount > 0').first
+            if funds_avail >= -(FoodsoftConfig[:payorder_grace_price]||0.1)
+              self.financial_transaction = ordergroup.financial_transactions.order('created_on').where('amount > 0').last
             end
           end
 
@@ -140,8 +140,9 @@ module FoodsoftPayorder
             if not FoodsoftPayorder.enabled? or %w(result total_price).include?(attr.to_s)
               foodsoft_payorder_orig_collect_result(attr)
             else
-              group_order_article_quantities
+              group_order_article_quantities.joins(:financial_transaction)
                 .where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
+                .merge(::FinancialTransaction.paid)
                 .collect(&attr).sum
             end
           end

@@ -70,6 +70,12 @@ if defined? FoodsoftPayorder
         finish_and_check_result goa, 8
       end
 
+      it 'has no result when paid 0' do
+        update_quantities goa, 1, 0
+        credit go.ordergroup, 0
+        finish_and_check_result [goa], [0]
+      end
+
       describe 'with multiple order articles' do
         let(:article2)  { create :article, unit_quantity: 1 }
         let(:article3)  { create :article, unit_quantity: 1, price: article.price, deposit: article.deposit, tax: article.tax }
@@ -196,9 +202,21 @@ if defined? FoodsoftPayorder
         end
 
         it 'removes group order when unpaid' do
+          ordergroup = go.ordergroup
           update_quantities goa, 1, 0
           finish_and_check_result [goa], [nil]
           expect(order.sum).to eq 0
+          expect(ordergroup.group_orders.count).to eq 0
+          expect(article.order_articles.first.group_order_articles.count).to eq 0
+        end
+
+        it 'removes group order when paid 0' do
+          ordergroup = go.ordergroup
+          update_quantities goa, 1, 0
+          credit go.ordergroup, 0
+          finish_and_check_result [goa], [nil]
+          expect(order.sum).to eq 0
+          expect(ordergroup.group_orders.count).to eq 0
           expect(article.order_articles.first.group_order_articles.count).to eq 0
         end
 

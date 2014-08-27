@@ -19,6 +19,8 @@ class FinancialTransaction < ActiveRecord::Base
   #   @return [String] {https://en.wikipedia.org/wiki/ISO_4217 ISO-4217} currency of +payment_amount+.
   # @!attribute payment_state
   #   Payment status. One of: +created+, +open+, +cancelled+, +paid+, +refunded+, +expired+.
+  #   Might be +nil+ for transactions without payment details, in which case it is supposed
+  #   to be +paid+.
   #   @return [String] Last known status of payment.
   #   @todo Document payment states, and what happens to this object.
   #   @todo Use a state machine here?
@@ -60,7 +62,14 @@ class FinancialTransaction < ActiveRecord::Base
   # @!method hide_expired
   #   Scope which hides old transactions that didn't result in a balance change.
   #   @return [Array<FinancialTransaction>] Filtered list
-  scope :hide_expired, -> { where("payment_state IN (NULL, 'paid', 'refunded') OR amount > 0 OR amount < 0 OR updated_on > ?", 3.days.ago) }
+  scope :hide_expired, -> { where("payment_state IS NULL OR payment_state IN ('paid', 'refunded') OR amount > 0 OR amount < 0 OR updated_on > ?", 3.days.ago) }
+
+  # @!method paid
+  #   Scope which shows only paid transactions
+  #   @see #payment_state
+  #   @see #paid?
+  #   @return [Array<FinancialTransaction>] Filtered list
+  scope :paid, -> { where("payment_state IS NULL OR payment_state = 'paid'") }
 
   # Positive transaction amount.
   #
@@ -80,6 +89,24 @@ class FinancialTransaction < ActiveRecord::Base
     if (amount and amount < 0) or payment_fee
       -(amount if amount.to_f < 0).to_f + payment_fee.to_f
     end
+  end
+
+  # Return whether the transaction is paid.
+  #
+  # Returns +true+ if the transaction has the "paid" state, or if the
+  # status is +nil+ for backwards compatibility when no state is being
+  # used.
+  #
+  # If unpaid, the +amount+ should in principle be zero (unless, for example,
+  # in a corner case like when a transaction fee is irrevocably levied but it's
+  # uncertain whether the amount will be received or not; in that case the
+  # amount might be the negative transaction fee, until the payment is
+  # received).
+  #
+  # @see #paid
+  # @return [Boolean] Whether the transaction is paid or not
+  def paid?
+    state.nil? or state == 'paid'
   end
 
   private

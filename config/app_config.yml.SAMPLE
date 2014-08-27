@@ -231,10 +231,9 @@ default: &defaults
   # after each sublist.
   #pdf_add_page_breaks: true
   # Alternatively, this can be set for each document.
-  #pdf_add_page_breaks:
-  #  order_by_groups: true
-  #  order_by_articles: true
-
+  pdf_add_page_breaks:
+    order_by_groups: true
+    order_by_articles: false
 
   # To import other spreadsheets than csv, libreoffice can be used. Disabled by default.
   use_libreoffice: true
