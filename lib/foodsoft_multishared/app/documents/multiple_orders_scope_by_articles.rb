@@ -74,4 +74,10 @@ class MultipleOrdersScopeByArticles < OrderPdf
     end
   end
 
+  protected
+
+  def pdf_add_page_breaks?
+    super 'order_by_articles'
+  end
+
 end

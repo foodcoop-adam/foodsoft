@@ -108,6 +108,12 @@ class MultipleOrdersByGroups < OrderPdf
 
       down_or_page 15
     end
-
   end
+
+  protected
+
+  def pdf_add_page_breaks?
+    super 'order_by_groups'
+  end
+
 end

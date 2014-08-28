@@ -120,4 +120,9 @@ class MultipleOrdersScopeByGroups < OrderPdf
     # Rails 3 - http://meltingice.net/2013/06/11/pluck-multiple-columns-rails/
     ActiveRecord::Base.connection.select_all(query).map(&:symbolize_keys)
   end
+
+  def pdf_add_page_breaks?
+    super 'order_by_groups'
+  end
+
 end
