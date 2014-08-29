@@ -3,9 +3,9 @@
     .pull-right
       = link_to I18n.t('layouts.foodsoft'), FoodsoftConfig[:foodsoft_url] if FoodsoftConfig[:foodsoft_url]
       - if Foodsoft.VERSION.revision.blank?
-        = "v#{Foodsoft.VERSION}"
+        = "v#{Foodsoft.VERSION}+ß"
       - else
-        %abbr{title: t('.revision', revision: Foodsoft.VERSION.revision)}= "v#{Foodsoft.VERSION}"
+        %abbr{title: t('.revision', revision: Foodsoft.VERSION.revision)}= "v#{Foodsoft.VERSION}+ß"
     %p
       - if (s = FoodsoftConfig[:page_footer]).blank?
         = link_to FoodsoftConfig[:name], FoodsoftConfig[:homepage]
