@@ -1,3 +1,16 @@
+# Foodsoft 3.3.5-adam
+(29 aug 2014)
+
+* Improvements in the receive screen
+* Make distribute screen layout a little clearer
+* Redesign "Fax PDF" and call it to "Order PDF" from now on
+* Handle (ajax) errors better
+* Allow to enter amount in unit or kg/g/l/... in distribute screen
+* Allow to configure how ordergroup margin is shown on member profile
+* Allow foodcoops to specify custom CSS for styling
+* Allow to set page-break options for articles and groups PDFs separately
+* Bugfix: do not show deleted members in CSV download
+
 # Foodsoft 3.3.4-adam
 (10 Jun 2014)
 
