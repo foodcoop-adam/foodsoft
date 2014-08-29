@@ -12,8 +12,8 @@ class MultipleOrdersScopeByGroups < OrderPdf
 
   def body
     # Start rendering
-    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).order(:scope).pluck('DISTINCT(groups.scope) AS scope')
-    @scopes.each do |scope|
+    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).group('groups.scope').order('groups.scope').count
+    @scopes.each_pair do |scope, groups_in_scope|
 
       totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0}
       taxes = Hash.new {0}
@@ -69,7 +69,11 @@ class MultipleOrdersScopeByGroups < OrderPdf
         rows.first[-1] = nil
       end
 
-      text scope, size: fontsize(13), style: :bold
+      table [[
+        {content: scope.to_s, align: :left, size: fontsize(13)},
+        {content: "#{groups_in_scope} #{Ordergroup.model_name.human count: groups_in_scope}", size: fontsize(8), align: :right, text_color: '999999'}
+      ]], width: bounds.width, cell_style: {font_style: :bold, borders: []}
+
       table rows, width: bounds.width, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]

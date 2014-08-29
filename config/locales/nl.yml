@@ -197,7 +197,9 @@ nl:
       order: Bestelling
       order_article: Bestellingsartikel
       order_comment: Commentaar
-      ordergroup: Huishouden
+      ordergroup:
+        one: Huishouden
+        other: Huishoudens
       stock_article: Voorraadartikel
       stock_taking: Inventaris
       supplier: Leverancier
