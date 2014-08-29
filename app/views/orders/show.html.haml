@@ -54,6 +54,10 @@
           %li= order_pdf(@order, :groups, t('.download.group_pdf'))
           %li= order_pdf(@order, :articles, t('.download.article_pdf'))
           %li= order_pdf(@order, :matrix, t('.download.matrix_pdf'))
+          - if defined? FoodsoftMultishared # TODO fix deface https://github.com/spree/deface/issues/125
+            %li= link_to t('multishared_signup.orders.fc_group_pdf'), controller: 'multishared_orders', id: @order.id, action: 'foodcoop_doc', format: 'pdf', document: 'groups'
+            %li= link_to t('multishared_signup.orders.fc_articles_pdf'), controller: 'multishared_orders', id: @order.id, action: 'foodcoop_doc', format: 'pdf', document: 'articles'
+          %li.divider
           %li= order_pdf(@order, :fax, t('.download.fax_pdf'))
           %li= link_to t('.download.fax_txt'), order_path(@order, format: :txt), {title: t('.download.download_file')}
           %li= link_to t('.download.fax_csv'), order_path(@order, format: :csv), {title: t('.download.download_file')}
