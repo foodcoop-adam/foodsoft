@@ -73,6 +73,9 @@ class MultipleOrdersScopeByGroups < OrderPdf
         {content: scope.to_s, align: :left, size: fontsize(13)},
         {content: "#{groups_in_scope} #{Ordergroup.model_name.human count: groups_in_scope}", size: fontsize(8), align: :right, text_color: '999999'}
       ]], width: bounds.width, cell_style: {font_style: :bold, borders: []}
+      if scope.present? and scope != '*' and scope_address = FoodsoftMultishared::get_scope_config(scope)[:contact]
+        text FoodsoftMultishared::address_line(scope_address), size: fontsize(8), style: :bold, color: '999999'
+      end
 
       table rows, width: bounds.width, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
