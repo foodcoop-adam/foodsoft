@@ -9,7 +9,6 @@ default: &defaults
   default_scope: 'f'
 
   # without these settings Foodsoft breaks
-  host: localhost
   name: FC Test
   contact:
     email: f@c.test
