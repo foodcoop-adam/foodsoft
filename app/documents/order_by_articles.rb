@@ -42,6 +42,7 @@ class OrderByArticles < OrderPdf
            "(#{order_article.article.unit}; #{number_to_currency order_article.price.fc_price}; " +
            units_history_line(order_article, @order, plain: true) + ')',
            size: fontsize(10), inline_format: true
+      s = OrderByArticles.article_info(order_article.article) and text s, size: fontsize(8), inline_format: true
       table rows, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
@@ -69,6 +70,16 @@ class OrderByArticles < OrderPdf
 
       down_or_page
     end
+  end
+
+  # @return [String] Article info: manufacturer and origin
+  def self.article_info(article)
+    s = []
+    s << I18n.t('documents.order_by_articles.made_by', manufacturer: '<em>'+article.manufacturer+'</em>') unless article.manufacturer.blank?
+    s << I18n.t('documents.order_by_articles.origin_in', origin: '<em>'+article.origin+'</em>') unless article.origin.blank?
+    s = s.join(' ')
+    s = [s, article.note].reject(&:blank?).join('. ') if article.note
+    s
   end
 
 end

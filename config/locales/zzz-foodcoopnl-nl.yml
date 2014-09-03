@@ -42,6 +42,9 @@ nl:
       sub_name: Ondertitel
       use_paymanual: Handmatige betalingen
   documents:
+    order_by_articles:
+      made_by: gemaakt door %{manufacturer}
+      origin_in: uit %{origin}
     order_by_groups:
       multiple:
         filename: Meerdere bestellingen - naar huishouden

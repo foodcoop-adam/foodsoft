@@ -42,6 +42,9 @@ en:
       sub_name: Subtitle
       use_paymanual: Allow manual payments
   documents:
+    order_by_articles:
+      made_by: made by %{manufacturer}
+      origin_in: from %{origin}
     order_by_groups:
       multiple:
         filename: Multiple orders - by group

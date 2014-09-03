@@ -49,6 +49,7 @@ class MultipleOrdersScopeByArticles < OrderPdf
            "(#{order_article.article.unit}; #{number_to_currency order_article.price.fc_price}; " +
            units_history_line(order_article, order_article.order, plain: true) + ')',
            size: fontsize(10), inline_format: true
+      s = ::OrderByArticles.article_info(order_article.article) and text s, size: fontsize(8), inline_format: true
       table rows, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
         # borders
         table.cells.borders = [:bottom]
