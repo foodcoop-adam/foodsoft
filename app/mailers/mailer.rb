@@ -113,11 +113,12 @@ class Mailer < ActionMailer::Base
     attachments['order.csv'] = OrderCsv.new(@order, @options).to_csv
   end
 
-  # using after_action to allow different scopes and optional defaults
+  # hook mail method to set some defaults
+  # @see config/app_config.yml.SAMPLE
   def mail(options={})
-    options[:from] ||= FoodsoftConfig[:email_from] || "\"#{FoodsoftConfig[:name]}\" <#{FoodsoftConfig[:contact]['email']}>"
+    options[:reply_to] ||= options[:from] if options[:from]
+    options[:from] = FoodsoftConfig[:email_from] || "\"#{FoodsoftConfig[:name]}\" <#{FoodsoftConfig[:contact]['email']}>"
     options[:sender] ||= FoodsoftConfig[:email_sender]
-    options[:reply_to] ||= FoodsoftConfig[:email_replyto] if FoodsoftConfig[:email_replyto]
     super
   end
 

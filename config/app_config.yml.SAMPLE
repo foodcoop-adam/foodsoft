@@ -205,12 +205,14 @@ default: &defaults
   # Custom css for the foodcoop
   #custom_css: 'body { background-color: #fcffba; }'
 
-  # email address to be used as sender
-  email_sender: Foodsoft <info@foodcoop.nl>
-  # contact info will be used as email from, but you can override it here
+  # Contact info will be used as email from, but you can override it here.
+  #  Please note that this is always used as from address, also for messages. Due to
+  #  tightening SPAM measures on the internet (e.g. <a href="http://dmarc.org/">DMARC</a>),
+  #  we can't use free-form from anymore and use the reply-to field instead.
+  #  Don't forget to set SPF or DKIM on the domains you use for the sender and from field.
   #email_from: FC Test <contact@foodcoop.test>
-  # reply-to address for all emails (not set by default)
-  #email_replyto: FC Test <support@foodcoop.test>
+  # email address to be used as sender (unset by default)
+  email_sender: Foodsoft <info@foodcoop.nl>
 
   # If your foodcoop uses a mailing list instead of internal messaging system
   #mailing_list: list@example.org
