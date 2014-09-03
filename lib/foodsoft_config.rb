@@ -96,9 +96,9 @@ class FoodsoftConfig
         value == 'false' and value = false
         value == 'true' and value = true
         value = config[key] if value.nil?
-        fix_value value
+        fix_hash value
       else
-        fix_value config[key]
+        fix_hash config[key]
       end
     end
 
@@ -111,15 +111,7 @@ class FoodsoftConfig
     def []=(key, value)
       key = key.to_sym
       return false unless allowed_key?(key)
-      # try to figure out type ...
-      value = case value
-                when false then 'false'  # Rails 3 version of +CachedSettings+ destroys key when +false+
-                when true then 'true'
-                when /^[-+0-9]+$/ then value.to_i
-                when /^[-+0-9.]+([eE][-+0-9]+)?$/ then value.to_f
-                when '' then nil
-                else value
-              end
+      value = normalize_value value
       # then update database
       if config[key] == value or (config[key].nil? and value == false)
         # delete (ok if it was already deleted)
@@ -266,13 +258,29 @@ class FoodsoftConfig
 
     # returns HashWithIndifferentAccess if Hash
     #   workaround for Rails 3
-    def fix_value(v)
+    def fix_hash(v)
       if v.is_a? Hash and not v.is_a? ActiveSupport::HashWithIndifferentAccess
         v = ActiveSupport::HashWithIndifferentAccess.new(v)
-        v.values.map! {|v| fix_value(v)}
+        v.values.map! {|v| fix_hash(v)}
       end
       v
     end
+
+   # Normalize value recursively (which can be entered as strings, but we want to store it properly)
+   def normalize_value(value)
+     value = value.map(&:normalize_value) if value.is_a? Array
+     if value.is_a? Hash
+       value = ActiveSupport::HashWithIndifferentAccess[ value.to_a.map{|a| [a[0], normalize_value(a[1])]} ]
+     end
+     case value
+       when 'true' then true
+       when 'false' then false
+       when /^[-+0-9]+$/ then value.to_i
+       when /^[-+0-9.]+([eE][-+0-9]+)?$/ then value.to_f
+       when '' then nil
+       else value
+     end
+   end
 
   end
 end
