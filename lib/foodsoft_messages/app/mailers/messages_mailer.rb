@@ -1,4 +1,4 @@
-class MessagesMailer < Mailer
+class MessagesMailer < ApplicationMailer
   # Sends an email copy of the given internal foodsoft message.
   def foodsoft_message(message, recipient)
     set_foodcoop_scope

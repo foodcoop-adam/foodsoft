@@ -1,13 +1,6 @@
 # encoding: utf-8
-# ActionMailer class that handles all emails for the FoodSoft.
-class Mailer < ActionMailer::Base
-  # XXX Quick fix to allow the use of show_user. Proper take would be one of
-  #     (1) Use draper, decorate user
-  #     (2) Create a helper with this method, include here and in ApplicationHelper
-  helper :application
-  include ApplicationHelper
-
-  layout 'email'  # Use views/layouts/email.txt.erb
+# ActionMailer class that handles standard emails for Foodsoft.
+class Mailer < ApplicationMailer
 
   # Sends an email with instructions on how to reset the password.
   # Assumes user.setResetPasswordToken has been successfully called already.
@@ -99,27 +92,10 @@ class Mailer < ActionMailer::Base
 
   private
 
-  # @todo this global stuff gives threading problems when foodcoops have different values! - pass args to `url_for` instead
-  def set_foodcoop_scope(foodcoop = FoodsoftConfig.scope)
-    [:protocol, :host, :port].each do |k|
-      ActionMailer::Base.default_url_options[k] = FoodsoftConfig[k] if FoodsoftConfig[k]
-    end
-    ActionMailer::Base.default_url_options[:foodcoop] = foodcoop
-  end
-
   # separate method to allow plugins to mess with the attachments
   def add_order_result_attachments
     attachments['order.pdf'] = OrderFax.new(@order, @options).to_pdf
     attachments['order.csv'] = OrderCsv.new(@order, @options).to_csv
-  end
-
-  # hook mail method to set some defaults
-  # @see config/app_config.yml.SAMPLE
-  def mail(options={})
-    options[:reply_to] ||= options[:from] if options[:from]
-    options[:from] = FoodsoftConfig[:email_from] || "\"#{FoodsoftConfig[:name]}\" <#{FoodsoftConfig[:contact]['email']}>"
-    options[:sender] ||= FoodsoftConfig[:email_sender]
-    super
   end
 
 end
