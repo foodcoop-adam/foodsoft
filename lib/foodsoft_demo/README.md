@@ -16,3 +16,8 @@ Configuration options in `config/app_config.yml`:
   # or admin to allow admins to post.
   restrict_new_message: admin
 ```
+
+Note that both options are protected by default. If you want foodcoops
+to be able to set this in the configuration screen, you need to add
+`use_demo_autologin: false` and `restrict_new_message: false` under the
+`protected` key in `config/app_config.yml`.

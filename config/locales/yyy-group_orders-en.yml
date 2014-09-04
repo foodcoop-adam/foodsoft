@@ -7,6 +7,20 @@ en:
         tolerance: Extra amount
         tolerance_short: Extra
         tolerance_desc: Any extra amount for filling the last box
+  admin:
+    configs:
+      tab_others:
+        tolerance_opts:
+          yes: Yes
+          nope: Hide for members
+          supplier: Specify for each supplier
+      tab_payment:
+         methods_title: Payment methods
+  config:
+    hints:
+      use_tolerance: Whether to show the tolerance column to members. When choosing per supplier, you can specify this in the supplier edit screen.
+    keys:
+      use_tolerance: Use tolerance
   group_orders:
     my_current_order: My current order
     my_last_order: My last order

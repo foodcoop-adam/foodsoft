@@ -1,4 +1,18 @@
 en:
+  admin:
+    configs:
+      tab_messages:
+        restrict_new_message_opts:
+          yes: Disable new messages
+          nope: Allow writing messages
+          admin: Only admins can write new messages
+  config:
+    hints:
+      use_demo_autologin: "Demonstration functionality: automatically create a demonstration account for each visitor. Don't use this for real coops!"
+      restrict_new_message: Specify who can post new messages. Useful for e.g. demonstration purposes. Default is to allow.
+    keys:
+      use_demo_autologin: Demo auto-login
+      restrict_new_message: Restrict posting
   foodsoft_demo:
     autologin:
       fields:

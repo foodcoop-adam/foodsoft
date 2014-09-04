@@ -1,4 +1,11 @@
 en:
+  config:
+    hints:
+      use_payorder: Shopping-cart-like functionality. Enable to add a payment button on the current order overview and only order articles that members have paid.
+      payorder_payment_fee: 'This amount will be added to all transactions when "pay after order" is enabled; leave empty to pay the payment fee out of the foodcoop margin. When a user chooses a non-standard payment method, the real payment fee may still be different; make sure to choose a default level that is sufficient. '
+    keys:
+      use_payorder: Members pay right after ordering (shopping-cart)
+      payorder_payment_fee: Add payment fee
   group_orders:
     group_order_totals:
       payable: Total payable

@@ -1,0 +1,2 @@
+/ insert_after 'erb:contains("mailing_list_subscribe")'
+= config_input form, :restrict_new_message, collection: [[t('.restrict_new_message_opts.yes'), true], [t('.restrict_new_message_opts.nope'), false], [t('.restrict_new_message_opts.admin'), 'admin']]

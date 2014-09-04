@@ -1,6 +1,7 @@
-= config_input form, :use_wiki, as: :boolean if defined? FoodsoftWiki # an exception
+= config_input form, :use_wiki, as: :boolean if defined? FoodsoftWiki
 = config_input form, :use_nick, as: :boolean
 = config_input form, :skip_order_finished_mails, as: :boolean
+= config_input form, :use_tolerance, collection: [[t('.tolerance_opts.yes'), true], [t('.tolerance_opts.nope'), false], [t('.tolerance_opts.supplier'), 'supplier']]
 -# tolerance_is_costly is not tested in foodcoop-adam, be safe here
   = config_input form, :tolerance_is_costly, as: :boolean
 -# this fork doesn't use the help url

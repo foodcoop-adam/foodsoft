@@ -26,4 +26,6 @@
   .input-prepend
     %span.add-on= t 'number.currency.format.unit'
     = config_input_field form, :minimum_balance, as: :decimal, class: 'input-small'
+
+%h4= t '.methods_title'
 = config_input form, :use_paymanual, as: :boolean

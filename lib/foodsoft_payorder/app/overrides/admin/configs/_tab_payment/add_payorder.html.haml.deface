@@ -1,0 +1,6 @@
+/ insert_after ':root:last-child'
+= config_use_heading form, :use_payorder do
+  = config_input form, :payorder_payment_fee do
+    .input-prepend
+      %span.add-on= t 'number.currency.format.unit'
+      = config_input_field form, :payorder_payment_fee, as: :decimal, class: 'input-small'

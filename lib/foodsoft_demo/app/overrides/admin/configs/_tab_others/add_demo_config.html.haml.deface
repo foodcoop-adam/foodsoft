@@ -1,0 +1,2 @@
+/ insert_after ':root:last-child'
+= config_input form, :use_demo_autologin, as: :boolean
