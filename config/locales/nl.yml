@@ -19,6 +19,8 @@ nl:
         order_number_short: Nr.
         origin: Herkomst
         price: Netto prijs
+        quantity: Maximaal beschikbaar
+        quantity_short: Max
         supplier: Leverancier
         tax: BTW
         unit: Eenheid
@@ -872,6 +874,12 @@ nl:
     group_orders:
       finished_since: 'gesloten sinds %{when}'
       closed_since: 'afgerekend sinds %{when}'
+    finance:
+      financial_transactions:
+        state:
+          cancelled: Geannuleerd
+          pending: In behandeling
+          refunded: Teruggestort
     messages:
       write_message: Bericht schrijven
     orders:
