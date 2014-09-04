@@ -20,6 +20,7 @@ class SharedArticle < ActiveRecord::Base
         :tax => tax,
         :deposit => deposit,
         :unit_quantity => unit_quantity,
+        :quantity => quantity,
         :order_number => number,
         :article_category => ArticleCategory.find_match(category),
         # convert to db-compatible-string

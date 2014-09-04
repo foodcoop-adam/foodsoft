@@ -58,6 +58,7 @@ class Supplier < ActiveRecord::Base
             :shared_updated_on => shared_article.updated_on,
             :tax => shared_article.tax,
             :deposit => shared_article.deposit,
+            :quantity => shared_article.quantity,
             :note => shared_article.note
           }
           updated_articles << [article, unequal_attributes]

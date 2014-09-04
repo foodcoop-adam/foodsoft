@@ -119,6 +119,7 @@ class Article < ActiveRecord::Base
           :deposit => [self.deposit.to_f.round(2), shared_article.deposit.to_f.round(2)],
           # take care of different num-objects.
           :unit_quantity => [self.unit_quantity.to_s.to_f.round(1), new_unit_quantity.to_s.to_f.round(1)],
+          :quantity => [self.quantity, shared_article.quantity],
           :note => [self.note.to_s, shared_article.note.to_s]
         }
       )
