@@ -70,7 +70,7 @@ en:
         available_funds: Available funds
         balance: Balance of account
         finished_orders: Value of finished orders
-        last_updated_at: "(the account balance was last updated at %{when})"
+        last_updated_at: "(balance updated %{when} ago)"
         open_orders: Value of open orders
       create_collection:
         paymanual_disabled: Manual payments are disabled.

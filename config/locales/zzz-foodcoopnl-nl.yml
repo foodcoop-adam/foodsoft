@@ -70,7 +70,7 @@ nl:
         available_funds: Beschikbaar tegoed
         balance: Balans van huishouden
         finished_orders: Gesloten bestellingen
-        last_updated_at: "(laatst bijgewerkt op %{when})"
+        last_updated_at: "(balans bijgewerkt %{when} geleden)"
         open_orders: Open bestellingen
       create_collection:
         paymanual_disabled: De mogelijkheid om bestellingen handmatig invoeren is niet aangezet.

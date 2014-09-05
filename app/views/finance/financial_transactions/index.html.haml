@@ -1,11 +1,14 @@
-- title t('.title', name: show_group(@ordergroup))
+- title t('.title', name: show_group(@ordergroup)), false
+%h2= t('.title', name: show_group(@ordergroup))
 
 - if FoodsoftConfig[:use_paymanual]
   - content_for :actionbar do
     = link_to t('.new_transaction'), new_finance_ordergroup_transaction_path(@ordergroup), class: 'btn btn-primary'
 
 - content_for :sidebar do
-  .well.well-small
+  -# h2 for margin ...
+  %h2 &nbsp;
+  .well
     = render 'account_info', ordergroup: @ordergroup
 
 = render 'transactions_search', url: finance_ordergroup_transactions_path(@ordergroup)
