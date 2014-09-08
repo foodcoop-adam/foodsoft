@@ -126,11 +126,12 @@ ActiveRecord::Schema.define(:version => 20140921104907) do
   add_index "financial_transactions", ["payment_plugin", "payment_id"], :name => "index_financial_transactions_on_payment_plugin_and_payment_id"
 
   create_table "group_order_article_quantities", :force => true do |t|
-    t.integer  "group_order_article_id", :default => 0, :null => false
+    t.integer  "group_order_article_id", :default => 0,     :null => false
     t.integer  "quantity",               :default => 0
     t.integer  "tolerance",              :default => 0
-    t.datetime "created_on",                            :null => false
+    t.datetime "created_on",                                :null => false
     t.integer  "financial_transaction_id"
+    t.boolean  "confirmed",              :default => false, :null => false
   end
 
   add_index "group_order_article_quantities", ["group_order_article_id"], :name => "index_group_order_article_quantities_on_group_order_article_id"

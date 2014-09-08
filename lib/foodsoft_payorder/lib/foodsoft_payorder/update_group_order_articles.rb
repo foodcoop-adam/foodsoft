@@ -17,7 +17,7 @@ module FoodsoftPayorder
               max_sum = account_balance - value_of_finished_orders
               order_articles = []
               group_order_article_quantities.includes(:group_order_article => {:group_order => :order})
-                    .merge(Order.where(state: :open)).order('created_on ASC').each do |goaq|
+                    .where(confirmed: true).merge(Order.where(state: :open)).order('created_on ASC').each do |goaq|
                 goa = goaq.group_order_article
                 goaq_price = goa.total_price(goa.order_article, goaq.quantity, goaq.tolerance)
                 if sum + goaq_price <= max_sum + (FoodsoftConfig[:payorder_grace_price]||0.1)
@@ -71,7 +71,7 @@ module FoodsoftPayorder
           alias_method :foodsoft_payorder_orig_get_quantities_for_order_article, :get_quantities_for_order_article
           def get_quantities_for_order_article
             result = foodsoft_payorder_orig_get_quantities_for_order_article
-            result = result.paid if FoodsoftPayorder.enabled?
+            result = result.paid.confirmed if FoodsoftPayorder.enabled?
             result
           end
 
@@ -81,7 +81,8 @@ module FoodsoftPayorder
             if FoodsoftPayorder.enabled?
               if quantities[0] and quantities[1]
                 quantities[0].send :foodsoft_payorder_set_transaction # make sure it's set
-                if quantities[0].financial_transaction.present? != quantities[1].financial_transaction.present?
+                if quantities[0].financial_transaction.present? != quantities[1].financial_transaction.present? \
+                   or quantities[0].confirmed != quantities[1].confirmed
                   return quantities
                 end
               end
@@ -99,6 +100,8 @@ module FoodsoftPayorder
           belongs_to :financial_transaction
 
           before_create :foodsoft_payorder_set_transaction, if: proc { FoodsoftPayorder.enabled? }
+
+          scope :confirmed, -> { where(confirmed: true) }
 
           # scope paid
           def self.paid
@@ -138,13 +141,13 @@ module FoodsoftPayorder
 
           private
 
-          # only count paid amounts
+          # only count confirmed & paid amounts
           alias_method :foodsoft_payorder_orig_collect_result, :collect_result
           def collect_result(attr)
             if not FoodsoftPayorder.enabled? or %w(result total_price).include?(attr.to_s)
               foodsoft_payorder_orig_collect_result(attr)
             else
-              group_order_article_quantities.paid.collect(&attr).sum
+              group_order_article_quantities.paid.confirmed.collect(&attr).sum
             end
           end
         end

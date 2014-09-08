@@ -16,7 +16,7 @@ module FoodsoftPayorder
                                       .where(order_articles: {order_id: self.id})
                                       .select('group_order_articles.id')
               GroupOrderArticleQuantity.where("group_order_article_id IN (#{goas.to_sql})")
-                                       .where(financial_transaction_id: nil)
+                                       .where('financial_transaction_id IS NULL OR confirmed IS NULL or confirmed = ?', false)
                                        .delete_all
               # remove unpaid group_order_articles
               GroupOrderArticle.includes(:order_article, :group_order_article_quantities)

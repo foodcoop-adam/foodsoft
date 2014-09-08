@@ -12,10 +12,12 @@ if defined? FoodsoftPayorder
     before do
       FoodsoftConfig.config[:use_payorder] = true
       FoodsoftConfig.config[:payorder_payment] = 'root_path'
+      FoodsoftConfig.config[:payorder_grace_price] = 0.01 # be strict when testing
     end
 
-    def update_quantities(goa, quantity, tolerance)
+    def update_quantities(goa, quantity, tolerance, confirm=true)
       goa.update_quantities(quantity, tolerance)
+      goa.group_order_article_quantities.last.update_attributes confirmed: true if confirm
       goa.order_article.reload.update_results!
       goa.group_order.update_price!
     end
@@ -137,6 +139,35 @@ if defined? FoodsoftPayorder
           expect(go2.ordergroup.get_available_funds).to be_within(1e-2).of 0
         end
       end
+
+
+      describe 'without confirmation' do
+        it 'has no result with plenty of funds before ordering' do
+          credit go.ordergroup, article.fc_price*120
+          update_quantities goa, 1, 0, false
+          finish_and_check_result goa, 0
+        end
+
+        it 'has no result when funds are added after ordering' do
+          update_quantities goa, 2, 0, false
+          credit go.ordergroup, article.fc_price*2
+          finish_and_check_result goa, 0
+        end
+
+        it 'has old result when partially confirmed' do
+          credit go.ordergroup, article.fc_price*2
+          update_quantities goa, 1, 0, true
+          update_quantities goa, 1, 0, false
+          finish_and_check_result goa, 1
+        end
+
+        it 'has no result when paid 0' do
+          update_quantities goa, 1, 0, false
+          credit go.ordergroup, 0
+          finish_and_check_result goa, 0
+        end
+      end
+
 
       describe 'with multiple order articles' do
         let(:article2)  { create :article, unit_quantity: 1 }

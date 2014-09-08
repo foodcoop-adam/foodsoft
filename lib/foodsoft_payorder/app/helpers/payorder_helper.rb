@@ -1,7 +1,8 @@
 module PayorderHelper
   def order_payment_status_button(options={})
     return unless @group_orders_sum > 0
-    if @ordergroup.get_available_funds >= 0
+    unconfirmed = GroupOrderArticleQuantity.where(group_order_article_id: @goa_by_oa.values.map(&:id)).where(confirmed: [false,nil])
+    if unconfirmed.empty?
       link = my_ordergroup_path
       cls = "payment-status-btn #{options[:class]}"
       link_to glyph('ok')+' '+I18n.t('helpers.payorder.paid'), link, {style: 'color: green'}.merge(options).merge({class: cls})

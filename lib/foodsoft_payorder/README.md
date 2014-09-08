@@ -35,6 +35,10 @@ This plugin is configured in the foodcoop configuration in foodsoft's
   #payorder_remove_unpaid: true
 ```
 
+When using this plugin's shopping-cart functionality, members receive products only
+after they've pressed either the "Confirm" or "Payment" button on the current\_orders
+overview.
+
 
 Implementation notes
 --------------------
@@ -44,20 +48,20 @@ be helpful to explain in some detail how the different numbers are interpreted w
 plugin is used.
 
 **GroupOrderArticleQuantity** tells when a member has entered a quantity for an article.
-This is extended with a `financial_transaction`. When computing order totals, only records
-with a (paid) transaction are counted. (And when `payorder_remove_unpaid` is set, all other
-records are even deleted upon closing the order.)
+This is extended with `confirmed` and a `financial_transaction`. When computing order totals,
+only confirmed records with a (paid) transaction are counted. (And when `payorder_remove_unpaid`
+is set, all other records are even deleted upon closing the order.)
 
 **GroupOrderArticle** quantity and tolerance are those ordered by the member. Result
-includes only paid articles (or what they actually received after the order is finished).
-See `#calculate_result`.
+includes only paid and confirmed articles (or what they actually received after the order is
+finished). See `#calculate_result`.
 
-**GroupOrder** totals include paid and unpaid articles. Payorder uses
+**GroupOrder** totals include paid, unpaid and unconfirmed articles. Payorder uses
 `Ordergroup#get_available_funds` to find out how much a member needs to pay, which is
 computed by `GroupOrderArticle#total_prices`.
 
-**OrderArticle** totals only include paid articles, also when the order is open. This
-allows foodcoops to monitor ordering progress.
+**OrderArticle** totals only include articles that are paid and confirmed, also when the order
+is open. This allows foodcoops to monitor ordering progress.
 
-Note that, while the order is open, `GroupOrderArticle#result` only includes paid articles,
-whereas `GroupOrderArticle#total_prices` includes both paid and unpaid.
+Note that, while the order is open, `GroupOrderArticle#result` only includes articles that are
+paid and confirmed, whereas `GroupOrderArticle#total_prices` includes all.
