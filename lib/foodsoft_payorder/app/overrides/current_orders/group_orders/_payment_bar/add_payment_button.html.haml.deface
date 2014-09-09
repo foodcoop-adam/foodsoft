@@ -1,4 +1,3 @@
 / insert_bottom '.pull-right'
 - if FoodsoftConfig[:payorder_payment]
-  - if @articles_grouped_by_category.count > 0 and @ordergroup.get_available_funds < 0
-    = order_payment_status_button
+  = order_payment_status_button if order_needs?

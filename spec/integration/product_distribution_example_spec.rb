@@ -8,8 +8,10 @@ describe 'product distribution', :type => :feature do
   let(:article) { create :article, supplier: supplier, unit_quantity: 5 }
   let(:order) { create(:order, supplier: supplier, article_ids: [article.id]) }
   let(:oa) { order.order_articles.first }
+  let(:goa_a) { oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_a.ordergroup.id}).first }
+  let(:goa_b) { oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_b.ordergroup.id}).first }
 
-  describe :type => :feature do
+  describe :type => :feature, :js => true do
     before do
       # make sure users have enough money to order
       [user_a, user_b].each do |user|
@@ -35,24 +37,47 @@ describe 'product distribution', :type => :feature do
       # die zuteilung
       order.finish!(admin)
       oa.reload
+    end
+
+    def dotest_check_received
       # Endstand: insg. Bestellt wurden 6(1)
       expect([oa.quantity, oa.tolerance]).to eq [6, 1]
       # Gruppe a bekommt 3 einheiten.
-      goa_a = oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_a.ordergroup.id}).first
       expect(goa_a.result).to eq(3)
       # gruppe b bekommt 2 einheiten.
-      goa_b = oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_b.ordergroup.id}).first
       expect(goa_b.result).to eq(2)
     end
 
-    it 'agrees to documented example', :js => true do
+    def dotest_check_nothing_received
+      expect([oa.quantity, oa.tolerance]).to eq [0, 0]
+      expect([goa_a.result, goa_b.result]).to eq [0, 0]
+    end
+
+    it 'agrees to documented example' do
       dotest
+      dotest_check_received
     end
 
     if defined? FoodsoftPayorder
-      it 'agrees to document example when payorder is enabled', :js => true do
-        FoodsoftConfig.config[:use_payorder] = true
-        dotest
+      describe 'with payorder' do
+        it 'will not order if not confirmed' do
+          FoodsoftConfig.config[:use_payorder] = true
+          dotest
+          dotest_check_nothing_received
+        end
+
+        it 'agrees to documented example' do
+          FoodsoftConfig.config[:use_payorder] = true
+          dotest do
+            # confirm order each time
+            visit group_order_path(:current)
+            within '.page-header' do
+              click_link_or_button I18n.t('helpers.payorder.confirm')
+              expect(page).to have_link I18n.t('helpers.payorder.paid')
+            end
+          end
+          dotest_check_received
+        end
       end
     end
   end

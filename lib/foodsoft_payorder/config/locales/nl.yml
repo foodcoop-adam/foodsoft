@@ -7,6 +7,7 @@ nl:
       previous_deficit: Openstaand bedrag
   helpers:
     payorder:
+      confirm: Bevestigen
       paid: betaald
       payment: Betalen
       payment_prompt: Bestelling betalen

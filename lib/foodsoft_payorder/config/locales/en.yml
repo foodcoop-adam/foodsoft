@@ -14,6 +14,7 @@ en:
       previous_deficit: Previous deficit
   helpers:
     payorder:
+      confirm: Confirm
       paid: paid
       payment: Payment
       payment_prompt: Pay for your orders

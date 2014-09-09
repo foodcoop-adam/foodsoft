@@ -4,7 +4,7 @@ class GroupOrdersController < ApplicationController
   # Security
   before_filter :ensure_ordergroup_member
   before_filter :parse_order_specifier, :only => [:show, :edit, :price_details]
-  before_filter :get_order_articles, :only => [:show, :edit]
+  before_filter :get_order_articles, :only => [:show, :edit, :price_details]
   before_filter :enough_apples?, only: [:edit, :update]
 
   def index
@@ -82,7 +82,6 @@ class GroupOrdersController < ApplicationController
 
   def price_details
     # only makes sense for current ...
-    @order_articles = []
     compute_order_article_details
   end
   

@@ -110,6 +110,22 @@ module FoodsoftPayorder
               .merge(::FinancialTransaction.unscoped.paid) # unscoped required for multishared
           end
 
+          def confirm!
+            update_attributes! confirmed: true
+            group_order_article.order_article.update_results! # @todo only after /all/ goaqs are updated
+          end
+
+          # confirm an ordergroup's open orders
+          #   this can be a lot faster than `#confirm!`-ing every record
+          def self.confirm_open!(ordergroup)
+            ordergroup.group_order_article_quantities.joins(group_order_article: {group_order: :order})
+              .where(orders: {state: 'open'})
+              .update_all(confirmed: true)
+            ordergroup.group_order_articles.joins(order_article: :order)
+              .where(orders: {state: 'open'})
+              .map{|goa| goa.order_article.update_results!}
+          end
+
           private
 
           # When a new GroupOrderArticleQuantity is created, check available funds and set it
