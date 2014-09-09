@@ -62,7 +62,7 @@ module FoodsoftOrderdoc::ExportHelper
                   when 'quantity' then a[:unit_quantity].to_i * a[:result].to_f
                   else '?'
                   end
-          f.puts "#{p[:sheet].to_i} #{p[:row].to_i} #{p[:col].to_i} #{value}"
+          f.puts "#{p[:sheet].to_i} #{p[:row].to_i} #{p[:col].to_i} #{value}" if value.present? and value != 0
         end
       end
       Rails.logger.debug "libreoffice --headless --nolockcheck 'macro:///Standard.Module1.UpdateCells(#{dst},#{celldata})' >/dev/null"
