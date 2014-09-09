@@ -3,6 +3,7 @@ class CurrentOrders::OrdersController < ApplicationController
   before_filter :authenticate_orders
 
   def show
+    @doc_options ||= {}
     @order_ids = if params[:id]
                    params[:id].split('+').map(&:to_i)
                  else
@@ -13,8 +14,8 @@ class CurrentOrders::OrdersController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = case params[:document]
-                  when 'groups' then MultipleOrdersByGroups.new(@order_ids)
-                  when 'articles' then MultipleOrdersByArticles.new(@order_ids)
+                  when 'groups' then MultipleOrdersByGroups.new(@order_ids, @doc_options)
+                  when 'articles' then MultipleOrdersByArticles.new(@order_ids, @doc_options)
               end
         send_data pdf.to_pdf, filename: pdf.filename, type: 'application/pdf'
       end

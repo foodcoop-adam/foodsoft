@@ -10,9 +10,12 @@ class MultipleOrdersScopeByArticles < OrderPdf
     I18n.t('documents.multiple_orders_scope_by_articles.title', count: @order.count)
   end
 
-  def body
+  def order_articles
     @order_articles ||= OrderArticle.joins(:order, :article).where(:orders => {:id => @order}).ordered.reorder('orders.id, articles.name')
-    @order_articles.each do |order_article|
+  end
+
+  def body
+    order_articles.each do |order_article|
 
       rows = []
       dimrows = []

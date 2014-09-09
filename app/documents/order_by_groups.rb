@@ -11,9 +11,13 @@ class OrderByGroups < OrderPdf
       :date => @order.ends.strftime(I18n.t('date.formats.default')))
   end
 
+  def group_orders
+    @group_orders ||= @order.group_orders.ordered
+  end
+
   def body
     # Start rendering
-    @order.group_orders.ordered.includes(:ordergroup).each do |group_order|
+    group_orders.includes(:ordergroup).each do |group_order|
       total = 0
       taxes = Hash.new {0}
       fc_markup_price = 0

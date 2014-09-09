@@ -1,0 +1,11 @@
+- path_opts ||= {}
+- title ||= t('orders.show.download.article_pdf')
+- cssclass ||= ''
+%li{class: "dropdown-submenu #{cssclass}"}
+  = link_to title, '#'
+  %ul.dropdown-menu
+    %li= link_to t('shared.split_manufacturer.all_manufacturers'), self.send(path, {document: :articles, format: :pdf}.merge(path_opts))
+    %li.divider
+    - for manufacturer in order_articles.map(&:article).map(&:manufacturer).uniq.reject(&:blank?)
+      -# @todo add option for empty/no manufacturer (not pressing because when using this option it's most probably set)
+      %li= link_to manufacturer.to_s, self.send(path, {document: :articles, manufacturer: manufacturer, format: :pdf}.merge(path_opts))

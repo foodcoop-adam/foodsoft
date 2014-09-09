@@ -27,6 +27,7 @@ class OrdersController < ApplicationController
   # Gives a view for the results to a specific order
   # Renders also the pdf
   def show
+    @doc_options ||= {}
     @order= Order.find(params[:id])
     @view = (params[:view] or 'default').gsub(/[^-_a-zA-Z0-9]/, '')
     @partial = case @view
@@ -43,18 +44,18 @@ class OrdersController < ApplicationController
       end
       format.pdf do
         pdf = case params[:document]
-                when 'groups'   then OrderByGroups.new(@order)
-                when 'articles' then OrderByArticles.new(@order)
-                when 'fax'      then OrderFax.new(@order)
-                when 'matrix'   then OrderMatrix.new(@order)
+                when 'groups'   then OrderByGroups.new(@order, @doc_options)
+                when 'articles' then OrderByArticles.new(@order, @doc_options)
+                when 'fax'      then OrderFax.new(@order, @doc_options)
+                when 'matrix'   then OrderMatrix.new(@order, @doc_options)
               end
         send_data pdf.to_pdf, filename: pdf.filename, type: 'application/pdf'
       end
       format.csv do
-        send_data OrderCsv.new(@order).to_csv, filename: @order.name+'.csv', type: 'text/csv'
+        send_data OrderCsv.new(@order, @doc_options).to_csv, filename: @order.name+'.csv', type: 'text/csv'
       end
       format.text do
-        send_data OrderTxt.new(@order).to_txt, filename: @order.name+'.txt', type: 'text/plain'
+        send_data OrderTxt.new(@order, @doc_options).to_txt, filename: @order.name+'.txt', type: 'text/plain'
       end
     end
   end

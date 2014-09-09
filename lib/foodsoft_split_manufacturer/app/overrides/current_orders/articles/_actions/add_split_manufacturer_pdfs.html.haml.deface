@@ -1,0 +1,2 @@
+/ replace 'ul.dropdown-menu erb:contains("download.article_pdf")'
+= render 'shared/split_manufacturer/article_pdf_menu_item', order_articles: @order_articles, path: :current_orders_orders_path, cssclass: 'pull-left'

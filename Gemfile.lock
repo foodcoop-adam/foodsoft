@@ -85,6 +85,13 @@ PATH
       rails
       rmagick
 
+PATH
+  remote: lib/foodsoft_split_manufacturer
+  specs:
+    foodsoft_split_manufacturer (0.0.1)
+      deface (~> 1.0.0)
+      rails
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -500,6 +507,7 @@ DEPENDENCIES
   foodsoft_orderdoc!
   foodsoft_payorder!
   foodsoft_signup!
+  foodsoft_split_manufacturer!
   haml-rails
   i18n-js!
   i18n-spec

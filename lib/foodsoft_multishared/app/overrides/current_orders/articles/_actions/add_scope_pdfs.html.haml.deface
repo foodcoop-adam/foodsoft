@@ -1,3 +1,7 @@
 / insert_bottom 'ul.dropdown-menu'
 %li= link_to t('multishared_signup.orders.fc_group_pdf'), controller: '/multishared_orders', id: :current, action: 'foodcoop_doc', format: 'pdf', document: 'groups'
-%li= link_to t('multishared_signup.orders.fc_articles_pdf'), controller: '/multishared_orders', id: :current, action: 'foodcoop_doc', format: 'pdf', document: 'articles'
+-# @todo separate concern to plugin, could get Deface override on override to work properly
+- if defined? FoodsoftSplitManufacturer and FoodsoftSplitManufacturer.enabled?
+  = render 'shared/split_manufacturer/article_pdf_menu_item', order_articles: @order_articles, path: :multishared_order_path, path_opts: {id: :current}, title: t('multishared_signup.orders.fc_articles_pdf'), cssclass: 'pull-left'
+- else
+  %li= link_to t('multishared_signup.orders.fc_articles_pdf'), controller: '/multishared_orders', id: :current, action: 'foodcoop_doc', format: 'pdf', document: 'articles'

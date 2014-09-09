@@ -52,11 +52,17 @@
           %span.caret
         %ul.dropdown-menu
           %li= order_pdf(@order, :groups, t('.download.group_pdf'))
-          %li= order_pdf(@order, :articles, t('.download.article_pdf'))
+          - if defined? FoodsoftSplitManufacturer and FoodsoftSplitManufacturer.enabled? # TODO fix deface https://github.com/spree/deface/issues/125
+            = render 'shared/split_manufacturer/article_pdf_menu_item', order_articles: @order.order_articles, path: :order_path, path_opts: {id: @order.id}
+          - else
+            %li= order_pdf(@order, :articles, t('.download.article_pdf'))
           %li= order_pdf(@order, :matrix, t('.download.matrix_pdf'))
           - if defined? FoodsoftMultishared # TODO fix deface https://github.com/spree/deface/issues/125
             %li= link_to t('multishared_signup.orders.fc_group_pdf'), controller: 'multishared_orders', id: @order.id, action: 'foodcoop_doc', format: 'pdf', document: 'groups'
-            %li= link_to t('multishared_signup.orders.fc_articles_pdf'), controller: 'multishared_orders', id: @order.id, action: 'foodcoop_doc', format: 'pdf', document: 'articles'
+            - if defined? FoodsoftSplitManufacturer and FoodsoftSplitManufacturer.enabled?
+              = render 'shared/split_manufacturer/article_pdf_menu_item', order_articles: @order.order_articles, path: :multishared_order_path, path_opts: {id: @order.id}, title: t('multishared_signup.orders.fc_articles_pdf')
+            - else
+              %li= link_to t('multishared_signup.orders.fc_articles_pdf'), controller: 'multishared_orders', id: @order.id, action: 'foodcoop_doc', format: 'pdf', document: 'articles'
           %li.divider
           %li= order_pdf(@order, :fax, t('.download.fax_pdf'))
           %li= link_to t('.download.fax_txt'), order_path(@order, format: :txt), {title: t('.download.download_file')}

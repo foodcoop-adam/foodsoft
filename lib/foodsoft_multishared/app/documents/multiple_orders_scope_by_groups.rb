@@ -10,10 +10,13 @@ class MultipleOrdersScopeByGroups < OrderPdf
     I18n.t('documents.multiple_orders_scope_by_groups.title', count: @order.count)
   end
 
+  def scopes
+    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).group('groups.scope').order('groups.scope').count
+  end
+
   def body
     # Start rendering
-    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).group('groups.scope').order('groups.scope').count
-    @scopes.each_pair do |scope, groups_in_scope|
+    scopes.each_pair do |scope, groups_in_scope|
 
       totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0}
       taxes = Hash.new {0}

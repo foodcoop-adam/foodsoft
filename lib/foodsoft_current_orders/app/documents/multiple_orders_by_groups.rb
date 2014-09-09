@@ -10,10 +10,13 @@ class MultipleOrdersByGroups < OrderPdf
     I18n.t('documents.multiple_orders_by_groups.title', count: @order.count)
   end
 
+  def ordergroups
+    @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
+  end
+
   def body
     # Start rendering
-    @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
-    @ordergroups.each do |ordergroup|
+    ordergroups.each do |ordergroup|
 
       totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0, fc_markup_price: 0}
       taxes = Hash.new {0}

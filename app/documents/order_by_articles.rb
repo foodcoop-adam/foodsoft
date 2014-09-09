@@ -11,8 +11,12 @@ class OrderByArticles < OrderPdf
       :date => @order.ends.strftime(I18n.t('date.formats.default')))
   end
 
+  def order_articles
+    @order_articles ||= @order.order_articles.ordered
+  end
+
   def body
-    @order.order_articles.ordered.each do |order_article|
+    order_articles.each do |order_article|
       rows = []
       dimrows = []
       has_units_str = ''
