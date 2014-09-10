@@ -3,7 +3,7 @@
     = link_to t('ui.marks.close').html_safe, '#', class: 'close', data: {dismiss: 'modal'}
     %h3= t 'invites.form.title'
   .modal-body
-    = bootstrap_flash
+    = bootstrap_flash_patched
     = render 'form', invite: @invite, form: form
   .modal-footer
     = link_to t('ui.close'), '#', class: 'btn', data: {dismiss: 'modal'}

@@ -6,7 +6,7 @@
         %h1= yield(:title)
 
     %div#messages
-      = bootstrap_flash
+      = bootstrap_flash_patched
 
     %div{:data => {:role => :content}}
       = yield

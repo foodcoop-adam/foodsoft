@@ -3,7 +3,7 @@
     = link_to t('ui.marks.close').html_safe, '#', class: 'close', data: {dismiss: 'modal'}
     %h3= t '.title', name: @order.name
     .modal-body
-      = bootstrap_flash
+      = bootstrap_flash_patched
       %p= t('.confirm_end', order: @order.name)
       - order_checks(@order).each do |type, msg|
         %p
