@@ -8,6 +8,7 @@ require 'foodsoft_multishared/default_sub_name'
 require 'foodsoft_multishared/add_scope_to_documents'
 require 'foodsoft_multishared/order_by_scope'
 require 'foodsoft_multishared/mollie_check'
+require 'foodsoft_multishared/disable_setting_config'
 if defined? FoodsoftSignup
   require 'underscore-rails'
   require 'gmaps4rails'
