@@ -67,8 +67,6 @@ class FoodsoftConfig
       set_config Rails.env
       # Overwrite scope to have a better namescope than 'production'
       self.scope = config[:default_scope] or raise "No default_scope is set"
-      # Set defaults for backward-compatibility
-      set_missing
     end
 
     # Set config and database connection for specific foodcoop.
@@ -94,16 +92,16 @@ class FoodsoftConfig
     # @param key [String, Symbol]
     # @return [Object] Value of the key.
     def [](key)
+      value = nil
       key = key.to_sym
       if RailsSettings::CachedSettings.table_exists? and allowed_key?(key)
         value = RailsSettings::CachedSettings["foodcoop.#{self.scope}.#{key}"]
         value == 'false' and value = false
         value == 'true' and value = true
-        value = config[key] if value.nil?
-        fix_hash value
-      else
-        fix_hash config[key]
       end
+      value = config[key] if value.nil?
+      value = default_config[key] if value.nil?
+      fix_hash value
     end
 
     # Store configuration in the database.
@@ -154,10 +152,14 @@ class FoodsoftConfig
     def allowed_key?(key)
       key = key.to_sym
       # fast check for keys without nesting
-      if self.config[:protected].include? key
+      if self.config[:protected] and self.config[:protected].include? key
         return !self.config[:protected][key]
-      else
+      elsif self.default_config[:protected].include? key
+        return !self.default_config[:protected][key]
+      elsif self.config[:protected]
         return !self.config[:protected][:all]
+      else
+        return true
       end
       # @todo allow to check nested keys as well
     end
@@ -199,7 +201,6 @@ class FoodsoftConfig
       raise "No config for this environment (#{foodcoop}) available!" if APP_CONFIG[foodcoop].nil?
       self.config = APP_CONFIG[foodcoop].symbolize_keys
       self.scope = foodcoop
-      set_missing
     end
 
     def setup_database
@@ -208,20 +209,12 @@ class FoodsoftConfig
       ActiveRecord::Base.establish_connection(database_config)
     end
 
-    # Completes foodcoop configuration with program defaults.
-    # @see #foodsoft_config
-    def set_missing
-      config.replace(default_config.deep_merge(config))
-      config
-    end
-
     # Returns program-default configuration.
     #   When new options are introduced, put backward-compatible defaults here, so that
     #   configuration files that haven't been updated, still work as they did. This also
     #   makes sure that the configuration editor picks up the defaults.
     # @return [Hash] Program-default foodcoop configuration.
     # @see #default_config
-    # @see #set_missing
     def get_default_config
       cfg = {
         use_nick: true,
@@ -241,7 +234,7 @@ class FoodsoftConfig
           protected: true,
           database: true
         }
-      }
+      }.with_indifferent_access
       # allow engines to easily add to this
       engines = Rails::Engine::Railties.engines.select { |e| e.respond_to?(:default_foodsoft_config) }
       engines.each { |e| e.default_foodsoft_config(cfg) }
