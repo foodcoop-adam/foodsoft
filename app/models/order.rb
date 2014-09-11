@@ -152,9 +152,9 @@ class Order < ActiveRecord::Base
       last ||= self.starts
       # adjust end and pickup dates
       self.ends   ||= FoodsoftDateUtil.next_occurrence last, self.starts,
-                        FoodsoftConfig[:order_schedule]['ends'].symbolize_keys
+                        FoodsoftConfig[:order_schedule]['ends']
       self.pickup ||= FoodsoftDateUtil.next_occurrence last, self.starts,
-                        FoodsoftConfig[:order_schedule]['pickup'].symbolize_keys
+                        FoodsoftConfig[:order_schedule]['pickup']
     end
     self
   end

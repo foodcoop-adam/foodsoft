@@ -3,9 +3,9 @@ module FoodsoftDateUtil
   def self.next_occurrence(start=Time.now, from=start, options={})
     if options[:recurr]
       schedule = IceCube::Schedule.new(start)
-      schedule.add_recurrence_rule get_rule(options[:recurr])
-      # TODO handle ical parse errors
-      occ = (Time.parse(schedule.next_occurrence(from)) rescue nil)
+      schedule.add_recurrence_rule rule_from(options[:recurr])
+      # @todo handle ical parse errors
+      occ = (schedule.next_occurrence(from).to_time rescue nil)
     else
       occ = start
     end
