@@ -343,7 +343,7 @@ nl:
       parse_upload:
         notice: ! '%{count} artikelen zijn geanalyseerd'
       sync:
-        notice: Catalogus is bijgewerkt
+        notice: Catalogus is up-to-date (aangepast %{updated} geleden)
         shared_alert: ! '%{supplier} is niet aan een externe database gekoppeld'
       update_all:
         notice: Alle artikelen en prijzen zijn bijgewerkt.

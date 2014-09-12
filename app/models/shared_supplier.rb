@@ -22,5 +22,10 @@ class SharedSupplier < ActiveRecord::Base
     methods += %w(import) # perhaps, in the future: if shared_articles.count > 20
     methods
   end
+
+  # @return [DateTime] Last update of articles
+  def articles_updated_at
+    shared_articles.order('updated_on DESC').first.try(:updated_on)
+  end
 end
 

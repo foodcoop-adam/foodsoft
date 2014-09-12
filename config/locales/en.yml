@@ -357,7 +357,7 @@ en:
       parse_upload:
         notice: ! '%{count} articles were succesfully analysed.'
       sync:
-        notice: Catalog is up to date
+        notice: 'Catalog is up to date (updated %{updated} ago)'
         shared_alert: ! '%{supplier} is not linked to an external database'
       update_all:
         notice: All articles and prices were updated.
