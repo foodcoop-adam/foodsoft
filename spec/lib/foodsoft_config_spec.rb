@@ -3,13 +3,14 @@ require_relative '../spec_helper'
 describe FoodsoftConfig do
   let(:name) { Faker::Lorem.words(rand(2..4)).join(' ') }
   let(:other_name) { Faker::Lorem.words(rand(2..4)).join(' ') }
+  before { FoodsoftConfig.config[:protected] ||= {} }
 
   it 'returns a default value' do
-    expect(FoodsoftConfig[:protected][:database]).to be_true
+    expect(FoodsoftConfig[:use_nick]).to be false
   end
 
   it 'returns an empty default value' do
-    expect(FoodsoftConfig[:protected][:LIUhniuyGNKUQTWfbiOQIWYexngo78hqexul]).to be_false
+    expect(FoodsoftConfig[:LIUhniuyGNKUQTWfbiOQIWYexngo78hqexul]).to be_false
   end
 
   it 'returns a configuration value' do
