@@ -5,6 +5,8 @@ en:
         scope: Foodcoop
       group:
         scope: Foodcoop
+      message:
+        scope: Foodcoop
       order:
         scope: Foodcoop
       ordergroup:
@@ -14,6 +16,13 @@ en:
         scope: Foodcoop
       task:
         scope: Foodcoop
+  config:
+    hints:
+      payorder_payment_fee: 'This amount will be added to all transactions when "pay after order" is enabled; leave empty to pay the payment fee out of the foodcoop margin. When a user chooses a non-standard payment method, the real payment fee may still be different; make sure to choose a default level that is sufficient. '
+      use_payorder: Shopping-cart-like functionality. Enable to add a payment button on the current order overview and only order articles that members have paid.
+    keys:
+      payorder_payment_fee: Add payment fee
+      use_payorder: Members pay right after ordering (shopping-cart)
   current_orders:
     articles:
       form:
@@ -127,8 +136,8 @@ en:
       submit: to signup
       text: 'Select which foodcoop you''d like to join:'
     orders:
-      fc_articles_pdf: Foodcoop article PDF
-      fc_group_pdf: Foodcoop group PDF
+      fc_articles_pdf: Article-foodcoop PDF
+      fc_group_pdf: Foodcoop PDF
     profile:
       subtitle: You are part of foodcoop
     select_foodcoop:

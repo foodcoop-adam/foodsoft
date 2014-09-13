@@ -4,10 +4,43 @@ nl:
       order:
         pickup: Ophalen op
         price_markup_key: Foodcoop marge
+  admin:
+    configs:
+      tab_layout:
+        dashboard_title: Dashboard
+    users:
+      index:
+        new_user_invite: Uitnodigingen versturen
   articles:
     upload:
-      body: <p>Het bestand is utf-8 tekstbestand met extensie <tt>.csv</tt>. De eerste regel bevat kolomhoofden. Velden worden met een puntkomma (';') gescheiden, en tekst mag tussen dubbele aanhalingstekstens staan ("Tekst...").</p> <p>Volgorde van de kolommen:</p>
-      body_convert: <p>Het bestand is een spreadsheet (met extensie <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> of <tt>.csv</tt>). De eerste regel bevat kolomhoofden.</p> <p>Volgorde van de kolommen:</p>
+      body_convert: "<p>Het bestand is een spreadsheet (met extensie <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> of <tt>.csv</tt>). De eerste regel bevat kolomhoofden.</p> <p>Volgorde van de kolommen:</p>"
+  config:
+    hints:
+      home_notice: Bericht bovenaan dashboard (html toegestaan).
+      order_schedule:
+        ends:
+          recurr: 
+          time: 
+        initial: 
+        pickup:
+          recurr: 
+          time: 
+      skip_order_finished_mails: 
+      sub_name: Ondertitel getoond onder de naam van de foodcoop (optioneel).
+      use_paymanual: Invoeren van handmatige betalingen toestaan.
+    keys:
+      home_notice: 
+      order_schedule:
+        ends:
+          recurr: 
+          time: 
+        initial: 
+        pickup:
+          recurr: 
+          time: 
+      skip_order_finished_mails: 
+      sub_name: Ondertitel
+      use_paymanual: Handmatige betalingen
   documents:
     order_by_groups:
       multiple:
@@ -18,12 +51,12 @@ nl:
       filename: Bestelling van %{foodcoop} voor %{supplier} op %{date}
       price: Prijs/eenh.
       subtotal: Subtotaal
-      total_net: Totaal (netto)
       total_gross: Totaal (bruto)
+      total_net: Totaal (netto)
   errors:
     default:
-      title: Oeps
       go_back: Terug
+      title: Oeps
   finance:
     balancing:
       orders:
@@ -86,7 +119,7 @@ nl:
       email_multiple_hint: Je kunt meerdere emailadressen invoeren, gescheiden door een komma of witruimte.
     success:
       one: Persoon is uitgenodigd.
-      other: '%{count} personen zijn uitgenodigd.'
+      other: "%{count} personen zijn uitgenodigd."
   layouts:
     header:
       ordergroup: Rekeningafschrift
@@ -94,38 +127,31 @@ nl:
     accept_invitation:
       invited_into_group: Je bent uitgenodigd om lid te worden van %{foodcoop} als deel van de groep <b>%{group}</b>.
       invited_into_group_members:
-        zero: Je zou het eerste lid van deze groep worden.
         one: Deze groep bestaat momenteel uit %{members}.
         other: Deze groep bestaat momenteel uit %{members}.
+        zero: Je zou het eerste lid van deze groep worden.
       invited_new_group: Je bent uitgenodigd om lid te worden van %{foodcoop}.
     accept_invitation_form:
-      body: <p>Als je wilt meedoen, vul dan dit formulier in.</p> <p>Natuurlijk zullen we je informatie niet delen met anderen. Je kunt zelf aangeven welke informatie voor andere leden beschikbaar is (maar beheerders hebben daar altijd toegang toe).</p>
+      body: "<p>Als je wilt meedoen, vul dan dit formulier in.</p> <p>Natuurlijk zullen we je informatie niet delen met anderen. Je kunt zelf aangeven welke informatie voor andere leden beschikbaar is (maar beheerders hebben daar altijd toegang toe).</p>"
       submit: Foodsoft account aanmaken
   mailer:
     invite:
-      text_into_group: ! 'Hallo!
+      text_into_group: |-
+        Hallo!
 
-
-        %{user} <%{mail}> heeft je uitgenodigd om lid te worden van "%{foodcoop}"
-        als deel van de groep "%{group}".
-
+        %{user} <%{mail}> heeft je uitgenodigd om lid te worden van %{foodcoop} als deel van de groep "%{group}".
         Om de uitnodiging te accepteren, ga naar: %{link}
-
         Dit kan maar een keer en uiterlijk tot %{expires}.
 
-
-        Groeten van de foodcoop.'
-      text_new_group: ! 'Hallo!
-
+        Groeten van %{foodcoop}!
+      text_new_group: |-
+        Hallo!
 
         %{user} <%{mail}> heeft je uitgenodigd om lid te worden "%{foodcoop}".
-
         Om de uitnodiging te accepteren, ga naar: %{link}
-
         Dit kan maar een keer en uiterlijk tot %{expires}.
 
-
-        Groeten van de foodcoop.'
+        Groeten van de foodcoop.
     order_result_supplier:
       footer: "\nVriendelijke groet,\n%{name}\n%{foodcoop} "
       line_delivered_before: 'Leverdatum: %{when}'
@@ -172,8 +198,12 @@ nl:
       edit_message: bericht bewerken
       submit_close: Bestelling sluiten
       submit_send: Bestelling sluiten & versturen
+      title: Sluit %{name}
     index:
       last_order_week: Recente bestellingen
+    model:
+      error_pickup_before_ends: 
+      error_pickup_before_starts: 
     show:
       download:
         fax_csv: Bestelling CSV

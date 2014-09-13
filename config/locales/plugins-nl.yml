@@ -5,6 +5,8 @@ nl:
         scope: Foodcoop
       group:
         scope: Foodcoop
+      message:
+        scope: Foodcoop
       order:
         scope: Foodcoop
       ordergroup:
@@ -14,6 +16,13 @@ nl:
         scope: Foodcoop
       task:
         scope: Foodcoop
+  config:
+    hints:
+      payorder_payment_fee: 
+      use_payorder: 
+    keys:
+      payorder_payment_fee: 
+      use_payorder: 
   current_orders:
     articles:
       form:
@@ -127,8 +136,8 @@ nl:
       submit: naar inschrijven
       text: 'Kies een foodcoop om lid van te worden:'
     orders:
-      fc_articles_pdf: Foodcoop artikelen PDF
-      fc_group_pdf: Foodcoop huishoudens PDF
+      fc_articles_pdf: Artikelen-foodcoop PDF
+      fc_group_pdf: Foodcoop PDF
     profile:
       subtitle: Je bent deel van foodcoop
     select_foodcoop:

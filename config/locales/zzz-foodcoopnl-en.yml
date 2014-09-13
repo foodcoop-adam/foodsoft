@@ -13,34 +13,34 @@ en:
         new_user_invite: Send invitations
   articles:
     upload:
-      body_convert: <p>The file is a spreadsheet (ending with <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> or <tt>.csv</tt>). The first line contains columns headers.</p><p>Order of the columns:</p>
+      body_convert: "<p>The file is a spreadsheet (ending with <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> or <tt>.csv</tt>). The first line contains columns headers.</p><p>Order of the columns:</p>"
   config:
     hints:
-      sub_name: Sub-title shown below the foodcoop name (optional).
       home_notice: Show message on top of the dashboard frontpage (html allowed).
-      skip_order_finished_mails: Do not send members an email with the order results when an order closes (regardless of their own preference).
-      use_paymanual: Allow entering ordergroup payments manually.
       order_schedule:
-        initial: Schedule starts at this date.
         ends:
           recurr: Schedule for order closing date.
           time: Default time when orders are closed.
+        initial: Schedule starts at this date.
         pickup:
           recurr: Schedule for pickup day date.
           time: Default time when pickup starts.
+      skip_order_finished_mails: Do not send members an email with the order results when an order closes (regardless of their own preference).
+      sub_name: Sub-title shown below the foodcoop name (optional).
+      use_paymanual: Allow entering ordergroup payments manually.
     keys:
-      sub_name: Subtitle
       home_notice: Dashboard notice
-      skip_order_finished_mails: Skip member mails when closing an order
-      use_paymanual: Allow manual payments
       order_schedule:
-        initial: Start date
         ends:
           recurr: Order end schedule
           time: time
+        initial: Start date
         pickup:
           recurr: Pickup schedule
           time: time
+      skip_order_finished_mails: Skip member mails when closing an order
+      sub_name: Subtitle
+      use_paymanual: Allow manual payments
   documents:
     order_by_groups:
       multiple:
@@ -51,12 +51,12 @@ en:
       filename: Order from %{foodcoop} to %{supplier} at %{date}
       price: Price/unit
       subtotal: Subtotal
-      total_net: Total (net)
       total_gross: Total (gross)
+      total_net: Total (net)
   errors:
     default:
-      title: Whoops
       go_back: Go back
+      title: Whoops
   finance:
     balancing:
       orders:
@@ -119,50 +119,40 @@ en:
       email_multiple_hint: You can enter multiple email addresses, separated by commas or whitespace.
     success:
       one: User was invited successfully.
-      other: '%{count} users were invited successfully.'
+      other: "%{count} users were invited successfully."
   layouts:
     header:
       ordergroup: Account statement
   login:
     accept_invitation:
-      invited_into_group: 'You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.'
+      invited_into_group: You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.
       invited_into_group_members:
-        zero: You would be the first member of this group.
         one: This group currently consists of %{members}.
         other: This group currently consists of %{members}.
+        zero: You would be the first member of this group.
       invited_new_group: You are invited to become a member of %{foodcoop}.
     accept_invitation_form:
-      body: <p>If you want to participate, please fill in this form.</p> <p>Naturally, your information will not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>
+      body: "<p>If you want to participate, please fill in this form.</p> <p>Naturally, your information will not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>"
+      submit: Create a Foodsoft account
   mailer:
     invite:
-      text_into_group: ! 'Hi!
+      text_into_group: |-
+        Hi!
 
-
-        %{user} <%{mail}> has invited you to join the group "%{group}".
-
+        %{user} <%{mail}> has invited you to join %{foodcoop} as part of the group "%{group}".
         To accept the invitation and to join the foodcoop please follow this link: %{link}
-
         This link works only once and expires on %{expires}.
 
-
-
-        Greetings, your Foodsoft Team!
-
-'
-      text_new_group: ! 'Hi!
-
+        Greetings, %{foodcoop}!
+      text_new_group: |
+        Hi!
 
         %{user} <%{mail}> has invited you to join "%{foodcoop}".
-
         To accept the invitation please follow this link: %{link}
-
         This link works only once and expires on %{expires}.
 
 
-
         Greetings, your Foodsoft Team!
-
-'
     order_result_supplier:
       footer: "\nKind regards,\n%{name}\n%{foodcoop} "
       line_delivered_before: 'Deliver before: %{when}'
@@ -197,7 +187,6 @@ en:
       suppliers: Assortment
   orders:
     finish:
-      title: Close %{name}
       confirm_end: Do you really want to close the order? There is no going back.
       confirm_end_send: The order will be sent to the supplier.
       confirm_end_send_manual: To place the order, download the Fax in the following screen and send it to the supplier.
@@ -210,6 +199,7 @@ en:
       edit_message: edit message
       submit_close: Close order
       submit_send: Close & send order to supplier
+      title: Close %{name}
     index:
       last_order_week: Recent orders
     model:
