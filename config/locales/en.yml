@@ -76,7 +76,6 @@ en:
         ends: Ends at
         name: Supplier
         note: Note
-        pickup: Pickup at
         starts: Starts at
         status: Status
         supplier: Supplier
@@ -105,7 +104,6 @@ en:
         ignore_apple_restriction: Ignore order stop by apple points restriction
         last_order: Last order
         name: Name
-        price_markup_key: Foodcoop margin
         user_tokens: Members
       page:
         body: Body
@@ -229,24 +227,24 @@ en:
         username: username
     configs:
       list:
-        title: Configuration list
         key: Key
+        title: Configuration list
         value: Value
       show:
-        title: Configuration
         submit: Save
+        title: Configuration
       tab_layout:
         pdf_title: PDF documents
-      tabs:
-        title: Configuration
       tab_messages:
         emails_title: Sending email
+      tabs:
+        title: Configuration
       update:
         notice: Configuration saved.
     confirm: Do you really want to delete %{name}?
     ordergroups:
       destroy:
-        error: ! 'Ordergroup could not be deleted: %{error}'
+        error: 'Ordergroup could not be deleted: %{error}'
         notice: Ordergroup was deleted
       edit:
         title: Edit ordergroup
@@ -257,7 +255,7 @@ en:
         first_paragraph: Here you can add %{url}, and edit or delete groups.
         new_ordergroup: Add new ordergroup
         new_ordergroups: new ordergroups
-        second_paragraph: ! 'Consider the difference between <em>group</em> and <em>ordergroup</em>: An ordergroup has an account and can order food. In a <em>%{url}</em> (for example ''sorting group''), members coordinate with each other via tasks and messages. Users can only be in one ordergroup, but can be in multiple workgroups.'
+        second_paragraph: 'Consider the difference between <em>group</em> and <em>ordergroup</em>: An ordergroup has an account and can order food. In a <em>%{url}</em> (for example ''sorting group''), members coordinate with each other via tasks and messages. Users can only be in one ordergroup, but can be in multiple workgroups.'
         title: Ordergroups
         workgroup: workgroup
       new:
@@ -274,7 +272,6 @@ en:
       index:
         first_paragraph: Here you can %{url}, edit and delete users.
         new_user: Create new user
-        new_user_invite: Send invitations
         new_users: create new
         title: User admin
       new:
@@ -288,7 +285,7 @@ en:
         send_message: Send message
     workgroups:
       destroy:
-        error: ! 'Workgroup could not be deleted: %{error}'
+        error: 'Workgroup could not be deleted: %{error}'
         notice: Workgroup was deleted
       edit:
         title: Edit workgroup
@@ -300,7 +297,7 @@ en:
         new_workgroup: Create new workgroup
         new_workgroups: new workgroups
         ordergroup: ordergroup
-        second_paragraph: ! 'Consider the difference between a <em>workgroup</em> and an <em>ordergroup</em>: an <em>%{url}</em> has an account and can order food. In a workgroup (for example ''sorting group''), members coordinate with each other via tasks and messages. Users can only be in one ordergroup, but can be in multiple workgroups.'
+        second_paragraph: 'Consider the difference between a <em>workgroup</em> and an <em>ordergroup</em>: an <em>%{url}</em> has an account and can order food. In a workgroup (for example ''sorting group''), members coordinate with each other via tasks and messages. Users can only be in one ordergroup, but can be in multiple workgroups.'
         title: Workgroups
       new:
         title: Create workgroup
@@ -323,7 +320,7 @@ en:
     create:
       notice: Category was stored
     destroy:
-      error: ! 'Category could not be deleted: %{message}'
+      error: 'Category could not be deleted: %{message}'
     edit:
       title: Edit category
     index:
@@ -337,7 +334,7 @@ en:
   articles:
     article:
       confirm_delete: Are you sure?
-      last_update: ! 'last updated: %{last_update} | gross: %{gross_price}'
+      last_update: 'last updated: %{last_update} | gross: %{gross_price}'
     articles:
       confirm_delete: Do you really want to delete all selected articles?
       option_available: Make articles available
@@ -346,19 +343,19 @@ en:
       option_select: Select action ...
       price_netto: Price
       unit_quantity_desc: Unit quantity
-      unit_quantity_short: Quantity
+      unit_quantity_short: U.Q.
     controller:
       create_from_upload:
-        notice: ! '%{count} new articles were saved.'
+        notice: '%{count} new articles were saved.'
       error_invalid: There are errors in articles
       error_nosel: No articles selected
-      error_parse: ! '%{msg} ... in line %{line}'
-      error_update: ! 'An error occured when updating article ''%{article}'': %{msg}'
+      error_parse: '%{msg} ... in line %{line}'
+      error_update: 'An error occured when updating article ''%{article}'': %{msg}'
       parse_upload:
-        notice: ! '%{count} articles were succesfully analysed.'
+        notice: '%{count} articles were succesfully analysed.'
       sync:
-        notice: 'Catalog is up to date (updated %{updated} ago)'
-        shared_alert: ! '%{supplier} is not linked to an external database'
+        notice: Catalog is up to date
+        shared_alert: '%{supplier} is not linked to an external database'
       update_all:
         notice: All articles and prices were updated.
       update_sel:
@@ -370,18 +367,17 @@ en:
         notice: All articles and prices were updated.
     destroy_active_article:
       drop: delete
-      note: ! '%{article} is used in current orders and can not be deleted Please first ... the article from orders %{drop_link}.'
+      note: '%{article} is used in current orders and can not be deleted Please first ... the article from orders %{drop_link}.'
     edit_all:
-      note: ! 'Mandatory fields are: name, unit, (net) price and order number.'
+      note: 'Mandatory fields are: name, unit, (net) price and order number.'
       submit: Update all articles
       title: Edit all articles from %{supplier}
-      warning: ! 'Warning: all articles will be updated!'
+      warning: 'Warning: all articles will be updated!'
     form:
       title_edit: Edit article
       title_new: Add new article
     import_search_results:
       action_import: import
-      action_edit_import: edit import
       already_imported: imported
       not_found: No articles found
     index:
@@ -401,7 +397,7 @@ en:
       title: Articles from %{supplier} (%{count})
       upload: Upload articles
     model:
-      error_in_use: ! '%{article} can not be deleted because the article is part of a current order!'
+      error_in_use: '%{article} can not be deleted because the article is part of a current order!'
       error_nosel: You have selected no articles
     parse_upload:
       body: <p><i>Please verify the articles.</i></p> <p><i>Warning, at the moment there is no check for duplicate articles.</i></p>
@@ -410,10 +406,10 @@ en:
     sync:
       outlist:
         alert_used: Warning, %{article} is used in an open order. Please remove it from the order first.
-        body: ! 'The following articles were removed from the list and will be <b>deleted</b>:'
+        body: 'The following articles were removed from the list and will be <b>deleted</b>:'
         body_ignored:
           one: One article without order number was skipped.
-          other: ! '%{count} articles without order number were skipped.'
+          other: '%{count} articles without order number were skipped.'
         body_skip: No articles to delete.
         title: Remove from list ...
       price_short: Price
@@ -421,7 +417,7 @@ en:
       title: Synchronize articles with external database
       unit_quantity_short: Unit quantity
       update:
-        body: ! 'Every article is shown twice: old values are gray, while the text fields contain updated values. Differences with the old articles are marked yellow.'
+        body: 'Every article is shown twice: old values are gray, while the text fields contain updated values. Differences with the old articles are marked yellow.'
         title: Update ...
         update_msg:
           one: One article needs to be updated.
@@ -429,98 +425,97 @@ en:
       upnew:
         body_count:
           one: There is one new article to add.
-          other: 'There are %{count} articles to add.'
+          other: There are %{count} articles to add.
         title: Add new ...
     upload:
-      body: <p>The file has to be a text file with the ending <tt>.csv</tt> The first line will be ignored when imported</p> <p>The fields have to be separated with semicolons (';') and the text enclosed by double quotation marks ("text...").</p> <p>As character set UTF-8 is demanded. Order of the columns:</p>
-      body_convert: <p>The file is a spreadsheet (ending with <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> or <tt>.csv</tt>). The first line contains columns headers.</p><p>Order of the columns:</p>
+      body: <p>The file has to be a text file with the ending <tt>.csv</tt>. The first line will be ignored when imported, fields are separated by semicolons (';'), and text may be enclosed by double quotation marks ("text..."). Default character-set is utf-8.</p> <p>Column order:</p>
       fields:
         reserved: (Reserved)
         status: Status (x=skip)
       file_label: Please choose a compatible file
       submit: Upload file
-      title: ! '%{supplier} / upload articles'
+      title: '%{supplier} / upload articles'
   config:
-    tabs:
-      foodcoop: Foodcoop
-      payment: Finances
-      language: Language
-      messages: Messages
-      tasks: Tasks
-      layout: Layout
-      others: Other
-      list: List
     hints:
-      name: The name of your foodcoop.
+      applepear_url: Website where the apple and pear system for tasks is explained.
       contact:
         email: General contact email address, shown on website as well as some forms.
         street: Address, typically this will be your delivery and pick-up location.
-      currency_unit: Currency symbol for displaying prices.
       currency_space: Whether to add whitespace after the currency symbol.
+      currency_unit: Currency symbol for displaying prices.
       custom_css: To modify the layout of this site, you can enter style modifications using the cascading stylesheets (CSS) language. Leave blank for the default style.
-      homepage: Website of your foodcoop.
-      help_url: Documentation website.
-      applepear_url: Website where the apple and pear system for tasks is explained.
-      ignore_browser_locale: "Ignore the language of user's computer when the user has not chosen a language yet."
-      price_markup: Percentage that is added to the gross price for foodcoop members.
-      tax_default: Default VAT percentage for new articles.
-      stop_ordering_under: Members can only order when they have at least this many apple points.
-      minimum_balance: Members can only order when their account balance is above or equal to this amount.
-      use_apple_points: When the apple point system is enabled, members are required to do some tasks to be able to keep ordering.
-      use_nick: Show and use nicknames instead of real names. When enabling this, please check that each user has a nickname.
-      use_messages: Allow members to communicate with each other within Foodsoft.
-      use_wiki: Enable editable wiki pages.
-      email_sender: "Emails will appear to be sent from this email address. To avoid emails sent being classified as spam, the webserver may need to be registered in the SPF record of the email address's domain."
-      email_from: "Emails will appear to be from this email address. Leave empty to use the foodcoop's contact address."
+      email_from: Emails will appear to be from this email address. Leave empty to use the foodcoop's contact address.
       email_replyto: Set this when you want to receive replies from emails sent by Foodsoft on a different address than the above.
+      email_sender: Emails will appear to be sent from this email address. To avoid emails sent being classified as spam, the webserver may need to be registered in the SPF record of the email address's domain.
+      help_url: Documentation website.
+      homepage: Website of your foodcoop.
+      ignore_browser_locale: Ignore the language of user's computer when the user has not chosen a language yet.
       mailing_list: Mailing-list email address to use instead of the messaging system for mail to all members.
       mailing_list_subscribe: Email address where members can send an email to for subscribing.
-      page_footer: 'Shown on each page at the bottom. Enter "blank" to disable the footer completely.'
-      pdf_font_size: Base font size for PDF documents (12 is standard).
-      pdf_page_size: 'Page size for PDF documents, typically "A4" or "letter".'
+      minimum_balance: Members can only order when their account balance is above or equal to this amount.
+      name: The name of your foodcoop.
+      page_footer: Shown on each page at the bottom. Enter "blank" to disable the footer completely.
       pdf_add_page_breaks:
         order_by_articles: Put each article on a separate page.
         order_by_groups: Put each ordergroup on a separate page.
-      tolerance_is_costly: "Order as much of the member tolerance as possible (compared to only as much needed to fill the last box). Enabling this also includes the tolerance in the total price of the open member order."
+      pdf_font_size: Base font size for PDF documents (12 is standard).
+      pdf_page_size: Page size for PDF documents, typically "A4" or "letter".
+      price_markup: Percentage that is added to the gross price for foodcoop members.
+      stop_ordering_under: Members can only order when they have at least this many apple points.
+      tax_default: Default VAT percentage for new articles.
+      tolerance_is_costly: Order as much of the member tolerance as possible (compared to only as much needed to fill the last box). Enabling this also includes the tolerance in the total price of the open member order.
+      use_apple_points: When the apple point system is enabled, members are required to do some tasks to be able to keep ordering.
+      use_messages: Allow members to communicate with each other within Foodsoft.
+      use_nick: Show and use nicknames instead of real names. When enabling this, please check that each user has a nickname.
+      use_wiki: Enable editable wiki pages.
     keys:
-      name: Name
+      applepear_url: Apple system help URL
       contact:
-        street: Street
-        zip_code: Postcode
         city: City
         country: Country
         email: Email
         phone: Phone
-      currency_unit: Currency
+        street: Street
+        zip_code: Postcode
       currency_space: add space
+      currency_unit: Currency
       custom_css: Custom CSS
-      homepage: Homepage
-      help_url: Documentation URL
-      applepear_url: Apple system URL
       default_locale: Default language
-      ignore_browser_locale: Ignore browser language
-      price_markup: Foodcoop margin
-      tax_default: Default VAT
-      tolerance_is_costly: Tolerance is costly
-      stop_ordering_under: Minimum apple points
-      use_apple_points: Apple points
-      minimum_balance: Minimum account balance
-      use_nick: Use nicknames
-      use_messages: Enable messages
-      use_wiki: Enable wiki
-      email_sender: Sender address
       email_from: From address
       email_replyto: Reply-to address
+      email_sender: Sender address
+      help_url: Documentation URL
+      homepage: Homepage
+      ignore_browser_locale: Ignore browser language
       mailing_list: Mailing-list
       mailing_list_subscribe: Mailing-list subscribe
+      minimum_balance: Minimum account balance
+      name: Name
       page_footer: Page footer
+      pdf_add_page_breaks: Page breaks
       pdf_font_size: Font size
       pdf_page_size: Page size
-      pdf_add_page_breaks: Page breaks
+      price_markup: Foodcoop margin
+      stop_ordering_under: Minimum apple points
+      tax_default: Default VAT
       time_zone: Time zone
+      tolerance_is_costly: Tolerance is costly
+      use_apple_points: Apple points
+      use_messages: Enable messages
+      use_nick: Use nicknames
+      use_wiki: Enable wiki
+    tabs:
+      foodcoop: Foodcoop
+      language: Language
+      layout: Layout
+      list: List
+      messages: Messages
+      others: Other
+      payment: Finances
+      tasks: Tasks
   deliveries:
     add_stock_change:
-      how_many_units: ! 'How many units (%{unit}) to deliver? Stock article name: %{name}.'
+      how_many_units: 'How many units (%{unit}) to deliver? Stock article name: %{name}.'
     create:
       notice: Delivery was created. Please don’t forget to add an invoice!
     destroy:
@@ -536,8 +531,8 @@ en:
       title_select_stock_articles: 1. Select stock articles
     index:
       confirm_delete: Are you sure?
-      new_delivery: ! 'Create new delivery for %{supplier} '
-      title: ! '%{supplier}/deliveries'
+      new_delivery: 'Create new delivery for %{supplier} '
+      title: '%{supplier}/deliveries'
     invoice_amount: Invoice amount
     invoice_net_amount: Invoice net amount
     new:
@@ -562,11 +557,11 @@ en:
     order_by_articles:
       filename: Order %{name}-%{date} - by articles
       rows:
-      - Order group
+      - Ordergroup
       - Ordered
       - Received
       - Price
-      title: ! 'Order sorted by articles: %{name}, closed at %{date}'
+      title: 'Order sorted by articles: %{name}, closed at %{date}'
     order_by_groups:
       filename: Order %{name}-%{date} - by group
       rows:
@@ -574,18 +569,22 @@ en:
       - Ordered
       - Received
       - Price
-      - Unit quantity
+      - Unit Q.
       - Unit
       - Sum
       sum: Sum
-      title: ! 'Order sorted by group: %{name}, closed at %{date}'
+      title: 'Order sorted by group: %{name}, closed at %{date}'
     order_fax:
-      date: created at %{date}
-      filename: Order from %{foodcoop} to %{supplier} at %{date}
-      price: Price/unit
-      subtotal: Subtotal
-      total_net: Total (net)
-      total_gross: Total (gross)
+      filename: Order %{name}-%{date} - Fax
+      rows:
+      - Order Number
+      - Amount
+      - Name
+      - Unit quantity
+      - Unit
+      - Price/Unit
+      - Subtotal
+      total: Total
     order_matrix:
       filename: Order %{name}-%{date} - sorting matrix
       heading: Article overview
@@ -595,17 +594,14 @@ en:
       - Unit quantity
       - FC-Price
       - Amount
-      title: ! 'Order sorting matrix: %{name}, closed at %{date}'
+      title: 'Order sorting matrix: %{name}, closed at %{date}'
       total:
         one: One article in total
-        other: ! '%{count} articles in total'
+        other: '%{count} articles in total'
   errors:
     general: A problem has occured.
     general_again: A problem has occured. Please try again.
-    general_msg: ! 'A problem has occured: %{msg}'
-    default:
-      title: Whoops
-      go_back: Go back
+    general_msg: 'A problem has occured: %{msg}'
   feedback:
     create:
       notice: Your feedback was sent successfully. Thanks a lot!
@@ -617,14 +613,14 @@ en:
   finance:
     balancing:
       close:
-        alert: ! 'An error occured while accounting: %{message}'
+        alert: 'An error occured while accounting: %{message}'
         notice: Order was settled succesfully, the balance of the account was updated.
       close_direct:
-        alert: ! 'Order can not be settled: %{message}'
+        alert: 'Order can not be settled: %{message}'
         notice: Order was settled.
       confirm:
         clear: Settle
-        first_paragraph: ! 'When the order is settled, all group accounts will be updated.<br />The accounts will be charged as follows:'
+        first_paragraph: 'When the order is settled, all group accounts will be updated.<br />The accounts will be charged as follows:'
         or_cancel: or back to accounting
         title: Settle order
       edit_results_by_articles:
@@ -641,17 +637,19 @@ en:
         title: Closed orders
       invoice:
         edit: Edit invoice
-        invoice_amount: ! 'Invoice amount:'
-        invoice_date: ! 'Invoice date:'
-        invoice_number: ! 'Invoice number:'
-        minus_refund_calculated: ! '- deposit charged:'
+        invoice_amount: 'Invoice amount:'
+        invoice_date: 'Invoice date:'
+        invoice_number: 'Invoice number:'
+        minus_refund_calculated: '- deposit charged:'
         new: create new invoice
-        new_body: ! 'Create an invoice for this order:'
-        plus_refund_credited: ! '+ deposit returned:'
-        refund_adjusted_amount: ! 'amount adjusted for refund:'
+        new_body: 'Create an invoice for this order:'
+        plus_refund_credited: '+ deposit returned:'
+        refund_adjusted_amount: 'amount adjusted for refund:'
       new:
         alert: Attention, order was already accounted
         articles_overview: Overview of articles
+        close_direct: Skip settling
+        close_direct_confirm: You are about to settle the order without charging member accounts. Do this only when you have already debited member accounts manually, or if you really know what you are doing.
         comment_on_transaction: Here you can add a comment to your accounting.
         comments: Comments
         confirm_order: Settle order
@@ -669,8 +667,6 @@ en:
       orders:
         clear: accounting
         cleared: accounted (%{amount})
-        close: settle directly
-        confirm: Do you really want to settle the order?
         end: End
         ended: closed
         name: Supplier
@@ -679,40 +675,39 @@ en:
       summary:
         changed: Data was changed!
         duration: From %{starts} till %{ends}
-        fc_amount: ! 'FC-amount:'
-        fc_profit: FC Profit
-        gross_amount: ! 'Gross amount:'
-        groups_amount: ! 'Group amounts:'
-        net_amount: ! 'Net amount:'
+        fc_amount: 'Sales value:'
+        fc_profit: 'FC surplus:'
+        gross_amount: 'Gross value:'
+        groups_amount: 'Ordergroups sum:'
+        net_amount: 'Net value:'
         reload: Reload summary
-        with_extra_charge: ! 'with extra charge:'
-        without_extra_charge: ! 'without extra charge:'
+        with_extra_charge: 'with extra charge:'
+        without_extra_charge: 'without extra charge:'
     create:
-      notice: Invoice was created
+      notice: Invoice was created.
     financial_transactions:
       controller:
         create:
           notice: The transaction was saved.
         create_collection:
-          alert: ! 'An error occured: %{error}'
+          alert: 'An error occured: %{error}'
           error_note_required: Note is required!
           notice: All transactions were saved.
-        paymanual_disabled: 'Manual payments are disabled.'
       index:
-        balance: ! 'Balance of account: %{balance}'
+        balance: 'Balance of account: %{balance}'
         last_updated_at: (last updated %{when} ago)
         new_transaction: Create new transaction
         title: Account statement for %{name}
       index_collection:
-        title: Financial transactions
         show_groups: Manage accounts
+        title: Financial transactions
       new:
-        paragraph: Here you can credit and debit money for the order group <b>%{name}</b>.
+        paragraph: Here you can credit and debit money for the ordergroup <b>%{name}</b>.
         title: New transaction
       new_collection:
-        new_ordergroup: Add new order group
+        new_ordergroup: Add new ordergroup
         save: Save transaction
-        sidebar: Here you can update more accounts at the same time. For example all transfers of the order group from one account statement.
+        sidebar: Here you can update more accounts at the same time. For example all transfers of the ordergroup from one account statement.
         title: Updating more accounts
       ordergroup:
         remove: Remove
@@ -767,7 +762,7 @@ en:
       index:
         body: <p>Here you can write a message to the members of your Foodcoop.</p> <p>You have to approve in your %{profile_link} that your contact details are visible.</p>
         ph_name: Name ...
-        ph_ordergroup: Order group ...
+        ph_ordergroup: Ordergroup ...
         profile_link: options
         title: Users
     workgroups:
@@ -784,7 +779,7 @@ en:
   group_order_articles:
     form:
       amount_change_for: Change amount for %{article}
-      result_hint: ! 'Unit: %{unit}'
+      result_hint: 'Unit: %{unit}'
   group_orders:
     archive:
       desc: View all %{link} here.
@@ -798,7 +793,7 @@ en:
       notice: The order was saved.
     errors:
       closed: This order is already closed.
-      no_member: You are not a member of an order group.
+      no_member: You are not a member of an ordergroup.
       notfound: Incorrect URL, this is not your order.
     form:
       action_save: Save order
@@ -811,8 +806,6 @@ en:
       total_sum_amount: Total amount
       total_tolerance: Total tolerance
       units: Units
-      units_all: All members
-      units_all_short: All
       units_full: Filled units
       units_total: Total units
     index:
@@ -853,7 +846,7 @@ en:
       sum: Sum
       title: Your order result for %{order}
     switch_order:
-      remaining: ! '%{remaining} remaining'
+      remaining: '%{remaining} remaining'
       title: Current orders
     update:
       error_general: The order couldn’t be updated due to a bug.
@@ -885,22 +878,22 @@ en:
       message:
         create: send message
     tasks:
-      required_users: ! '%{count} members are still needed!'
-      task_title: ! '%{name} (%{duration}h)'
+      required_users: '%{count} members are still needed!'
+      task_title: '%{name} (%{duration}h)'
   home:
     apple_bar:
-      desc: ! 'This shows the proportion of completed tasks to the volume of orders for your ordergroup in comparison to the average of the Foodcoop. In practice: for every %{amount} of total orders, you should execute a task!'
+      desc: 'This shows the proportion of completed tasks to the volume of orders for your ordergroup in comparison to the average of the Foodcoop. In practice: for every %{amount} of total orders, you should execute a task!'
       more_info: More information
-      points: ! 'Your current apple points: %{points}'
+      points: 'Your current apple points: %{points}'
       warning: Warning, if you have less then %{threshold} of apple points, you are not allowed to place an order!
     changes_saved: Changes saved.
     index:
-      due_date_format: ! '%A %d %B'
+      due_date_format: '%A %d %B'
       messages:
         title: Newest Messages
         view_all: See all messages
       my_ordergroup:
-        funds: ! '| Available Credit:'
+        funds: '| Available Credit:'
         last_update: Last update was %{when} ago
         title: My ordergroup
         transactions:
@@ -930,11 +923,11 @@ en:
         cancel: Leave group
         cancel_confirm: Are you sure you want to leave this group?
         invite: Invite new members
-        title: You are member of the following groups
+        title: You are member of the groups
       title: My Profile
       user:
-        since: ! '(member since: %{when})'
-        title: ! '%{user}'
+        since: '(member since: %{when})'
+        title: '%{user}'
     start_nav:
       admin: Administration
       finances:
@@ -960,20 +953,19 @@ en:
   invites:
     errors:
       already_member: is already in use. Person is already a member of this Foodcoop.
-    form:
+    modal_form:
+      body: <p>Here you can invite a person to a group <b>%{group}</b>, who is not yet a member of the foodcoop.</p> <p>After being added for the first time, the person is automatically a member of this group.</p>
       title: Invite person
-      body_into_group: Here you can invite someone to join %{foodcoop} as a member of your %{type} <b>%{group}</b>.
-      body_new_group: Here you can invite someone to become a new member of %{foodcoop}.
-      email_multiple_hint: You can enter multiple email addresses, separated by commas or whitespace.
-    success:
-      one: User was invited successfully.
-      other: '%{count} users were invited successfully.'
+    new:
+      action: Send invite
+      body: <p>Here you can add a person to the group <b>%{group}</b>, who is not yet a member of the foodcoop.</p>
+    success: User was invited successfully.
   js:
     ordering:
       confirm_change: Modifications to this order will be lost when you change the order. Do you want to lose the changes you made and continue?
   layouts:
     email:
-      footer_1_separator: '--'
+      footer_1_separator: --
       footer_2_foodsoft: 'Foodsoft: %{url}'
       footer_3_homepage: 'Foodcoop: %{url}'
       footer_4_help: 'Help: %{url}'
@@ -994,16 +986,9 @@ en:
       page: Page %{number}
   login:
     accept_invitation:
-      invited_into_group: 'You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.'
-      invited_into_group_members:
-        zero: You would be the first member of this group.
-        one: This group currently consists of %{members}.
-        other: This group currently consists of %{members}.
-      invited_new_group: You are invited to become a member of %{foodcoop}.
-      title: Invitation to %{name}
-    accept_invitation_form:
-      body: <p>If you want to participate, please fill in this form.</p> <p>Naturally, your information will not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>
+      body: <p>You are invited to be part of the foodcoop %{foodcoop} as a member of the group <b>%{group}</b>.</p> <p>If you want to participate, please fill in this form.</p> <p>Naturally, your information wll not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>
       submit: Create a Foodsoft account
+      title: Invitation to %{name}
     controller:
       accept_invitation:
         notice: Congratulations, your account was created. You can login now.
@@ -1011,11 +996,11 @@ en:
       error_invite_invalid: Your invite is not valid (anymore).
       error_token_invalid: Invalid or expired token. Please try again.
       reset_password:
-        notice: If your email is registered here, you will receive a message with a link to reset your password.
+        notice: If your email is registered here, you will receive a message with a link to reset your password. You may need to check your spam folder.
       update_password:
         notice: Your password was updated. You can login now.
     forgot_password:
-      body: <p>No Problem, you can choose a new password.</p> <p>Please fill in the email address with which you are registered here. Then you will receive an email with further instructions.</p>
+      body: <p>No problem, you can choose a new password.</p> <p>Please fill in the email address with which you are registered here. Then you will receive an email with further instructions.</p>
       submit: Request new password
       title: Forgot password?
     new_password:
@@ -1023,130 +1008,86 @@ en:
       submit: Save new password
       title: New password
   mailer:
-    dateformat: ! '%d %b'
+    dateformat: '%d %b'
     feedback:
-      header: ! '%{user} wrote at %{date}:'
+      header: '%{user} wrote at %{date}:'
       subject: Feedback from %{email}
     invite:
       subject: Invitation to the Foodcoop
-      text_into_group: ! 'Hi!
-
+      text: |
+        Hi!
 
         %{user} <%{mail}> has invited you to join the group "%{group}".
-
         To accept the invitation and to join the foodcoop please follow this link: %{link}
-
         This link works only once and expires on %{expires}.
 
 
-
         Greetings, your Foodsoft Team!
-
-'
-      text_new_group: ! 'Hi!
-
-
-        %{user} <%{mail}> has invited you to join "%{foodcoop}".
-
-        To accept the invitation please follow this link: %{link}
-
-        This link works only once and expires on %{expires}.
-
-
-
-        Greetings, your Foodsoft Team!
-
-'
     negative_balance:
       subject: Negative account balance
-      text: ! 'Dear %{group},
-
+      text: |
+        Dear %{group},
 
         Your account balance has dropped below zero due to a booking on %{when}: %{balance}
 
-
         There was a charge of %{amount} for "%{note}" by %{user}.
-
 
         Please deposit your account as soon as possible.
 
 
 
-
         Kind regards from %{foodcoop}.
-
-'
     not_enough_users_assigned:
-      subject: ! '"%{task}" still needs people!'
-      text: ! 'Dear %{user},
+      subject: '"%{task}" still needs people!'
+      text: |
+        Dear %{user},
 
-
-        The Task ''%{task}'' of your working group is due on %{when},
-
+        The Task '%{task}' of your working group is due on %{when},
         and could use some more contributors!
-
 
         If you haven’t assigned yourself to this task yet it’s your chance now:
 
-
         %{workgroup_tasks_url}
 
-
         Your Tasks: %{user_tasks_url}
-
-'
     order_result:
-      subject: ! 'Order closed: %{name}'
-      text0: ! 'Dear %{ordergroup},
-
+      subject: 'Order closed: %{name}'
+      text0: |
+        Dear %{ordergroup},
 
         The order for "%{order}" has been closed by %{user} on %{when}.
-
         The following articles have been ordered for your ordergroup:
-
-'
-      text1: ! 'o Total sum: %{sum}
-
+      text1: |-
+        o Total sum: %{sum}
 
         You can view the order online: %{order_url}
 
 
-
-        Kind regards from %{foodcoop}.'
+        Kind regards from %{foodcoop}.
     reset_password:
       subject: New password for %{username}
-      text: ! 'Hi %{user},
-
+      text: |
+        Hi %{user},
 
         You have (or someone else has) requested a new password.
-
         In order to choose a new password follow this link: %{link}
-
         This link works only once and expires on %{expires}.
-
-        If you don''t want to change your password, just ignore this message. Your password hasn''t been changed yet.
-
+        If you don't want to change your password, just ignore this message. Your password hasn't been changed yet.
 
 
         Greetings, your Foodsoft Team!
-
-'
     upcoming_tasks:
-      nextweek: ! 'Tasks for the next week:'
+      nextweek: 'Tasks for the next week:'
       subject: Tasks are due!
-      text0: ! 'Dear %{user},
-
+      text0: |
+        Dear %{user},
 
         You are asigned to the task "%{task}". This task is due by tomorrow (%{when})!
-
-'
-      text1: ! 'My tasks: %{user_tasks_url}
-
+      text1: |
+        My tasks: %{user_tasks_url}
 
 
         Kind regards from %{foodcoop}.
-
-'
   messages:
     create:
       notice: Message is saved and will be sent.
@@ -1156,12 +1097,12 @@ en:
     messages:
       reply: Reply
     model:
-      reply_header: ! '%{user} wrote on %{when}:'
-      reply_indent: ! '> %{line}'
-      reply_subject: ! 'Re: %{subject}'
+      reply_header: '%{user} wrote on %{when}:'
+      reply_indent: '> %{line}'
+      reply_subject: 'Re: %{subject}'
     new:
       list:
-        desc: ! 'Please send messages to all using the mailing-list: %{list}'
+        desc: 'Please send messages to all using the mailing-list: %{list}'
         mail: for example with an email to %{email}.
         subscribe: You can find more about the mailing-list at %{link}.
         subscribe_msg: You may have to subscribe to the mailing-list first.
@@ -1172,20 +1113,17 @@ en:
       title: New message
     show:
       all_messages: All messages
-      from: ! 'From:'
+      from: 'From:'
       reply: Reply
-      sent_on: ! 'Sent:'
-      subject: ! 'Subject:'
+      sent_on: 'Sent:'
+      subject: 'Subject:'
       title: Show message
   messages_mailer:
     foodsoft_message:
-      footer: ! 'Reply: %{reply_url}
-
+      footer: |
+        Reply: %{reply_url}
         See message online: %{msg_url}
-
         Messaging options: %{profile_url}
-
-'
   model:
     delivery:
       each_stock_article_must_be_unique: Each stock article must not be listed more than once.
@@ -1196,7 +1134,7 @@ en:
     page:
       redirect: Redirect to [[%{title}]]...
     user:
-      no_ordergroup: no order group
+      no_ordergroup: no ordergroup
   navigation:
     admin:
       config: Configuration
@@ -1248,19 +1186,19 @@ en:
     index:
       title: Ordergroups
     model:
-      error_single_group: ! '%{user} is already a member of another ordergroup'
+      error_single_group: '%{user} is already a member of another ordergroup'
       invalid_balance: is not a valid number
   orders:
     articles:
-      article_count: ! 'Ordered articles:'
+      article_count: 'Ordered articles:'
       prices: Net/gross price
-      prices_sum: ! 'Sum (net/gross price):'
+      prices_sum: 'Sum (net/gross price):'
       units_full: Full units
       units_ordered: Units ordered
     create:
       notice: The order was created.
     edit:
-      title: ! 'Edit order: %{name}'
+      title: 'Edit order: %{name}'
     edit_amount:
       field_locked_title: The distribution of this article among the ordergroups was changed manually. This field is locked to protect those changes. To redistribute and overwrite those changes, press the unlock button and change the amount.
       field_unlocked_title: The distribution of this article among the ordergroups was changed manually. When you change the amount, those manual changes will be overwritten.
@@ -1273,7 +1211,6 @@ en:
       number: Number
       to_address: Shipping address
     finish:
-      title: Close %{name}
       notice: The order has been closed.
     form:
       ignore_warnings: Ignore warnings
@@ -1285,6 +1222,7 @@ en:
       action_end: Close
       action_receive: Receive
       confirm_delete: Do you really want to delete the order?
+      confirm_end: Do you really want to close the order %{order}? There is no going back.
       new_order: Create new order
       no_open_or_finished_orders: There are currently no open or closed orders.
       orders_finished: Closed
@@ -1292,47 +1230,49 @@ en:
       orders_settled: Settled
       title: Manage orders
     model:
+      close_direct_message: Order settled without charging member accounts.
       error_closed: Order was already settled
-      error_nosel: At least one article must be selected
-      error_pickup_before_ends: must be after the end date (or remain empty)
-      error_pickup_before_starts: must be after the start date (or remain empty)
+      error_nosel: At least one article must be selected. You may want to delete the order instead?
       error_starts_before_ends: must be after the start date (or remain empty)
-      notice_close: ! 'Order: %{name}, until %{ends}'
+      notice_close: 'Order: %{name}, until %{ends}'
       stock: Stock
-      warning_ordered: ! 'Warning: articles marked red have already been ordered within this open order. If you uncheck them here, all existing orders of these articles will be deleted.'
-      warning_ordered_stock: ! 'Warning: Articles marked red have already been ordered/purchased within this open stock order. If you uncheck them here, all existing orders/purchases of these articles will be deleted and it will not be accounted for them.'
+      warning_ordered: 'Warning: articles marked red have already been ordered within this open order. If you uncheck them here, all existing orders of these articles will be deleted. To proceed, confirm below.'
+      warning_ordered_stock: 'Warning: Articles marked red have already been ordered/purchased within this open stock order. If you uncheck them here, all existing orders/purchases of these articles will be deleted and it will not be accounted for them. Confirm below to proceed.'
     new:
       title: Create new order
     receive:
       add_article: Add article
       consider_member_tolerance: consider tolerance
-      notice: ! 'Order received: %{msg}'
+      notice: 'Order received: %{msg}'
       notice_none: No new articles to receive
       rest_to_stock: rest to stock
       submit: Receive order
-      surplus_options: ! 'Distribution options:'
+      surplus_options: 'Distribution options:'
       title: Receiving %{order}
     show:
       action_end: Close!
-      amounts: ! 'Net/gross sum:'
+      amounts: 'Net/gross sum:'
       articles: Article overview
-      articles_ordered: ! 'Ordered articles:'
+      articles_ordered: 'Ordered articles:'
       comments:
         title: Comments
       comments_link: Comments
       confirm_delete: Do you really want to delete the order?
-      description1: ! '%{state} order from %{supplier} created by %{who}, open from %{starts} until %{ends}.'
-      description2: ! '%{ordergroups} ordered %{article_count} articles, with a total value of %{net_sum} / %{gross_sum} (net / gross).'
+      confirm_end: |-
+        Do you really want to close the order %{order}?
+        There is no going back.
+      description1: '%{state} order from %{supplier} created by %{who}, open from %{starts} until %{ends}.'
+      description2: '%{ordergroups} ordered %{article_count} articles, with a total value of %{net_sum} / %{gross_sum} (net / gross).'
       download:
         article_pdf: Article PDF
         download_file: Download file
-        fax_csv: Order CSV
-        fax_pdf: Order PDF
-        fax_txt: Order text
+        fax_csv: Fax CSV
+        fax_pdf: Fax PDF
+        fax_txt: Fax text
         group_pdf: Group PDF
         matrix_pdf: Matrix PDF
         title: Download
-      group_orders: ! 'Group orders:'
+      group_orders: 'Group orders:'
       search_placeholder:
         articles: Search for articles...
         default: Search for articles...
@@ -1340,7 +1280,7 @@ en:
       search_reset: Reset search
       sort_article: Sorted in articles
       sort_group: Sorted in groups
-      title: ! 'Order: %{name}'
+      title: 'Order: %{name}'
       warn_not_closed: Warning, order is not yet settled.
     state:
       closed: settled
@@ -1349,10 +1289,10 @@ en:
     update:
       notice: The order was updated.
     update_order_amounts:
-      msg1: ! '%{count} articles (%{units} units) updated'
-      msg2: ! '%{count} (%{units}) using tolerance'
-      msg3: ! '%{count} (%{units}) go to stock if foodsoft would support that [don''t translate]'
-      msg4: ! '%{count} (%{units}) left over'
+      msg1: '%{count} articles (%{units} units) updated'
+      msg2: '%{count} (%{units}) using tolerance'
+      msg3: '%{count} (%{units}) go to stock if foodsoft would support that [don''t translate]'
+      msg4: '%{count} (%{units}) left over'
   pages:
     all:
       new_page: Create new page
@@ -1365,7 +1305,7 @@ en:
       title_list: List of pages
     body:
       title_toc: Content
-      wikicloth_exception: ! 'I''m sorry to report that an error occured when interpreting the wiki page: %{msg}. Please try to fix it, and save the page again.'
+      wikicloth_exception: 'I''m sorry to report that an error occured when interpreting the wiki page: %{msg}. Please try to fix it, and save the page again.'
     create:
       notice: Page was created
     cshow:
@@ -1404,11 +1344,11 @@ en:
     new:
       title: Create new wiki page
     page_list_item:
-      date_format: ! '%a, %d %B %Y %H:%M:%S'
+      date_format: '%a, %d %B %Y %H:%M:%S'
     show:
-      date_format: ! '%d-%m-%y %H:%M'
+      date_format: '%d-%m-%y %H:%M'
       delete: Delete page
-      delete_confirm: ! 'Warning: all subpages will be deleted as well. Are you sure?'
+      delete_confirm: 'Warning: all subpages will be deleted as well. Are you sure?'
       edit: Edit page
       last_updated: Last updated by <b>%{user}</b> on %{when}
       subpages: subpages
@@ -1418,10 +1358,10 @@ en:
     update:
       notice: Page was updated
     version:
-      author: ! 'Author: %{user}'
-      date_format: ! '%a, %d-%m-%Y, %H:%M'
+      author: 'Author: %{user}'
+      date_format: '%a, %d-%m-%Y, %H:%M'
       revert: Revert to this version
-      title: ! '%{title} - version %{version}'
+      title: '%{title} - version %{version}'
       title_version: Version
       view_current: See current version
   sessions:
@@ -1457,7 +1397,7 @@ en:
       user_not_found: No user found
     open_orders:
       no_open_orders: There are no current orders
-      not_enough_apples: Attention your order group has too few apple points to place an order!
+      not_enough_apples: Attention your ordergroup has too few apple points to place an order!
       title: Current orders
       total_sum: Total sum
       who_ordered: Who ordered?
@@ -1513,7 +1453,7 @@ en:
             fr: French
             nl: Dutch
     required:
-      mark: ! '*'
+      mark: '*'
       text: required
     'yes': 'Yes'
   stock_takings:
@@ -1550,7 +1490,7 @@ en:
       notice: Inventory was updated.
   stockit:
     check:
-      not_empty: ! '%{name} could not be deleted, the inventory is not zero.'
+      not_empty: '%{name} could not be deleted, the inventory is not zero.'
     copy:
       title: Copy stock article
     create:
@@ -1571,13 +1511,13 @@ en:
       new_stock_taking: Add inventory
       order_online: Put stock order online
       show_stock_takings: Inventory overview
-      stock_count: ! 'Number of articles:'
-      stock_worth: ! 'Current stock value:'
+      stock_count: 'Number of articles:'
+      stock_worth: 'Current stock value:'
       title: Stock (%{article_count})
       toggle_unavailable: Show/hide unavailable articles
       view_options: View options
     new:
-      search_text: ! 'Search for articles in all catalogues:'
+      search_text: 'Search for articles in all catalogues:'
       title: Add new stock article
     show:
       change_quantity: Change
@@ -1606,11 +1546,11 @@ en:
       title: Suppliers
     new:
       title: New supplier
-    shared_supplier_note: Supplier is connected to the external database.
     shared_supplier_methods:
-      import: Articles are imported manually.
-      all_available: New articles are available by default.
-      all_unavailable: New articles are not available by default.
+      all_available: All articles (new are available)
+      all_unavailable: All articles (new are unavailable)
+      import: Choose articles to import
+    shared_supplier_note: Supplier is connected to the external database.
     shared_suppliers:
       body: <p>Suppliers of the external database are displayed here.</p> <p>You can import external suppliers by subscribing (see below).</p> <p>A new supplier will be created and connected to the external database.</p>
       subscribe: Subscribe
@@ -1674,7 +1614,7 @@ en:
       confirm_delete_group: Really delete this and all subsequent tasks?
       confirm_delete_single: Are you sure you want to delete the task?
       delete_group: Delete task and subsequent
-      hours: ! '%{count}h'
+      hours: '%{count}h'
       mark_done: Mark task as done
       reject_task: Reject task
       title: Show task
@@ -1697,7 +1637,7 @@ en:
     delete: Delete
     edit: Edit
     marks:
-      close: ! '&times;'
+      close: '&times;'
       success: <i class="icon icon-ok"></i>
     or_cancel: or cancel
     please_wait: Please wait...
@@ -1705,11 +1645,11 @@ en:
     show: Show
   views:
     pagination:
-      first: ! '&laquo;'
-      last: ! '&raquo;'
-      next: ! '&rsaquo;'
-      previous: ! '&lsaquo;'
-      truncate: ! '...'
+      first: '&laquo;'
+      last: '&raquo;'
+      next: '&rsaquo;'
+      previous: '&lsaquo;'
+      truncate: '...'
   workgroups:
     edit:
       title: Edit workgroup

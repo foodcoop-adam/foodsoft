@@ -1,9 +1,29 @@
 nl:
+  activerecord:
+    attributes:
+      order:
+        pickup: Ophalen op
+        price_markup_key: Foodcoop marge
+  articles:
+    upload:
+      body: <p>Het bestand is utf-8 tekstbestand met extensie <tt>.csv</tt>. De eerste regel bevat kolomhoofden. Velden worden met een puntkomma (';') gescheiden, en tekst mag tussen dubbele aanhalingstekstens staan ("Tekst...").</p> <p>Volgorde van de kolommen:</p>
+      body_convert: <p>Het bestand is een spreadsheet (met extensie <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> of <tt>.csv</tt>). De eerste regel bevat kolomhoofden.</p> <p>Volgorde van de kolommen:</p>
   documents:
     order_by_groups:
       multiple:
         filename: Meerdere bestellingen - naar huishouden
         title: Meerdere bestellingen gesorteerd naar huishouden
+    order_fax:
+      date: gemaakt op %{date}
+      filename: Bestelling van %{foodcoop} voor %{supplier} op %{date}
+      price: Prijs/eenh.
+      subtotal: Subtotaal
+      total_net: Totaal (netto)
+      total_gross: Totaal (bruto)
+  errors:
+    default:
+      title: Oeps
+      go_back: Terug
   finance:
     balancing:
       orders:
@@ -16,10 +36,12 @@ nl:
         finished_orders: Gesloten bestellingen
         last_updated_at: "(laatst bijgewerkt op %{when})"
         open_orders: Open bestellingen
+      create_collection:
+        paymanual_disabled: De mogelijkheid om bestellingen handmatig invoeren is niet aangezet.
       new:
         type: Type
         type_cash: cash delivery day
-        type_other: other (add note)
+        type_other: overig (notitie toevoegen)
         type_pin: PIN delivery day
     ordergroups:
       ordergroups:
@@ -28,6 +50,9 @@ nl:
     archive:
       title: Vorige bestellingen van %{group}
       title_open: gesloten
+    form:
+      units_all: Alle leden
+      units_all_short: Allen
     min_quantity_notice:
       status_enough_affected: Als je jouw bestelling opslaat, is er voldoende besteld om te kunnen leveren. Bedankt!
       status_enough_others: Er is voldoende besteld om te kunnen leveren.
@@ -54,10 +79,53 @@ nl:
     index:
       to_archive: Bekijk je %{archive_link}.
       to_archive_link: vorige bestellingen
+  invites:
+    form:
+      body_into_group: Hier kun je iemand uitnodigen om lid te worden van %{foodcoop} als deel van je %{type} <b>%{group}</b>.
+      body_new_group: Hier kun je iemand uitnodigen om een nieuw lid te worden van %{foodcoop}.
+      email_multiple_hint: Je kunt meerdere emailadressen invoeren, gescheiden door een komma of witruimte.
+    success:
+      one: Persoon is uitgenodigd.
+      other: '%{count} personen zijn uitgenodigd.'
   layouts:
     header:
       ordergroup: Rekeningafschrift
+  login:
+    accept_invitation:
+      invited_into_group: Je bent uitgenodigd om lid te worden van %{foodcoop} als deel van de groep <b>%{group}</b>.
+      invited_into_group_members:
+        zero: Je zou het eerste lid van deze groep worden.
+        one: Deze groep bestaat momenteel uit %{members}.
+        other: Deze groep bestaat momenteel uit %{members}.
+      invited_new_group: Je bent uitgenodigd om lid te worden van %{foodcoop}.
+    accept_invitation_form:
+      body: <p>Als je wilt meedoen, vul dan dit formulier in.</p> <p>Natuurlijk zullen we je informatie niet delen met anderen. Je kunt zelf aangeven welke informatie voor andere leden beschikbaar is (maar beheerders hebben daar altijd toegang toe).</p>
+      submit: Foodsoft account aanmaken
   mailer:
+    invite:
+      text_into_group: ! 'Hallo!
+
+
+        %{user} <%{mail}> heeft je uitgenodigd om lid te worden van "%{foodcoop}"
+        als deel van de groep "%{group}".
+
+        Om de uitnodiging te accepteren, ga naar: %{link}
+
+        Dit kan maar een keer en uiterlijk tot %{expires}.
+
+
+        Groeten van de foodcoop.'
+      text_new_group: ! 'Hallo!
+
+
+        %{user} <%{mail}> heeft je uitgenodigd om lid te worden "%{foodcoop}".
+
+        Om de uitnodiging te accepteren, ga naar: %{link}
+
+        Dit kan maar een keer en uiterlijk tot %{expires}.
+
+
+        Groeten van de foodcoop.'
     order_result_supplier:
       footer: "\nVriendelijke groet,\n%{name}\n%{foodcoop} "
       line_delivered_before: 'Leverdatum: %{when}'
@@ -106,6 +174,11 @@ nl:
       submit_send: Bestelling sluiten & versturen
     index:
       last_order_week: Recente bestellingen
+    show:
+      download:
+        fax_csv: Bestelling CSV
+        fax_pdf: Bestelling PDF
+        fax_txt: Bestelling text
   simple_form:
     hints:
       supplier:

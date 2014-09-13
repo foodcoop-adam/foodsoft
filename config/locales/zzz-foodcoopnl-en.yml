@@ -1,8 +1,19 @@
 en:
+  activerecord:
+    attributes:
+      order:
+        pickup: Pickup at
+        price_markup_key: Foodcoop margin
   admin:
     configs:
       tab_layout:
         dashboard_title: Dashboard
+    users:
+      index:
+        new_user_invite: Send invitations
+  articles:
+    upload:
+      body_convert: <p>The file is a spreadsheet (ending with <tt>.xls</tt>, <tt>.xlsx</tt>, <tt>.ods</tt>, <tt>.sxc</tt> or <tt>.csv</tt>). The first line contains columns headers.</p><p>Order of the columns:</p>
   config:
     hints:
       sub_name: Sub-title shown below the foodcoop name (optional).
@@ -35,6 +46,17 @@ en:
       multiple:
         filename: Multiple orders - by group
         title: Multiple orders sorted by group
+    order_fax:
+      date: created at %{date}
+      filename: Order from %{foodcoop} to %{supplier} at %{date}
+      price: Price/unit
+      subtotal: Subtotal
+      total_net: Total (net)
+      total_gross: Total (gross)
+  errors:
+    default:
+      title: Whoops
+      go_back: Go back
   finance:
     balancing:
       orders:
@@ -47,6 +69,8 @@ en:
         finished_orders: Value of finished orders
         last_updated_at: "(the account balance was last updated at %{when})"
         open_orders: Value of open orders
+      create_collection:
+        paymanual_disabled: Manual payments are disabled.
       new:
         type: Type
         type_cash: cash delivery day
@@ -59,6 +83,9 @@ en:
     archive:
       title: Previous orders of %{group}
       title_open: closed
+    form:
+      units_all: All members
+      units_all_short: All
     min_quantity_notice:
       status_enough_affected: After saving your order, the order will be large enough for delivery. Thank you!
       status_enough_others: The order is large enough to be delivered.
@@ -85,10 +112,57 @@ en:
     index:
       to_archive: View your %{archive_link}.
       to_archive_link: previous orders
+  invites:
+    form:
+      body_into_group: Here you can invite someone to join %{foodcoop} as a member of your %{type} <b>%{group}</b>.
+      body_new_group: Here you can invite someone to become a new member of %{foodcoop}.
+      email_multiple_hint: You can enter multiple email addresses, separated by commas or whitespace.
+    success:
+      one: User was invited successfully.
+      other: '%{count} users were invited successfully.'
   layouts:
     header:
       ordergroup: Account statement
+  login:
+    accept_invitation:
+      invited_into_group: 'You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.'
+      invited_into_group_members:
+        zero: You would be the first member of this group.
+        one: This group currently consists of %{members}.
+        other: This group currently consists of %{members}.
+      invited_new_group: You are invited to become a member of %{foodcoop}.
+    accept_invitation_form:
+      body: <p>If you want to participate, please fill in this form.</p> <p>Naturally, your information will not be shared with third parties for any reason. You can decide how much of your personal information should be visible for everyone. 'All' means all Foodcoop-members. Please note that the administrators do have access to your information.</p>
   mailer:
+    invite:
+      text_into_group: ! 'Hi!
+
+
+        %{user} <%{mail}> has invited you to join the group "%{group}".
+
+        To accept the invitation and to join the foodcoop please follow this link: %{link}
+
+        This link works only once and expires on %{expires}.
+
+
+
+        Greetings, your Foodsoft Team!
+
+'
+      text_new_group: ! 'Hi!
+
+
+        %{user} <%{mail}> has invited you to join "%{foodcoop}".
+
+        To accept the invitation please follow this link: %{link}
+
+        This link works only once and expires on %{expires}.
+
+
+
+        Greetings, your Foodsoft Team!
+
+'
     order_result_supplier:
       footer: "\nKind regards,\n%{name}\n%{foodcoop} "
       line_delivered_before: 'Deliver before: %{when}'
@@ -123,6 +197,7 @@ en:
       suppliers: Assortment
   orders:
     finish:
+      title: Close %{name}
       confirm_end: Do you really want to close the order? There is no going back.
       confirm_end_send: The order will be sent to the supplier.
       confirm_end_send_manual: To place the order, download the Fax in the following screen and send it to the supplier.
@@ -137,6 +212,14 @@ en:
       submit_send: Close & send order to supplier
     index:
       last_order_week: Recent orders
+    model:
+      error_pickup_before_ends: must be after the end date (or remain empty)
+      error_pickup_before_starts: must be after the start date (or remain empty)
+    show:
+      download:
+        fax_csv: Order CSV
+        fax_pdf: Order PDF
+        fax_txt: Order text
   simple_form:
     hints:
       supplier:
