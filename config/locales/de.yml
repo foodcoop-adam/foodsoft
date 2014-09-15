@@ -851,6 +851,7 @@ de:
   helpers:
     application:
       edit_user: Mitglieder bearbeiten
+      nick_fallback: 
       role_admin: Admin
       role_article_meta: Artikel
       role_finance: Finanzen
@@ -1191,6 +1192,8 @@ de:
     edit_amount:
       field_locked_title: Die Verteilung dieses Artikels auf die einzelnen Bestellgruppen wurde manuell angepasst. Das Eingabefeld wurde gesperrt, um die manuellen Änderungen zu bewahren. Um den Artikel neu zu verteilen, drücke den Entsperrknopf und ändere die gelieferte Menge.
       field_unlocked_title: Die Verteilung dieses Artikels auf die einzelnen Bestellgruppen wurde manuell angepasst. Wenn du die gelieferte Menge änderst, werden die vorherigen manuellen Änderungen überschrieben.
+    edit_amounts:
+      no_articles_available: 
     fax:
       amount: Menge
       articles: Artikel

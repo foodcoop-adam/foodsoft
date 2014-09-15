@@ -565,7 +565,7 @@ nl:
       rows:
       - Artikel
       - Besteld
-      - Gekregen
+      - Ontvangen
       - Prijs
       - Colli
       - Eenheid
@@ -853,6 +853,7 @@ nl:
   helpers:
     application:
       edit_user: Gebruiker bewerken
+      nick_fallback: (geen gebruikersnaam)
       role_admin: Admin
       role_article_meta: Artikelen
       role_finance: Financiën
@@ -1197,6 +1198,8 @@ nl:
     edit_amount:
       field_locked_title: De verdeling van dit artikel over de huishoudens is handmatig aangepast, daarom is dit veld beschermd. Om dit artikel toch te herverdelen en de handmatige wijzigingen teniet te doen kun je op de knop met het slot drukken.
       field_unlocked_title: De verdeling van dit artikel over de huishoudens is handmatig aangepast. Als je de hoeveelheid hier verandert, worden deze handmatige aanpassingen overschreven.
+    edit_amounts:
+      no_articles_available: Geen artikelen om toe te voegen.
     fax:
       amount: Aantal
       articles: Artikelen

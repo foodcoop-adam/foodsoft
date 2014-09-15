@@ -861,6 +861,7 @@ fr:
   helpers:
     application:
       edit_user: Modifier la liste des membres
+      nick_fallback: 
       role_admin: Administrateur
       role_article_meta: Article
       role_finance: Finances
@@ -1208,6 +1209,8 @@ fr:
     edit_amount:
       field_locked_title: La répartition de cet article entre les cellules a été modifiée manuellement, et ce champ a été verrouillé pour éviter tout nouveau changement intempestif. Si tu veux tout de même effectuer un changement, cliques d'abord sur "Déverouiller".
       field_unlocked_title: La répartition de cet article entre les cellules a été modifiée manuellement. Toute nouvelle modification entrainera une perte de la valeur enregistrée actuellement.
+    edit_amounts:
+      no_articles_available: 
     fax:
       amount: Quantité
       articles: Produits

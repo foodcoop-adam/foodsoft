@@ -569,7 +569,7 @@ en:
       - Ordered
       - Received
       - Price
-      - Unit Q.
+      - U.Q.
       - Unit
       - Sum
       sum: Sum
@@ -855,6 +855,7 @@ en:
   helpers:
     application:
       edit_user: Edit user
+      nick_fallback: (no username)
       role_admin: Admin
       role_article_meta: Articles
       role_finance: Finance
@@ -1202,6 +1203,8 @@ en:
     edit_amount:
       field_locked_title: The distribution of this article among the ordergroups was changed manually. This field is locked to protect those changes. To redistribute and overwrite those changes, press the unlock button and change the amount.
       field_unlocked_title: The distribution of this article among the ordergroups was changed manually. When you change the amount, those manual changes will be overwritten.
+    edit_amounts:
+      no_articles_available: No articles to add.
     fax:
       amount: Amount
       articles: Articles
