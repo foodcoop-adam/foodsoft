@@ -142,7 +142,7 @@ module FoodsoftPayorder
             else
               group_order_article_quantities.joins(:financial_transaction)
                 .where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
-                .merge(::FinancialTransaction.paid)
+                .merge(::FinancialTransaction.unscoped.paid) # unscoped required for multishared
                 .collect(&attr).sum
             end
           end
