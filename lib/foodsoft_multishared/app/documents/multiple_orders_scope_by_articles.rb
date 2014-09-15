@@ -17,17 +17,19 @@ class MultipleOrdersScopeByArticles < OrderPdf
   def body
     order_articles.each do |order_article|
 
-      rows = []
-      dimrows = []
-      has_units_str = ''
       amounts = {}
       for goa in order_article.group_order_articles.ordered
         scope = goa.group_order.ordergroup.scope
         amounts[scope] ||= {quantity: 0, tolerance: 0, result: 0, total_price: 0}
         [:quantity, :tolerance, :result, :total_price].each {|f| amounts[scope][f] += goa.send(f) }
       end
+
+      rows = []
+      dimrows = []
+      has_units_str = ''
       amounts.each_pair do |scope, goa|
         units = result_in_units(goa[:result], order_article.article)
+        scope ||= '' # to allow sorting
         rows << [scope,
                  goa[:tolerance] > 0 ? "#{goa[:quantity]} + #{goa[:tolerance]}" : goa[:quantity],
                  goa[:result],
@@ -37,6 +39,7 @@ class MultipleOrdersScopeByArticles < OrderPdf
         has_units_str = units.to_s if units.to_s.length > has_units_str.length # hack for prawn line-breaking units cell
       end
       next if rows.length == 0
+      rows.sort_by!(&:first)
       sum = order_article.group_orders_sum
       rows.unshift I18n.t('documents.order_by_articles.rows').dup # table header
       rows[0][2] = {content: rows[0][2], colspan: 2}
