@@ -19,8 +19,12 @@ if defined? FoodsoftPayorder
       goa.order_article.reload.update_results!
       go.update_price!
     end
-    def credit(ordergroup, amount)
-      ordergroup.add_financial_transaction! amount, 'for ordering', admin
+    def credit(ordergroup, amount, paid=true)
+      t = ordergroup.add_financial_transaction! 0, 'for ordering', admin, payment_amount: amount, payment_state: 'pending'
+      t.update_attributes! amount: amount, payment_state: 'paid' if paid
+      # an alternative would have been the following, but the above happens for online payments and
+      #   is slightly more tricky with respect to triggering hooks, so we do that for testing
+      #ordergroup.add_financial_transaction! amount, 'for ordering', admin
     end
 
     def finish_and_check_result(goa, result)
@@ -73,7 +77,27 @@ if defined? FoodsoftPayorder
       it 'has no result when paid 0' do
         update_quantities goa, 1, 0
         credit go.ordergroup, 0
-        finish_and_check_result [goa], [0]
+        finish_and_check_result goa, 0
+      end
+
+      describe 'order total update' do
+
+        it 'when unpaid' do
+          update_quantities goa, 5, 0
+          expect(order.sum(:net)).to eq 0
+        end
+
+        it 'when paid' do
+          update_quantities goa, 5, 0
+          credit go.ordergroup, article.fc_price*5
+          expect(order.sum(:net)).to eq article.price*5
+        end
+
+        it 'when paid 0' do
+          update_quantities goa, 5, 0
+          credit go.ordergroup, 0
+          expect(order.sum(:net)).to eq 0
+        end
       end
 
       describe 'with multiple order articles' do
@@ -204,7 +228,7 @@ if defined? FoodsoftPayorder
         it 'removes group order when unpaid' do
           ordergroup = go.ordergroup
           update_quantities goa, 1, 0
-          finish_and_check_result [goa], [nil]
+          finish_and_check_result goa, nil
           expect(order.sum).to eq 0
           expect(ordergroup.group_orders.count).to eq 0
           expect(article.order_articles.first.group_order_articles.count).to eq 0
@@ -214,7 +238,7 @@ if defined? FoodsoftPayorder
           ordergroup = go.ordergroup
           update_quantities goa, 1, 0
           credit go.ordergroup, 0
-          finish_and_check_result [goa], [nil]
+          finish_and_check_result goa, nil
           expect(order.sum).to eq 0
           expect(ordergroup.group_orders.count).to eq 0
           expect(article.order_articles.first.group_order_articles.count).to eq 0
