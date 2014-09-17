@@ -203,8 +203,8 @@ en:
     index:
       last_order_week: Recent orders
     model:
-      error_pickup_before_ends: must be after the end date (or remain empty)
-      error_pickup_before_starts: must be after the start date (or remain empty)
+      error_ends_before_pickup: must be after the end date (or remain empty)
+      error_starts_before_pickup: must be after the start date (or remain empty)
     show:
       download:
         fax_csv: Order CSV
