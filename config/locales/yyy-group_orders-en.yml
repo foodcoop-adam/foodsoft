@@ -42,6 +42,7 @@ en:
       supplied_and_made_by: made by %{manufacturer}
       supplied_by_made_by: from %{supplier} made by %{manufacturer}
     order_articles:
+      received: Received
       all_members_tolerance: Everyone
       all_members_tolerance_desc: How full is the last box? + number of full boxes for everyone.
       all_members_short: All

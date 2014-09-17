@@ -28,6 +28,7 @@ nl:
       supplied_and_made_by: gemaakt door %{manufacturer}
       supplied_by_made_by: van %{supplier} gemaakt door %{manufacturer}
     order_articles:
+      received: Ontvangen
       all_members_tolerance: Iedereen
       all_members_tolerance_desc: Laatste doos vol? + aantal volle dozen voor iedereen.
       all_members_short: Allen

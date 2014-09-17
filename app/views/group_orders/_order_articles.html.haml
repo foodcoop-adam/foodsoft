@@ -14,7 +14,7 @@
           %th#col_tolerance.center{style: 'width:94px'}= heading_helper GroupOrderArticle, :tolerance, short: true
         - unless @has_open_orders
           - cols += 1
-          %th.center Received
+          %th.center= t '.received'
         %th.colsep-right.price{style: 'width: 4.5em'}= heading_helper GroupOrderArticle, :total_price
         - if @has_open_orders
           - if @has_tolerance
