@@ -1,2 +1,5 @@
 / replace 'ul.dropdown-menu erb:contains("download.article_pdf")'
-= render 'shared/split_manufacturer/article_pdf_menu_item', order_articles: @order.order_articles, path: :order_path, path_opts: {id: @order.id}
+- if FoodsoftSplitManufacturer.enabled?
+  = render 'shared/split_manufacturer/article_pdf_menu_item', order_articles: @order.order_articles, path: :order_path, path_opts: {id: @order.id}
+- else
+  = render_original

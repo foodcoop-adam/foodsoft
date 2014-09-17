@@ -1,4 +1,9 @@
 en:
+  config:
+    keys:
+      use_split_manufacturer: Split by manufacturer
+    hints:
+      use_split_manufacturer: When enabled, some screens will allow you select a manufacturer first. For example, the article PDFs.
   shared:
     split_manufacturer:
       all_manufacturers: All manufacturers
