@@ -35,7 +35,7 @@ describe 'receiving an order', :type => :feature do
   end
 
 
-  describe :type => :feature, :js => true do
+  describe :type => :feature do
     before { login admin }
 
     it 'has product ordered visible' do
@@ -54,7 +54,7 @@ describe 'receiving an order', :type => :feature do
     it 'is not received by default' do
       set_quantities [3,0], [0,0]
       visit receive_order_path(order)
-      expect(find("#order_articles_#{oa.id}_units_received").value).to eq ''
+      expect(find("#order_articles_#{oa.id}_units_received").value).to be_blank
     end
 
     it 'does not change anything when received is ordered' do
