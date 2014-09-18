@@ -134,7 +134,7 @@ class OrdersController < ApplicationController
   def receive
     @order = Order.find(params[:id])
     unless request.post?
-      @order_articles = @order.order_articles.ordered_or_member.includes(:article).order('articles.order_number, articles.name')
+      @order_articles = @order.order_articles.ordered_or_member.includes(:article, :article_price).order('articles.order_number, articles.name')
     else
       s = update_order_amounts
       flash[:notice] = (s ? I18n.t('orders.receive.notice', :msg => s) : I18n.t('orders.receive.notice_none'))
@@ -165,6 +165,7 @@ class OrdersController < ApplicationController
     #   changed, rest_to_tolerance, rest_to_stock, left_over
     counts = [0] * 4
     cunits = [0] * 4
+    group_orders = Set.new
     # This was once wrapped in a transaction, but caused
     # "MySQL lock timeout exceeded" errors. It's ok to do
     # this article-by-article anway.
@@ -178,13 +179,18 @@ class OrdersController < ApplicationController
           counts[0] += 1
           unless oa.units_received.blank?
             cunits[0] += oa.units_received * oa.article.unit_quantity
-            oacounts = oa.redistribute oa.units_received * oa.price.unit_quantity, rest_to
+            oacounts = oa.redistribute oa.units_received * oa.price.unit_quantity, rest_to, false
             oacounts.each_with_index {|c,i| cunits[i+1]+=c; counts[i+1]+=1 if c>0 }
+            group_orders.merge oa.group_order_articles.map(&:group_order_id)
           end
         end
         oa.save!
       end
     end
+    # update dependent fields afterwards (since we passed +false+ to OrderArticle#redistribute) for speed
+    group_orders = GroupOrder.find(group_orders.to_a)
+    group_orders.each(&:update_price!)
+    group_orders.map(&:ordergroup).uniq.each(&:update_stats!)
     return nil if counts[0] == 0
     notice = []
     notice << I18n.t('orders.update_order_amounts.msg1', count: counts[0], units: cunits[0])
