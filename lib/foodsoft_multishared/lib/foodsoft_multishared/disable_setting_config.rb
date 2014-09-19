@@ -6,7 +6,9 @@ module FoodsoftMultishared
       base.class_eval do
 
         def self.[](key)
-          fix_hash config[key.to_sym]
+          value = config[key.to_sym]
+          value = default_config[key.to_sym] if value.nil?
+          fix_hash value
         end
 
         def self.[]=(key, value)
