@@ -262,6 +262,11 @@ default: &defaults
   #port: 3000
 
 
+  # Uncomment to add tracking code for web statistics, e.g. piwik
+  #webstats_tracking_code: |
+  #  <!-- Piwik -->
+  #  ......
+
 development:
   <<: *defaults
 
