@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140521142651) do
+ActiveRecord::Schema.define(:version => 20140921104907) do
 
   create_table "adyen_notifications", :force => true do |t|
     t.boolean  "live",                                :default => false, :null => false
@@ -31,8 +31,6 @@ ActiveRecord::Schema.define(:version => 20140521142651) do
     t.datetime "created_at",                                             :null => false
     t.datetime "updated_at",                                             :null => false
   end
-
-  add_index "adyen_notifications", ["psp_reference", "event_code", "success"], :name => "adyen_notification_uniqueness", :unique => true
 
   create_table "article_categories", :force => true do |t|
     t.string "name",        :default => "", :null => false
