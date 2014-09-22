@@ -207,8 +207,13 @@ default: &defaults
   # Page footer (html allowed). Default is a Foodsoft footer. Set to `blank` for no footer.
   page_footer: <a href="%{homepage}">%{name}</a> ism <a href="http://www.foodcoop.nl/">FoodCoopNL</a>
 
-  # Custom css for the foodcoop
+  # Custom CSS for the foodcoop
   #custom_css: 'body { background-color: #fcffba; }'
+
+  # Uncomment to add tracking code for web statistics, e.g. for Piwik. (Added to bottom of page)
+  #webstats_tracking_code: |
+  #  <!-- Piwik -->
+  #  ......
 
   # Contact info will be used as email from, but you can override it here.
   #  Please note that this is always used as from address, also for messages. Due to
@@ -261,11 +266,6 @@ default: &defaults
   #host: localhost
   #port: 3000
 
-
-  # Uncomment to add tracking code for web statistics, e.g. piwik
-  #webstats_tracking_code: |
-  #  <!-- Piwik -->
-  #  ......
 
 development:
   <<: *defaults
