@@ -17,7 +17,7 @@ if defined? FoodsoftPayorder
     def update_quantities(goa, quantity, tolerance)
       goa.update_quantities(quantity, tolerance)
       goa.order_article.reload.update_results!
-      go.update_price!
+      goa.group_order.update_price!
     end
     def credit(ordergroup, amount, paid=true)
       t = ordergroup.add_financial_transaction! 0, 'for ordering', admin, payment_amount: amount, payment_state: 'pending'
@@ -39,7 +39,9 @@ if defined? FoodsoftPayorder
         end
       end
       expect(goa.map {|goa| goa ? goa.result : nil}).to eq result
-      expect(goa.map {|goa| goa ? goa.order_article.units_to_order : nil}).to eq result
+      # @todo sorry, couldn't resist the one-liner
+      oas_with_result = Hash[ goa.compact.map(&:order_article).zip(result).group_by(&:first).map {|a| [a[0], a[1].map(&:last).sum]} ]
+      expect(oas_with_result.keys.map(&:units_to_order)).to eq oas_with_result.values
     end
 
     describe :ordergroup do
@@ -97,6 +99,42 @@ if defined? FoodsoftPayorder
           update_quantities goa, 5, 0
           credit go.ordergroup, 0
           expect(order.sum(:net)).to eq 0
+        end
+      end
+
+      describe 'with multiple group orders' do
+        let(:go2)       { create :group_order, order: order }
+        let(:goa2)      { create :group_order_article, group_order: go2, order_article: order.order_articles.first }
+
+        before do
+          credit go2.ordergroup, article.fc_price
+          update_quantities goa,  1, 0
+          update_quantities goa2, 1, 0
+          [goa, goa2, go, go2].map(&:reload)
+        end
+
+        it 'only person who paid gets article' do
+          finish_and_check_result [goa, goa2], [0, 1]
+        end
+
+        it 'only person who paid is shown as ordered' do
+          expect([goa, goa2].map(&:result)).to eq [0, 1]
+        end
+
+        it 'has correct group order sums when open' do
+          expect(go.price).to be_within(1e-2).of article.fc_price
+          expect(go2.price).to be_within(1e-2).of article.fc_price
+        end
+
+        it 'has correct group order sums when finished' do
+          finish_and_check_result [goa, goa2], [0, 1]
+          expect(go.reload.price).to be_within(1e-2).of 0
+          expect(go2.reload.price).to be_within(1e-2).of article.fc_price
+        end
+
+        it 'results in correct available funds' do
+          expect(go.ordergroup.get_available_funds).to be_within(1e-2).of -article.fc_price
+          expect(go2.ordergroup.get_available_funds).to be_within(1e-2).of 0
         end
       end
 

@@ -67,15 +67,12 @@ module FoodsoftPayorder
       def self.included(base) # :nodoc:
         base.class_eval do
 
-          # When the order is finished, we only may want to include those quantities that were payed.
-          # The order state is set before calculating the final result, so we check for that to see
-          # if only payed quantities need to be taken into account.
+          # We may only want to include those quantities that were payed.
           alias_method :foodsoft_payorder_orig_get_quantities_for_order_article, :get_quantities_for_order_article
           def get_quantities_for_order_article
             result = foodsoft_payorder_orig_get_quantities_for_order_article
-            FoodsoftPayorder.enabled? or return result
-            order_article.order.finished? or return result
-            result.where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
+            result = result.paid if FoodsoftPayorder.enabled?
+            result
           end
 
           # Don't merge quantities when one has been payed and the other not
@@ -102,6 +99,13 @@ module FoodsoftPayorder
           belongs_to :financial_transaction
 
           before_create :foodsoft_payorder_set_transaction, if: proc { FoodsoftPayorder.enabled? }
+
+          # scope paid
+          def self.paid
+            joins(:financial_transaction)
+              .where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
+              .merge(::FinancialTransaction.unscoped.paid) # unscoped required for multishared
+          end
 
           private
 
@@ -140,10 +144,7 @@ module FoodsoftPayorder
             if not FoodsoftPayorder.enabled? or %w(result total_price).include?(attr.to_s)
               foodsoft_payorder_orig_collect_result(attr)
             else
-              group_order_article_quantities.joins(:financial_transaction)
-                .where('group_order_article_quantities.financial_transaction_id IS NOT NULL')
-                .merge(::FinancialTransaction.unscoped.paid) # unscoped required for multishared
-                .collect(&attr).sum
+              group_order_article_quantities.paid.collect(&attr).sum
             end
           end
         end
