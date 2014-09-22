@@ -30,6 +30,7 @@ default: &defaults
 
   # foodsoft documentation URL
   #help_url: https://github.com/foodcoops/foodsoft/wiki/Doku
+  use_apple_points: false
 
   # documentation URL for the apples&pears work system
   #applepear_url: https://github.com/foodcoops/foodsoft/wiki/%C3%84pfel-u.-Birnen
