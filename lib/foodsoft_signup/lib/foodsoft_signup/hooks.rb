@@ -72,7 +72,7 @@ module FoodsoftSignup
     else
       msg = (doexpand.call(FoodsoftConfig[:ordergroup_approval_msg], {}) or I18n.t('foodsoft_signup.approval.msg'))
     end
-    msg
+    msg.html_safe
   end
 
 end
