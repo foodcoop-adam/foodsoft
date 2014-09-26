@@ -1,0 +1,269 @@
+# Sample Foodsoft configuration for multiple groups
+#   uses a single database for all foodcoops with the multishared plugin
+#   (except for the test and demo instances)
+#
+# Based on a real foodcoop of about 600 members with about 40 groups.
+
+default: &defaults
+  multi_coop_install: true
+  use_subname_address: true
+
+  # if no scope is selected, redirect here by default
+  default_scope: 'all'
+  # This scope has access to all members
+  master_scope: 'central'
+
+  # name of this foodcoop
+  name: Large Foodcoop
+  # foodcoop contact information (used for FAX messages)
+  contact:
+    street: Pear 1
+    zip_code: 1234AB
+    city: Fruitcity
+    country: Greenland
+    email: info@foodcoop.test
+    phone: 1234567890
+
+  # Homepage
+  homepage: http://www.foodcoops.net/
+
+  # price markup in percent
+  price_markup: volunteer
+  price_markup_list:
+    volunteer:
+      name: Volunteers
+      markup: 5.5
+    pickup:
+      name: Pickup only
+      markup: 11
+  # do not show margin percentage to members too visibly yet (until we can explain it)
+  price_markup_member_format: label
+
+  use_nick: false
+  use_apple_points: false
+  tolerance_is_costly: false
+  minimum_balance: -2000
+  use_messages: true
+  use_libreoffice: true
+
+  # Dutch settings
+  price_markup_tax: true
+  deposit_tax: false
+  tax_default: 6.0
+
+  # only online payments, not manual
+  use_paymanual: false
+
+  # membership fee substracted from balance when a new ordergroup is created
+  membership_fee: 20
+  membership_fee_fixed: false
+
+  # we allow public signup, membership active after paying membership fee
+  use_signup: true
+  use_multishared_signup: true
+  list_search_placeholder: Search place, postcode or day...
+  multishared_signup_zoom: 10
+
+  # We use the payorder plugin, which requires paying membership with ordering.
+  unapproved_allow_access: '*'
+
+  # Payment link to show when ordergroup is not yet approved. When this is set,
+  # "%{link}" will be substituted with the link in the approval message.
+  # When starting with http: or https:, this is considered to be a full url; else 
+  # a Ruby name that will be evaluated on the controller.
+  ordergroup_approval_payment: new_payments_mollie_path
+
+  ordergroup_approval_payment_title: Pay your membership fee
+  ordergroup_approval_payment_label: Membership fee
+  ordergroup_approval_payment_text:
+    The membership fee of €20 is needed to do the initial investments. If you
+    really like the foodcoop, please feel free to donate more than this by
+    adjusting the amount below.
+
+  # Use shopping-cart functionality
+  use_payorder: true
+  payorder_payment: new_payments_mollie_path
+  payorder_payment_fee: 0.52
+  payorder_remove_unpaid: true
+
+  # Mollie payment settings
+  mollie:
+    api_key: live_123456789012345678901234567890
+    fee: &mollie_fees
+      ideal: 0.52
+      banktransfer: 0.30
+      paysafecard: 15%
+      creditcard: 3.39% + 0.05
+      paypal: 0.18 + 0.35 + 3.4%
+      mistercash: 2.18% + 0.30
+      bitcoin: 0.30
+
+  # email settings, see Foodsoft's app_config.yml.SAMPLE
+
+
+# central entry that redirects to other foodcoops
+all:
+  <<: *defaults
+  hidden: true
+  # some template texts not used here but in other configs
+  _templates:
+    # scope has been closed
+    closed: &scope_closed
+      hidden: true
+      use_signup: false
+      select_scope: login
+      home_notice: '
+        <p><strong>Pickup point was closed</strong></p>
+        <p>This pickup point has recently been closed, you may choose a new group. If you do not find a suitable group, please contact us at <a href="mailto:contact@foodcoop.test">contact@foodcoop.test</a> to find a solution. Our apologies for the inconvenience.</p>'
+
+    # scope needs coordinator
+    nocoord: &scope_nocoord
+      home_notice: '
+        <p><strong>This group is looking for a coordinator!</strong></p>
+        <p>...</p>'
+    # scope is ready to start
+    ready: &scope_ready
+      home_notice: '
+        <p><strong>Intermediate phase</strong></p>
+        <p>...</p>
+        <p>Group coordinator: %{contact.contact}.</p>'
+    # scope is participating in weekly order cycle
+    ready: &scope_run
+      home_notice: '
+        <p>Welcome to the ordering system, where you can order articles within our food collective. Since you are part of the first groups starting, please bear with us if something goes wrong initially. You can read more at ...</p>
+        <p>Group coordinator: %{contact.contact} &lt;<a href="mailto:%{contact.email}">%{contact.email}</a>&gt;, %{list_desc}.</p>'
+      join_scope: central
+
+
+# pilot instance that was used for the very first try-out group
+#   they don't pay a membership fee, we send them a link to the signup with key
+pilot:
+  <<: *defaults
+  sub_name: pilot
+  hidden: true # don't show on signup list
+  use_signup: 'welkom_bij_de_1e_pilot'
+  invitation_form_message:
+    Welcome to the pilot of Large Foodcoop! This pilot is on invitation only, so if
+    you received one, please fill in this form and you can order right away.
+  #join_scope: central # only the first round, not anymore!
+  membership_fee: 0
+
+# demonstration version with auto-login
+demo:
+  <<: *defaults
+  sub_name: demonstration
+  hidden: true
+  send_order_on_finish: cc_only
+  mollie:
+    <<: *mollie_fees
+    api_key: test_123456789012345678901234567890
+  membership_fee: 0
+  use_approval: false
+  use_demo_autologin: true
+  # also use messages when temporarily disabled in real instances
+  use_messages: true
+  restrict_new_message: admin
+  database: # here we do use a separate database
+    database: fs_fclarge_demo
+    username: fs_fclarge_demo
+    password: secret
+
+# test version to play with for admins
+test:
+  <<: *defaults
+  name: Large Foodcoop Test
+  sub_name: test (no real orders)
+  hidden: true
+  send_order_on_finish: cc_only
+  database: # separate database as well
+    database: fs_fclarge_test
+    username: fs_fclarge_test
+    password: secret
+
+development:
+  <<: *defaults
+
+production:
+  <<: *defaults
+
+
+# Central instance
+central:
+  <<: *defaults
+  sub_name: central distribution
+  hidden: true
+  use_signup: false
+  use_paymanual: true
+  # different style to help people remember this is not a normal group's login
+  custom_css: '
+    body { background: #f9f9f9; }
+    .logo { font-size: 14pt; font-weight: normal; margin-top: -4px; color: #60b; }
+    .sub-logo { font-size: 21pt; font-weight: bold; }
+    body > .nav.pull-left > li:first-child { display: none }
+  '
+
+
+# group that is currently participating in the order cycle
+some-city-1231:
+  <<: *defaults
+  contact:
+    street: Nicestreet
+    zip_code: 1231AB
+    city: Othercity
+    country: Greenland
+    contact: Mary Lou
+    email: mary@lou.test
+    lon: 5.6
+    lat: 53.2
+  list_desc: pickup Friday 11:00-16:00
+  signup_ordergroup_limit: 25
+  <<: *scope_run
+
+# a group that's still looking for a coordinator
+some-city-1234:
+  <<: *defaults
+  contact:
+    street: Somestreet
+    zip_code: 1234AB
+    city: Somecity
+    country: Greenland
+    contact: John
+    email: john@example.test
+    lon: 5.5
+    lat: 50.5
+  list_desc: pickup Friday 15:00-19:00
+  signup_ordergroup_limit: 25
+  <<: *scope_nocoord
+
+# group that's ready to start
+some-city-1235:
+  <<: *defaults
+  contact:
+    street: Otherstreet
+    zip_code: 1235AB
+    city: Somecity
+    country: Greenland
+    contact: Foo Bar
+    email: foo@bar.test
+    lon: 5.45
+    lat: 50.52
+  list_desc: pickup Saturday 9:30-12:00
+  signup_ordergroup_limit: 25
+  <<: *scope_ready
+
+# group that is currently participating in the order cycle
+other-city-1240:
+  <<: *defaults
+  contact:
+    street: Somestreet
+    zip_code: 1240AB
+    city: Othercity
+    country: Greenland
+    contact: Jane Boo
+    email: jane@boo.test
+    lon: 5.4
+    lat: 49.8
+  list_desc: pickup Friday 09:00-12:00
+  signup_ordergroup_limit: 25
+  <<: *scope_run
+
