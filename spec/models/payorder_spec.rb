@@ -17,8 +17,7 @@ if defined? FoodsoftPayorder
 
     def update_quantities(goa, quantity, tolerance, confirm=true)
       goa.update_quantities(quantity, tolerance)
-      goa.group_order_article_quantities.last.update_attributes confirmed: true if confirm
-      goa.order_article.reload.update_results!
+      goa.reload.group_order_article_quantities.last.confirm! if confirm
       goa.group_order.update_price!
     end
     def credit(ordergroup, amount, paid=true)
@@ -238,17 +237,18 @@ if defined? FoodsoftPayorder
         end
 
         it 'merges unpayed quantities' do
-          update_quantities goa, 1, 0
+          # confirm happens after creation of records, when merging occurs, test without confirm
+          update_quantities goa, 1, 0, false
           expect(goa.reload.group_order_article_quantities.count).to eq 1
-          update_quantities goa, 2, 0
+          update_quantities goa, 2, 0, false
           expect(goa.reload.group_order_article_quantities.count).to eq 1
         end
 
         it 'merges payed quantities' do
           credit go.ordergroup, article.fc_price*2
-          update_quantities goa, 1, 0
+          update_quantities goa, 1, 0, false
           expect(goa.reload.group_order_article_quantities.count).to eq 1
-          update_quantities goa, 2, 0
+          update_quantities goa, 2, 0, false
           expect(goa.reload.group_order_article_quantities.count).to eq 1
         end
 
@@ -292,6 +292,12 @@ if defined? FoodsoftPayorder
           credit go.ordergroup, article.fc_price
           finish_and_check_result [goa, goa2], [1, nil]
           expect(article.order_articles.first.group_order_articles.count).to eq 1
+        end
+
+        it 'removes article when unconfirmed' do
+          update_quantities goa, 1, 0, false
+          credit go.ordergroup, article.fc_price
+          finish_and_check_result goa, nil
         end
 
         it 'removes group order when unpaid' do

@@ -13,7 +13,7 @@ module FoodsoftPayorder
           end
 
           def cleanup_unpaid!
-            return if not finished?
+            return if finished?
             # remove unpaid quantities
             # @note the use of +#delete_all+ assumes that no callbacks are present for +GroupOrderArticleQuantity+
             # http://stackoverflow.com/questions/4235838/rails-is-it-possible-to-delete-all-with-inner-join-conditions
