@@ -17,4 +17,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails"
   s.add_dependency "deface", "~> 1.0.0"
+  s.add_dependency "easy_captcha"
+  s.add_dependency "rmagick"
 end

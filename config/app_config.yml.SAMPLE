@@ -130,6 +130,8 @@ default: &defaults
 
   # enable to to allow public signup
   use_signup: true
+  # require captcha for public signup (we've seen spam accounts already)
+  use_signup_captcha: true
 
   # Array of which pages are accesible to ordergroups that are not approved.
   # Values are controller names (`pages`) or actions combined with controller

@@ -7,6 +7,7 @@ en:
   config:
     hints:
       use_signup: Allow prospective members to signup for a new account. If there is a membership fee, members can only order after they have paid the amount.
+      use_signup_captcha: To protect against the creation of fake accounts by spambots, prospective members need to enter some letters they see in an image on the signup form.
       use_approval: "Members need approval before they can fully participate. Normally, this means that they can only order after they're approved (either by paying the membership fee, or by an administrator)."
       invitation_form_message: Message shown on top of invitation and signup form. Explain here what members may expect when joining the foodcoop.
       membership_fee: When set, new members start with a negative balance.
@@ -16,6 +17,7 @@ en:
       signup_ordergroup_limit: When your foodcoop has reached this number of approved members, no new members can signup. Leave empty for no limit.
     keys:
       use_signup: Member signup
+      use_signup_captcha: Anti-spam captcha
       use_approval: Approval needed
       invitation_form_message: Invitation form text
       membership_fee: Membership fee
@@ -55,3 +57,5 @@ en:
       ordergroup_limit: I'm sorry, %{foodcoop} has already reached the maximum of %{max} members.
     signup:
       title: Join %{name}
+      captcha_label: Anti-spam
+      captcha_placeholder: "What's in the image left?"

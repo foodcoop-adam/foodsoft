@@ -15,7 +15,9 @@ class SignupController < ApplicationController
           # enforce group (security!)
           @user.ordergroup = {id: 'new'}
           # save!
-          if @user.save
+          if FoodsoftConfig[:use_signup_captcha] and @user.valid? and not valid_captcha? params[:captcha]
+            @captcha_invalid = true
+          elsif @user.save
             session[:locale] = @user.locale
             # but we proceed slightly differently (TODO same behaviour for invites)
             login @user

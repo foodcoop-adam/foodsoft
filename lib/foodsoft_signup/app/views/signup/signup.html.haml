@@ -1,3 +1,10 @@
 - title t('.title', name: FoodsoftConfig[:name])
 
-= render 'login/accept_invitation_form', form_url: signup_path(params.select {|k,v| k=='key'})
+- capt = capture do
+  - if FoodsoftConfig[:use_signup_captcha]
+    .control-group.string.required.captcha{class: @captcha_invalid ? 'error' : ''}
+      %label.required.control-label{for: 'captcha'}= t '.captcha_label'
+      .controls
+        %div{style: "float: left; margin-right: .5em;"}= captcha_tag
+        %div= text_field_tag :captcha, nil, placeholder: t('.captcha_placeholder'), required: true
+= render 'login/accept_invitation_form', form_url: signup_path(params.select {|k,v| k=='key'}), captured: capt
