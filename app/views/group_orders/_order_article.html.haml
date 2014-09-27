@@ -16,7 +16,7 @@
         - data_delta['value-others'] = order_article.quantity - group_order_article.quantity
         = f.input_field :quantity, as: :delta, class: 'input-nano', data: data_delta, id: "q_#{order_article.id}"
     - else
-      = order_article.quantity
+      = group_order_article.quantity
   - if @has_tolerance
     %td.center.tolerance
       - if cur_open
@@ -26,7 +26,7 @@
             - data_delta['value-others'] = order_article.tolerance - group_order_article.tolerance
             = f.input_field :tolerance, as: :delta, class: 'input-nano', data: data_delta, id: "t_#{order_article.id}"
       - else
-        = order_article.tolerance
+        = group_order_article.tolerance
   - unless @has_open_orders
     %td.center= group_order_article.result unless cur_open
   %td.colsep-right.price
