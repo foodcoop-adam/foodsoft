@@ -1,6 +1,6 @@
 class CurrentOrders::OrdersController < ApplicationController
 
-  before_filter :authenticate_orders
+  before_filter :authenticate_orders, except: :my
 
   def show
     @doc_options ||= {}
@@ -18,6 +18,17 @@ class CurrentOrders::OrdersController < ApplicationController
                   when 'articles' then MultipleOrdersByArticles.new(@order_ids, @doc_options)
               end
         send_data pdf.to_pdf, filename: pdf.filename, type: 'application/pdf'
+      end
+    end
+  end
+
+  def my
+    @doc_options ||= {}
+    @doc_options[:ordergroup] = @current_user.ordergroup.id
+    respond_to do |format|
+      format.pdf do
+        params[:document] = 'groups'
+        show
       end
     end
   end

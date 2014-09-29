@@ -11,7 +11,11 @@ class MultipleOrdersByGroups < OrderPdf
   end
 
   def ordergroups
-    @ordergroups ||= Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
+    unless @ordergroups
+      @ordergroups = Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
+      @ordergroups = @ordergroups.where(id: @options[:ordergroup]) if @options[:ordergroup]
+    end
+    @ordergroups
   end
 
   def body
