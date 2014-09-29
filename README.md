@@ -24,9 +24,11 @@ Notes specific to this fork
 
 * This fork has enabled some plugins that aren't upstream. To make migration easier, we have included database migrations for these plugins.  As a developer, that means: when you add a migration to an enabled plugin, please use `rake railties:install:migrations` and commit to install those in `db/migrate` as well.
 
-* The master branch is a combination of many merges and ad-hoc changes. A new version is being worked on in branch foodcoop-adam-rails4, based on Foodsoft 4.0.0. This is working, but does not yet contain all features present in the master branch. At some point, this branch will be abandoned in favour of foodcoop-adam-rails4.
+* The _master_ branch is a combination of many merges and ad-hoc changes. A new version is being worked on in branch _feature/rails4-adam_, based on Foodsoft 4. This is working, but does not yet contain all features present in the master branch. At some point, this branch will be abandoned in favour of _feature/rails4-adam_.
 
-* The beta can be found in branch feature-group\_order\_ajax-adam and has a totally redesigned member ordering interface. When this has been proven in production, it will be cleaned up and merged into master.
+* The beta can be found in branch _beta_ and has a totally redesigned member ordering interface. When this has been proven in production, it will be cleaned up and merged into _master_.
+
+See also the wiki page [foodcoop adaptations](https://github.com/foodcoop-adam/foodsoft/wiki/Foodcoop-adaptations).
 
 
 Developing
