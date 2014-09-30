@@ -25,6 +25,7 @@ gem 'rails-i18n'
 
 gem 'mysql2'
 gem 'prawn'
+gem 'prawn-table'
 gem 'haml-rails'
 gem 'kaminari'
 gem 'simple_form'
@@ -42,7 +43,7 @@ gem "rails-settings-cached", "0.2.4"
 gem 'resque'
 gem 'whenever', require: false # For defining cronjobs, see config/schedule.rb
 gem 'ruby-units'
-gem 'ice_cube', github: 'greenriver/ice_cube', branch: 'issues/50-from_ical' # fork until seejohnrun/ice_cube#50 is merged
+gem 'ice_cube', github: 'wvengen/ice_cube', branch: 'issues/50-from_ical-rebased' # fork until merged
 gem 'recurring_select'
 gem 'charlock_holmes'
 gem 'attribute_normalizer'
