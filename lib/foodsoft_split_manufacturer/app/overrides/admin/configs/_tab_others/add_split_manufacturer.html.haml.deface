@@ -1,0 +1,2 @@
+/ insert_before 'erb:contains("use_tolerance")'
+= config_input form, :use_split_manufacturer, as: :boolean
