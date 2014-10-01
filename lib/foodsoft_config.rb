@@ -66,7 +66,7 @@ class FoodsoftConfig
       # Load initial config from development or production
       set_config Rails.env
       # Overwrite scope to have a better namescope than 'production'
-      self.scope = config[:default_scope] or raise "No default_scope is set"
+      self.scope = get_stock(:default_scope) or raise "No default_scope is set"
     end
 
     # Set config and database connection for specific foodcoop.
@@ -99,6 +99,20 @@ class FoodsoftConfig
         value == 'false' and value = false
         value == 'true' and value = true
       end
+      if value.nil?
+        get_stock key
+      else
+        fix_hash value
+      end
+    end
+
+    # Return application or default configuration value (bypassing database)
+    #
+    # @param key [String, Symbol]
+    # @return [Object] Value of the key.
+    def get_stock(key)
+      value = nil
+      key = key.to_sym
       value = config[key] if value.nil?
       value = default_config[key] if value.nil?
       fix_hash value
@@ -115,7 +129,8 @@ class FoodsoftConfig
       return false unless allowed_key?(key)
       value = normalize_value value
       # then update database
-      if config[key] == value or (config[key].nil? and value == false)
+      stock_value = get_stock(key)
+      if stock_value == value or (stock_value.nil? and value == false)
         # delete (ok if it was already deleted)
         begin
           RailsSettings::CachedSettings.destroy "foodcoop.#{self.scope}.#{key}"
@@ -123,6 +138,7 @@ class FoodsoftConfig
         end
       else
         # or store
+        value = 'false' if value == false # CachedSettings rails3(?) bug
         RailsSettings::CachedSettings["foodcoop.#{self.scope}.#{key}"] = value
       end
       return true
@@ -138,13 +154,13 @@ class FoodsoftConfig
 
     # Loop through each foodcoop and executes the given block after setup config and database
     def each_coop
-      if config[:multi_coop_install]
+      if get_stock :multi_coop_install
         APP_CONFIG.keys.reject { |coop| coop =~ /^(default|development|test|production)$/ }.each do |coop|
           select_foodcoop coop
           yield coop
         end
       else
-        yield config[:default_scope]
+        yield get_stock(:default_scope)
       end
     end
 

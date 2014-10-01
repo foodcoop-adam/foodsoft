@@ -97,4 +97,24 @@ describe FoodsoftConfig do
     end
   end
 
+  describe 'handles booleans', type: :feature do
+    it 'can override default true' do
+      FoodsoftConfig.config[:foo] = true
+      FoodsoftConfig[:foo] = false
+      expect(FoodsoftConfig[:foo]).to eq false
+    end
+
+    it 'can override default false' do
+      FoodsoftConfig.config[:foo] = false
+      FoodsoftConfig[:foo] = true
+      expect(FoodsoftConfig[:foo]).to eq true
+    end
+
+    it 'reverts to default true when set to nil' do
+      FoodsoftConfig.config[:foo] = true
+      FoodsoftConfig[:foo] = nil
+      expect(FoodsoftConfig[:foo]).to eq true
+    end
+  end
+
 end
