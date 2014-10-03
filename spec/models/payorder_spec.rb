@@ -90,6 +90,12 @@ if defined? FoodsoftPayorder
           expect(order.sum(:net)).to eq 0
         end
 
+        it 'when unconfirmed' do
+          credit go.ordergroup, article.fc_price*5
+          update_quantities goa, 5, 0, false
+          expect(order.sum(:net)).to eq 0
+        end
+
         it 'when paid' do
           update_quantities goa, 5, 0
           credit go.ordergroup, article.fc_price*5
