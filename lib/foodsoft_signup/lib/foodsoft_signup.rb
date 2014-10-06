@@ -71,6 +71,7 @@ module FoodsoftSignup
     return unless limit
     groups = Ordergroup
     groups = groups.where(approved: true) if enabled?(:approval)
+    groups = groups.where('scope != "*"') if defined? FoodsoftMultishared # @todo move to multishared plugin
     groups.count >= limit.to_i
   end
 end
