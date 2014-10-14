@@ -17,7 +17,11 @@ module FoodsoftVokomokum
 
         alias_method :foodsoft_vokomokum_show_user, :show_user
         def show_user(user=@current_user, options = {})
-          "#%03d #{foodsoft_vokomokum_show_user(user, options)}" % user.id
+          if user
+            "#%03d #{foodsoft_vokomokum_show_user(user, options)}" % user.id
+          else
+            foodsoft_vokomokum_show_user(user, options)
+          end
         end
 
       end
