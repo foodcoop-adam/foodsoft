@@ -1,0 +1,3 @@
+/ insert_after ':root:last-child'
+- if @render_totals and order_needs?
+  .pull-right= order_payment_status_button

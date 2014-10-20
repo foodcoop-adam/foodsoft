@@ -20,6 +20,3 @@
         %th{colspan: cols-colsright-1}= t '.payable'
         %th.price= number_to_currency payable
         %th{colspan: colsright}
-  - if order_needs?
-    %tr.price_details
-      %td{colspan: cols, style: 'text-align: right'}= order_payment_status_button
