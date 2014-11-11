@@ -6,6 +6,7 @@ nl:
         availability: Artikel leverbaar?
         availability_short: leverb.
         deposit: Statiegeld
+        fc_note: FC notitie
         fc_price: Foodcoop prijs
         fc_price_desc: Prijs inclusief belasting, statiegeld en foodcoop marge.
         fc_price_short: FC prijs

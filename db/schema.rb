@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140921104907) do
+ActiveRecord::Schema.define(:version => 20141111155832) do
 
   create_table "adyen_notifications", :force => true do |t|
     t.boolean  "live",                                :default => false, :null => false
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20140921104907) do
     t.string   "type"
     t.integer  "quantity"
     t.string   "info_url"
+    t.string   "fc_note"
   end
 
   add_index "articles", ["article_category_id"], :name => "index_articles_on_article_category_id"

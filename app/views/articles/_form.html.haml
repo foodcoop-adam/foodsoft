@@ -11,6 +11,8 @@
     = render partial: 'shared/article_fields_units', locals: {f: f}
 
     = f.input :note
+    - if @article.shared_article.present?
+      = f.input :fc_note
     = f.association :article_category, as: :indented_collection_select
     / TODO labels
 

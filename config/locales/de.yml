@@ -6,6 +6,7 @@ de:
         availability: Artikel ist verfügbar?
         availability_short: verf.
         deposit: Pfand
+        fc_note: FC-Notiz
         fc_price: Endpreis
         fc_price_desc: Preis incl. MwSt, Pfand und Foodcoop-Aufschlag.
         fc_price_short: FC-Preis

@@ -6,6 +6,7 @@ en:
         availability: Is article available?
         availability_short: avail.
         deposit: Deposit
+        fc_note: FC note
         fc_price: FoodCoop price
         fc_price_desc: Price including taxes, deposit and Foodcoop-charge.
         fc_price_short: FC price
