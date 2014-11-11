@@ -35,6 +35,11 @@ class Article < ActiveRecord::Base
     "#{name} (#{unit})"
   end
 
+  # combined note and foodcoop-note
+  def full_note
+    [fc_note, note].compact.join("; ")
+  end
+
   def tax_price(group=nil)
     ArticlePrice.tax_price(self, group)
   end

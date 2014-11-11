@@ -11,8 +11,8 @@
     - unless order_article.article.origin.blank?
       = raw t '.origin_in', origin: content_tag(:em, order_article.article.origin)
 
-  - unless order_article.article.note.blank?
-    %p= order_article.article.note
+  - unless order_article.article.full_note.blank?
+    %p= order_article.article.full_note
 
   - if order_article.article.is_a? StockArticle
     %p.unavailable
