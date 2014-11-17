@@ -6,8 +6,8 @@ class VokomokumController < ApplicationController
 
   def login
     # use cookies, but allow to get them from parameters (if on other domain)
-    sweets = params.select {|k,v| k=='Mem' or k=='Key'}
-    sweets.empty? and sweets = cookies
+    sweets = params.slice(:Mem, :Key)
+    sweets = cookies.slice(:Mem, :Key) if sweets.empty?
 
     userinfo = FoodsoftVokomokum.check_user(sweets)
     userinfo.nil? and raise FoodsoftVokomokum::AuthnException.new('User not logged in')
@@ -53,9 +53,9 @@ class VokomokumController < ApplicationController
       user.update_attributes email: email, first_name: first_name, last_name: last_name
       user.save!
       # make sure user has an ordergroup (different group id though, since we also have workgroups)
-      if user.ordergroup.nil?
-        group = Ordergroup.new(name: user.display)
-        Membership.new(user: user, group: group).save!
+      unless user.ordergroup
+        ordergroup = Ordergroup.create!(name: user.display)
+        user.memberships.create!(group: ordergroup)
       end
       # TODO update associations to existing workgroups with matching name
       user
