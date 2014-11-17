@@ -1,8 +1,6 @@
-- if defined? FoodsoftAdyen or current_user.role_finance?
+- if current_user.role_finance?
   .pull-right
     = t('.payment')
-    - if defined? FoodsoftAdyen # TODO move to plugin # TODO btn-primary on mobile
-      = link_to t('.new_pin'), new_payments_adyen_pin_path(ordergroup_id: ordergroup.id), class: 'btn'
     - if current_user.role_finance?
       = link_to t('.new_transaction'), new_finance_ordergroup_transaction_path(ordergroup), class: 'btn'
 

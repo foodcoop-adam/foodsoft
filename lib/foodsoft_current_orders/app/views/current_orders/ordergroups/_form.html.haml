@@ -15,29 +15,8 @@
     - if @ordergroup and FoodsoftConfig[:price_markup_list]
       %span.price_markup_note{style: 'margin-left: 1em'}= show_price_markup @ordergroup, format: :full_label, optional: true
 
-- if @ordergroup
-  %table.table.table-hover#articles_by_groups
-    %thead
-      %tr
-        %th{style: 'width: 35%'}= heading_helper Article, :name
-        %th= Order.model_name.human
-        %th= heading_helper Article, :unit
-        %th.center
-          %acronym{:title => t('shared.articles.ordered_desc')}= t 'shared.articles.ordered'
-        %th.center
-          %acronym{:title => t('shared.articles.received_desc')}= t 'shared.articles.received'
-        %th.symbol
-        %th= heading_helper Article, :fc_price, short: true
-        %th.symbol
-        %th= t 'shared.articles_by.price'
-      = render 'articles', goas: @goas
-
-  .well#payment_bar
-    = render 'payment_bar', ordergroup: @ordergroup
-
-- else
-  %i= t '.no_selection'
-
+#articles_by_groups
+  = render 'articles'
 
 = render 'shared/articles_by/common', order: @order
 

@@ -8,10 +8,11 @@
         %acronym{:title => t('shared.articles.ordered_desc')}= t 'shared.articles.ordered'
       %th.center
         %acronym{:title => t('shared.articles.received_desc')}= t 'shared.articles.received'
-      %td.center.btn-group
-        - if units and units.units != order_article.article.unit
-          = link_to t('.piece'), current_orders_articles_path(order: order_article.order.id, id: order_article.id), remote: true, class: "btn btn-small #{'active' unless params[:base_unit]}"
-          = link_to units.units, current_orders_articles_path(order: order_article.order.id, id: order_article.id, base_unit: true), remote: true, class: "btn btn-small #{'active' if params[:base_unit]}"
+      %td.center
+        .btn-group
+          - if units and units.units != order_article.article.unit
+            = link_to t('.piece'), current_orders_articles_path(order: order_article.order.id, id: order_article.id), remote: true, class: "btn btn-small #{'active' unless params[:base_unit]}"
+            = link_to units.units, current_orders_articles_path(order: order_article.order.id, id: order_article.id, base_unit: true), remote: true, class: "btn btn-small #{'active' if params[:base_unit]}"
 
   = render 'shared/articles_by/article_single', order_article: order_article, heading: false, delta_column: true, base_unit: params[:base_unit]
 

@@ -13,6 +13,7 @@ en:
         title: Distribute article
       ordergroups:
         piece: pc
+        unit: unit
         add_new: Add an ordergroup...
       show:
         title: ! 'Distribute %{name}'
