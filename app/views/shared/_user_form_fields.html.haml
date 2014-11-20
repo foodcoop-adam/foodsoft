@@ -36,8 +36,9 @@
         %h5{class: 'controls'}
           = t 'simple_form.labels.settings.settings_group.messages'
         
-      -#= s.simple_fields_for :messages, defaults: { inline_label: true, label: false } do |messages|
-        = messages.input 'send_as_email',   as: :boolean, input_html: { checked: f.object.settings.messages['send_as_email'] }
+      - if defined?(FoodsoftMessages) && FoodsoftMessages.enabled?
+        = s.simple_fields_for :messages, defaults: { inline_label: true, label: false } do |messages|
+          = messages.input 'send_as_email',   as: :boolean, input_html: { checked: f.object.settings.messages['send_as_email'] }
       = s.simple_fields_for :notify, defaults: { inline_label: true, label: false } do |notify|
         - unless FoodsoftConfig[:skip_order_finished_mails]
           = notify.input 'order_finished',    as: :boolean, input_html: { checked: f.object.settings.notify['order_finished'] }
