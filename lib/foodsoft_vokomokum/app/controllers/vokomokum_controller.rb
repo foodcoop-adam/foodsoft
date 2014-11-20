@@ -7,7 +7,7 @@ class VokomokumController < ApplicationController
   def login
     # use cookies, but allow to get them from parameters (if on other domain)
     sweets = params.slice(:Mem, :Key)
-    sweets = cookies.slice(:Mem, :Key) if sweets.empty?
+    sweets = cookies if sweets.empty?
 
     userinfo = FoodsoftVokomokum.check_user(sweets)
     userinfo.nil? and raise FoodsoftVokomokum::AuthnException.new('User not logged in')
