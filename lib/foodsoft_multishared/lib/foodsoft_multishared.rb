@@ -61,8 +61,8 @@ module FoodsoftMultishared
   # returns whether the ordergroup signup limit has been reached or not for a scope
   def self.signup_limit_reached?(scope, limit)
     return unless defined? FoodsoftSignup
-    return unless limit
     limit = limit[:signup_ordergroup_limit] if limit.respond_to? '[]'
+    return unless limit
     scope = scope.to_sym
     groups = Ordergroup.unscoped.where(scope: scope)
     groups = groups.where(approved: true) if FoodsoftSignup.enabled?(:approval)
