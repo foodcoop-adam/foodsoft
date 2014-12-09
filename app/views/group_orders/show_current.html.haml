@@ -8,9 +8,11 @@
     %i.icon-shopping-cart.soft-icon
     = t 'group_orders.my_current_order'
     %span.normal= orders_status_line(@orders)
-- if @order_articles and !@order_articles.empty?
-  = render 'order_articles'
-- else
-  = t '.no_articles'
+
+#articles_table
+  - if @order_articles and !@order_articles.empty?
+    = render 'order_articles'
+  - else
+    = t '.no_articles'
 
 = render 'edit_javascript'
