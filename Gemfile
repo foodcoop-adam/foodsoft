@@ -53,6 +53,7 @@ gem 'version_info'
 gem 'ancestry'
 gem 'acts_as_list'
 gem 'the_sortable_tree', github: 'wvengen/the_sortable_tree'
+gem 'strong_parameters' # not yet used everywhere
 
 # we use the git version of acts_as_versioned, and need to include it in this Gemfile
 #gem 'acts_as_versioned', git: 'git://github.com/technoweenie/acts_as_versioned.git'
