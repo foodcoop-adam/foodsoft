@@ -11,6 +11,15 @@ module FoodsoftVokomokum
           redirect_to login_vokomokum_url, options
         end
 
+        # also do single-logout
+        alias_method :foodsoft_vokomokum_orig_logout, :logout
+        def logout
+          foodsoft_vokomokum_orig_logout
+          # remove cookies to avoid logging in silently again, as if no logout happened
+          cookies.delete(:Mem, domain: FoodsoftConfig[:vokomokum_cookie_domain])
+          cookies.delete(:Key, domain: FoodsoftConfig[:vokomokum_cookie_domain])
+        end
+
       end
     end
   end

@@ -22,6 +22,9 @@ This plugin is configured in the foodcoop configuration in foodsoft's
    # Vokomokum order website url
    vokomokum_order_url: http://order.vokomokum.nl/
 
+   # Vokomokum cookie domain (for single-logout)
+   vokomokum_cookie_domain: .vokomokum.nl
+
    # To access the Vokomokum system with a session from a different ip address,
    # authentication is needed. Make sure they match Vokomokum configuration.
    # This is used for both the members and order system.
