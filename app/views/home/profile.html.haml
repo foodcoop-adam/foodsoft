@@ -9,18 +9,28 @@
       = render :partial => 'shared/user_form_fields', locals: {f: f, password_autocomplete: 'store-only', with_address: true}
       .form-actions
         = submit_tag t('ui.save'), class: 'btn'
+
   .span5
-    %h3= t '.groups.title'
-    %table.table.table-striped
-      - @current_user.memberships.each do |membership|
-        %tr
-          %td= show_group membership.group
-          %td= link_to t('.groups.invite'), new_invite_path(id: membership.group_id),
-            remote: true, class: 'btn btn-success btn-small'
-          - if membership.group.type != 'Ordergroup'
-            %td= link_to t('.groups.cancel'), cancel_membership_path(membership_id: membership),
-              confirm: t('.groups.cancel_confirm'), method: :post,
-              class: 'btn btn-danger btn-small'
+    - if @current_user.ordergroup
+      %h3= Ordergroup.model_name.human
+      .pull-right
+        = link_to t('.groups.invite'), new_invite_path(id: @current_user.ordergroup.id),
+                  remote: true, class: 'btn btn-success btn-small'
+      - if @current_user.ordergroup.users.count > 1
+        %strong= show_group(@current_user.ordergroup) + ':'
+        = @current_user.ordergroup.users.map{|u| show_user u}.join(', ')
+      - else
+        = show_group(@current_user.ordergroup)
+    - if @current_user.workgroups.count > 0
+      %h3= Workgroup.model_name.human(count: 2)
+      %table.table.table-striped
+        - @current_user.workgroups.each do |workgroup|
+          %tr
+            %td= show_group workgroup
+            %td{style: 'text-align: right'}
+              = link_to t('.groups.cancel'), cancel_membership_path(group_id: workgroup),
+                        confirm: t('.groups.cancel_confirm'), method: :post,
+                        class: 'btn btn-danger btn-small'
     - if FoodsoftConfig[:price_markup_list]
       %h4= heading_helper(Ordergroup, :price_markup_key)
       %p= show_price_markup @current_user.ordergroup, format: :member

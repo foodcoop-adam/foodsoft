@@ -54,10 +54,14 @@ class HomeController < ApplicationController
 
   # cancel personal memberships direct from the myProfile-page
   def cancel_membership
-    membership = Membership.find(params[:membership_id])
+    if params[:membership_id]
+      membership = Membership.find(params[:membership_id])
+    else
+      membership = @current_user.memberships.find_by_group_id(params[:group_id])
+    end
     if membership.user == current_user
       membership.destroy
-      flash[:notice] = I18n.t('home.ordergroup_cancelled', :group => show_group(membership.group))
+      flash[:notice] = I18n.t('home.ordergroup_cancelled', :group => membership.group.name)
     else
       flash[:error] = I18n.t('errors.general')
     end
