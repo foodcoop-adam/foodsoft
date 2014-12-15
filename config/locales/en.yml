@@ -469,6 +469,7 @@ en:
       email_replyto: Set this when you want to receive replies from emails sent by Foodsoft on a different address than the above.
       email_sender: Emails will appear to be sent from this email address. To avoid emails sent being classified as spam, the webserver may need to be registered in the SPF record of the email address's domain.
       help_url: Documentation website.
+      hide_ordergroup: Try to simplify the user-interface by hiding the presence of ordergroups somewhat.
       homepage: Website of your foodcoop.
       ignore_browser_locale: Ignore the language of user's computer when the user has not chosen a language yet.
       mailing_list: Mailing-list email address to use instead of the messaging system for mail to all members.
@@ -507,6 +508,7 @@ en:
       email_replyto: Reply-to address
       email_sender: Sender address
       help_url: Documentation URL
+      hide_ordergroup: Hide ordergroup
       homepage: Homepage
       ignore_browser_locale: Ignore browser language
       mailing_list: Mailing-list

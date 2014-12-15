@@ -11,7 +11,7 @@
         = submit_tag t('ui.save'), class: 'btn'
 
   .span5
-    - if @current_user.ordergroup
+    - if @current_user.ordergroup && !FoodsoftConfig[:hide_ordergroup]
       %h3= Ordergroup.model_name.human
       .pull-right
         = link_to t('.groups.invite'), new_invite_path(id: @current_user.ordergroup.id),
