@@ -1,5 +1,5 @@
 - if @ordergroup
-  %table.table.table-hover
+  %table.table.table-hover#articles_by_groups_table{data: {'base-unit' => params[:base_unit]}}
     %thead
       %tr
         %th{style: 'width: 35%'}= heading_helper Article, :name

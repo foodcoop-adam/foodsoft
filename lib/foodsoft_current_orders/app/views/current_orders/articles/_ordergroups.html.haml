@@ -1,6 +1,6 @@
 - units = order_article.article.unit_unit
 - multiplier = (params[:base_unit] and units) ? units.scalar : 1
-%table.table.table-hover#articles_by_articles
+%table.table.table-hover#articles_by_articles{data: {'base-unit' => params[:base_unit]}}
   %thead.list-heading
     %tr
       %th{:style => 'width:70%'}= Ordergroup.model_name.human

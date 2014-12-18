@@ -34,13 +34,14 @@
         formatNoMatches: function(term) { return '#{j t('.no_articles_available')}';}
       });
       $(document).on('GroupOrderArticle#create', function(e) {
+        var base_unit = $('#articles_by_groups_table').data('base-unit');
         // reset selection
         $('#group_order_article_order_article_id').select2('data', null);
         // update table
         $.ajax({
           url: '#{show_on_group_order_article_create_current_orders_ordergroups_path}',
           type: 'get',
-          data: {group_order_article_id: e.group_order_article_id}
+          data: {group_order_article_id: e.group_order_article_id, base_unit: base_unit}
         });
       });
 
