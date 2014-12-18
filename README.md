@@ -14,7 +14,7 @@ A food cooperative is a group of people that buy food from suppliers of their ow
 
 This branch contains the version we use at [Foodcoop NL](http://www.foodcoop.nl). We track [foodcoops/foodsoft](https://github.com/foodcoops/foodsoft), and merge in some features found in branches of this repository, as well as some local changes.
 
-If you're a food coop considering to use foodsoft, you're welcome to [contact us]. Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
+If you're a food coop considering to use foodsoft, you're welcome to [contact us]. Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). You can [read documentation](http://foodcoop-adam.github.io/) to get an impression of the software. When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
 
 More information about using this software and contributing can be found on [our wiki](https://github.com/foodcoop-adam/foodsoft/wiki), as wel [foodsoft's wiki](https://github.com/foodcoops/foodsoft/wiki).
 
@@ -24,9 +24,7 @@ Notes specific to this fork
 
 * This fork has enabled some plugins that aren't upstream. To make migration easier, we have included database migrations for these plugins.  As a developer, that means: when you add a migration to an enabled plugin, please use `rake railties:install:migrations` and commit to install those in `db/migrate` as well.
 
-* The _master_ branch is a combination of many merges and ad-hoc changes. A new version is being worked on in branch _feature/rails4-adam_, based on Foodsoft 4. This is working, but does not yet contain all features present in the master branch. At some point, this branch will be abandoned in favour of _feature/rails4-adam_.
-
-* The beta can be found in branch _beta_ and has a totally redesigned member ordering interface. When this has been proven in production, it will be cleaned up and merged into _master_.
+* The main branch is _beta_. This is based on _master_ (which is deprecated), which in turn was forked from a Rails 3 version of foodcoops/foodsoft. Many upstream changes were merged in, and many other changes as well. Beta was initially meant as a testing ground for a redesigned member ordering interface, but ended up being used in production. There is some technical debt here. While there has been some work in _feature/rails4-adam_ to migrate this to Rails 4, the idea is now to merge back changes to upstream instead.
 
 See also the wiki page [foodcoop adaptations](https://github.com/foodcoop-adam/foodsoft/wiki/Foodcoop-adaptations).
 
