@@ -15,3 +15,8 @@
 
     - pkg_info = pkg_helper(order_article.price)
     = ", #{pkg_info}".html_safe unless pkg_info.blank?
+
+    = ", "
+    = Article.human_attribute_name(:fc_price_short) + ": "
+    = number_to_currency(order_article.price.fc_price)
+    = t 'current_orders.articles.article_info.unit', unit: order_article.article.unit
