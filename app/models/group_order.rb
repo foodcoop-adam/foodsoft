@@ -20,6 +20,7 @@ class GroupOrder < ActiveRecord::Base
   #scope :in_finished_orders, joins(:order).merge(Order.finished_not_closed)
   scope :in_open_orders, joins(:order).where(:orders => {:state => 'open'})
   scope :in_finished_orders, joins(:order).where(:orders => {:state => 'finished'})
+  scope :in_unsettled_orders, joins(:order).where(:orders => {:state => ['open', 'finished']})
 
   scope :ordered, :include => :ordergroup, :order => 'groups.name'
 

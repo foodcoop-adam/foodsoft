@@ -47,6 +47,15 @@ class HomeController < ApplicationController
       @financial_transactions_all = @q.relation.hide_expired.includes(:user).order(sort)
       @financial_transactions = @financial_transactions_all.page(params[:page]).per(@per_page)
 
+      # on first page, include open and closed orders as dummy lines
+      if !params[:page]
+        @ordergroup.group_orders.in_unsettled_orders.where('group_orders.price != 0')
+            .includes(:order => :supplier).order('orders.ends DESC').each do |go|
+          note = I18n.t('orders.model.notice_close', :name => go.order.name, :ends => go.order.ends.try{|t| t.strftime(I18n.t('date.formats.default'))})
+          @financial_transactions.unshift FinancialTransaction.new amount: -go.price, note: note
+        end
+      end
+
     else
       redirect_to root_path, :alert => I18n.t('home.no_ordergroups')
     end
