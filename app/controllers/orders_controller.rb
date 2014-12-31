@@ -5,7 +5,6 @@
 class OrdersController < ApplicationController
   
   before_filter :authenticate_orders
-  before_filter :remove_empty_article, only: [:create, :update]
   
   # List orders
   def index
@@ -68,7 +67,7 @@ class OrdersController < ApplicationController
   # Save a new order.
   # order_articles will be saved in Order.article_ids=()
   def create
-    @order = Order.new(params[:order])
+    @order = Order.new(order_params)
     @order.created_by = current_user
     if @order.save
       flash[:notice] = I18n.t('orders.create.notice')
@@ -88,8 +87,7 @@ class OrdersController < ApplicationController
   # Update an existing order.
   def update
     @order = Order.find params[:id]
-    params[:order][:article_ids].reject!(&:blank?) if params[:order][:article_ids]
-    if @order.update_attributes params[:order]
+    if @order.update_attributes order_params
       flash[:notice] = I18n.t('orders.update.notice')
       redirect_to :action => 'show', :id => @order
     else
@@ -202,8 +200,10 @@ class OrdersController < ApplicationController
     notice.join(', ')
   end
 
-  def remove_empty_article
-    params[:order][:article_ids].reject!(&:blank?) if params[:order] and params[:order][:article_ids]
+  def order_params
+    p = params.require(:order).permit(:supplier_id, :starts_date, :starts_time, :ends_date, :ends_time, :pickup_date, :pickup_time, :note, article_ids: [])
+    p[:article_ids] ||= []
+    p
   end
 
 end
