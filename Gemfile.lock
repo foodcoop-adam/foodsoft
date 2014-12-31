@@ -26,14 +26,6 @@ GIT
       rails (>= 3.1)
 
 PATH
-  remote: lib/foodsoft_adyen
-  specs:
-    foodsoft_adyen (0.0.1)
-      adyen
-      jquery_mobile_rails
-      rails
-
-PATH
   remote: lib/foodsoft_current_orders
   specs:
     foodsoft_current_orders (0.0.1)
@@ -126,7 +118,6 @@ GEM
       activerecord (>= 3.0)
     acts_as_tree (2.1.0)
       activerecord (>= 3.0.0)
-    adyen (1.5.0)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
     arel (3.0.3)
@@ -248,8 +239,6 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (5.0.0)
       railties (>= 3.2.16)
-    jquery_mobile_rails (1.4.4)
-      railties (>= 3.1.0)
     json (1.8.1)
     kaminari (0.16.1)
       actionpack (>= 3.0.0)
@@ -504,7 +493,6 @@ DEPENDENCIES
   exception_notification
   factory_girl_rails (~> 4.0)
   faker
-  foodsoft_adyen!
   foodsoft_current_orders!
   foodsoft_mailall!
   foodsoft_messages!

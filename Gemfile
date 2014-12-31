@@ -61,7 +61,7 @@ gem 'strong_parameters' # not yet used everywhere
 gem 'foodsoft_messages', path: 'lib/foodsoft_messages'
 
 gem 'foodsoft_mollie', path: 'lib/foodsoft_mollie'
-gem 'foodsoft_adyen', path: 'lib/foodsoft_adyen'
+#gem 'foodsoft_adyen', path: 'lib/foodsoft_adyen'
 gem 'foodsoft_signup', path: 'lib/foodsoft_signup'
 gem 'foodsoft_current_orders', path: 'lib/foodsoft_current_orders'
 #gem 'foodsoft_vokomokum', path: 'lib/foodsoft_vokomokum'
