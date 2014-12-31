@@ -526,7 +526,6 @@ DEPENDENCIES
   recurring_select
   resque
   rspec-core
-  rspec-expectations
   rspec-rails
   rspec-rerun
   ruby-prof

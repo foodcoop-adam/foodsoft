@@ -7,7 +7,7 @@ FactoryGirl.define do
     phone { Faker::PhoneNumber.phone_number }
     address { Faker::Address.street_address }
 
-    ignore do
+    transient do
       article_count 0
     end
 
