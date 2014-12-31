@@ -50,6 +50,11 @@ class FinancialTransaction < ActiveRecord::Base
   #   @return [Boolean] Set this to +false+ to disable sending of account balance notifications.
   #   @note This is a virtual attribute, which is not saved to the database.
   attr_accessor :notify
+
+  # @!attribute hint
+  #   @return [String] Optional hint to show when displaying the transaction
+  #   @note This is a virtual attribute, which is not saved to the database.
+  attr_accessor :hint
   
   validates_presence_of :note, :user_id, :ordergroup_id
   validates_numericality_of :amount, allow_nil: -> { payment_amount.present? }

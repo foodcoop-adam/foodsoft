@@ -115,6 +115,8 @@ nl:
     index:
       to_archive: Bekijk je %{archive_link}.
       to_archive_link: vorige bestellingen
+    ordergroup:
+      prelim_transaction: Deze transactie kan nog wijzigen totdat de bestelling geadministreerd is.
   invites:
     form:
       body_into_group: Hier kun je iemand uitnodigen om lid te worden van %{foodcoop} als deel van je %{type} <b>%{group}</b>.

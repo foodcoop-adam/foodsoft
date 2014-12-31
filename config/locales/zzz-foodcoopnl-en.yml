@@ -115,6 +115,8 @@ en:
     index:
       to_archive: View your %{archive_link}.
       to_archive_link: previous orders
+    ordergroup:
+      prelim_transaction: This transaction is still being processed, it will become final when the order is administrated.
   invites:
     form:
       body_into_group: Here you can invite someone to join %{foodcoop} as a member of your %{type} <b>%{group}</b>.

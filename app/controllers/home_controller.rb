@@ -52,7 +52,7 @@ class HomeController < ApplicationController
         @ordergroup.group_orders.in_unsettled_orders.where('group_orders.price != 0')
             .includes(:order => :supplier).order('orders.ends DESC').each do |go|
           note = I18n.t('orders.model.notice_close', :name => go.order.name, :ends => go.order.ends.try{|t| t.strftime(I18n.t('date.formats.default'))})
-          @financial_transactions.unshift FinancialTransaction.new amount: -go.price, note: note
+          @financial_transactions.unshift FinancialTransaction.new amount: -go.price, note: note, hint: I18n.t('home.ordergroup.prelim_transaction')
         end
       end
 

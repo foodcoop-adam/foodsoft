@@ -25,7 +25,10 @@
         - if with_ordergroup
           %td= h link_to t.ordergroup.name, finance_ordergroup_transactions_path(t.ordergroup)
         %td= h show_user(t.user)
-        %td= h t.note
+        %td
+          = h t.note
+          - if t.hint
+            %i.icon-asterisk{title: t.hint}
         - if s = transaction_amount_text(t)
           %td.center{colspan: 2}= s
         - else
