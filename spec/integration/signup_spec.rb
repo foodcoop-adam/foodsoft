@@ -78,7 +78,7 @@ if defined? FoodsoftSignup
         expect(newuser).to_not be_nil
         expect(newuser.id).to_not be_nil
         expect(newuser.ordergroup).to_not be_nil
-        expect(newuser.ordergroup.approved?).to be_false
+        expect(newuser.ordergroup.approved?).to be false
       end
     end
 
@@ -115,9 +115,9 @@ if defined? FoodsoftSignup
       end
 
       it 'when payed approves ordergroup' do
-        expect(ordergroup.approved?).to be_false
+        expect(ordergroup.approved?).to be false
         ordergroup.add_financial_transaction! FoodsoftConfig.config[:membership_fee], 'payment', admin
-        expect(ordergroup.approved?).to be_true
+        expect(ordergroup.approved?).to be true
         expect(ordergroup.account_balance).to eq 0
       end
 
@@ -137,9 +137,9 @@ if defined? FoodsoftSignup
         end
 
         it 'when payed approves ordergroup' do
-          expect(ordergroup.approved?).to be_false
+          expect(ordergroup.approved?).to be false
           credit ordergroup, 'payment'
-          expect(ordergroup.approved?).to be_true
+          expect(ordergroup.approved?).to be true
           expect(ordergroup.account_balance).to eq 0
         end
 
