@@ -13,6 +13,10 @@
         %b= heading_helper(Ordergroup, :user_tokens) + ':'
         = @ordergroup.memberships.map{|m| show_user m.user}.join(', ')
       -#= link_to t('.invite'), new_invite_path(:id => @ordergroup), :remote => true, class: 'btn btn-primary'
+    = link_to group_orders_path do
+      .well.well-link
+        = glyph 'chevron-right'
+        = t('home.index.to_archive_link').capitalize
   .span8
     %h2= t('.account_summary')
     = render "finance/financial_transactions/transactions_search", url: my_ordergroup_path, fields: ['note']

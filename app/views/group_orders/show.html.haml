@@ -1,7 +1,10 @@
 - title t('group_orders.my_previous_order'), false
 
 - content_for :sidebar do
-  = render 'current_order_sidebar'
+  = link_to my_ordergroup_path do
+    .well.well-link
+      = glyph 'chevron-right'
+      = t('home.ordergroup.account_summary')
   .well
     %ul.nav.nav-list
       %li.nav-header= t 'group_orders.my_previous_orders'

@@ -125,9 +125,6 @@ nl:
     success:
       one: Persoon is uitgenodigd.
       other: "%{count} personen zijn uitgenodigd."
-  layouts:
-    header:
-      ordergroup: Rekeningafschrift
   login:
     accept_invitation:
       invited_into_group: Je bent uitgenodigd om lid te worden van %{foodcoop} als deel van de groep <b>%{group}</b>.

@@ -125,9 +125,6 @@ en:
     success:
       one: User was invited successfully.
       other: "%{count} users were invited successfully."
-  layouts:
-    header:
-      ordergroup: Account statement
   login:
     accept_invitation:
       invited_into_group: You are invited to become a member of %{foodcoop} as part of <b>%{group}</b>.
