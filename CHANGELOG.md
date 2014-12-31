@@ -1,3 +1,22 @@
+# Foodsoft 3.3.6-adam
+(31 dec 2014)
+
+* Configuration screen (except for users of the multishared plugin)
+* Allow configuration of timezone, currency, webstats tracking code
+* Also allow entering by unit in some receive screens
+* Captcha for signup to protect against spam users
+* Allow admins to login as a different user
+* Show more detail in member transactions screen
+* Require confirmation of orders with payorder plugin
+* Member PDF download for previous orders
+* Allow shared articles to have a note that remains after sync
+* Allow members to unsubscribe from messaging mails
+* Allow to edit address from member profile
+* Bugfix: make sync with max_quantity work
+* Bugfix: fix order history showing wrong amount
+* Bugfix: fix spreadsheet export with zero quantity
+* Bugfix: bottom payment button now works
+
 # Foodsoft 3.3.5-adam
 (29 aug 2014)
 
