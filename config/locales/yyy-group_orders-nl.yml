@@ -7,6 +7,20 @@ nl:
         tolerance: Extra aantal
         tolerance_short: Extra
         tolerance_desc: Evt. extra om doos vol te maken
+  admin:
+    configs:
+      tab_others:
+        tolerance_opts:
+          yes: Ja
+          nope: Verbergen voor leden
+          supplier: Per leverancier kiezen
+      tab_payment:
+         methods_title: Betaalmethoden
+  config:
+    hints:
+      use_tolerance: Of te tolerantie kolom aan members getoond wordt. Bij kiezen per leverancier, kan je dit instellen door de leverancier te bewerken.
+    keys:
+      use_tolerance: Gebruik tolerantie
   group_orders:
     my_current_order: Mijn bestelling
     my_last_order: Mijn laatste bestelling
