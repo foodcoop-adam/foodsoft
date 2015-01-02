@@ -27,7 +27,10 @@ class OrderPdf < Prawn::Document
       end
       # footer
       bounding_box [bounds.left, bounds.bottom-s], width: bounds.width, height: s*1.2  do
-        text I18n.t('lib.order_pdf.page', number: page_number, count: page_count), size: s, align: :center
+        text I18n.t('lib.order_pdf.page', number: page_number, count: page_count), size: s, align: :right
+      end
+      bounding_box [bounds.left, bounds.bottom-s], width: bounds.width, height: s*1.2  do
+        text I18n.l(Time.now, format: :long), size: s, align: :left
       end
     end
 
