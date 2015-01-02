@@ -13,6 +13,7 @@ class OrderPdf < Prawn::Document
     super(options)
     @order = order
     @options = options
+    @first_page = true
   end
 
   def to_pdf
@@ -61,6 +62,10 @@ class OrderPdf < Prawn::Document
 
   # add pagebreak or vertical whitespace, depending on configuration
   def down_or_page(space=10)
+    if @first_page
+      @first_page = false
+      return
+    end
     if pdf_add_page_breaks?
       start_new_page
     else

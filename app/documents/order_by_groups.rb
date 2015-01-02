@@ -18,6 +18,8 @@ class OrderByGroups < OrderPdf
   def body
     # Start rendering
     group_orders.includes(:ordergroup).each do |group_order|
+      down_or_page 15
+
       total = 0
       taxes = Hash.new {0}
       fc_markup_price = 0
@@ -103,8 +105,6 @@ class OrderByGroups < OrderPdf
           table.row(ri).columns(0..-1).font_style = nil
         end
       end
-
-      down_or_page 15
     end
 
   end
