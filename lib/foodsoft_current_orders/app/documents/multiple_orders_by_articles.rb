@@ -16,6 +16,7 @@ class MultipleOrdersByArticles < OrderPdf
 
   def body
     order_articles.each do |order_article|
+      down_or_page
 
       rows = []
       dimrows = []
@@ -66,8 +67,6 @@ class MultipleOrdersByArticles < OrderPdf
         # dim rows which were ordered but not received
         dimrows.each { |ri| table.row(ri).text_color = '999999' }
       end
-
-      down_or_page
     end
   end
 

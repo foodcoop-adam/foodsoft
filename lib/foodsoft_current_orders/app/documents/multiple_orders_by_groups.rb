@@ -21,6 +21,7 @@ class MultipleOrdersByGroups < OrderPdf
   def body
     # Start rendering
     ordergroups.each do |ordergroup|
+      down_or_page 15
 
       totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0, fc_markup_price: 0}
       taxes = Hash.new {0}
@@ -112,8 +113,6 @@ class MultipleOrdersByGroups < OrderPdf
           table.row(ri).columns(0..-1).font_style = nil
         end
       end
-
-      down_or_page 15
     end
   end
 

@@ -17,6 +17,7 @@ class MultipleOrdersScopeByGroups < OrderPdf
   def body
     # Start rendering
     scopes.each_pair do |scope, groups_in_scope|
+      down_or_page 15
 
       totals = {net_price: 0, deposit: 0, gross_price: 0, fc_price: 0}
       taxes = Hash.new {0}
@@ -118,8 +119,6 @@ class MultipleOrdersScopeByGroups < OrderPdf
           table.row(ri).columns(0..-1).font_style = nil
         end
       end
-
-      down_or_page 15
     end
 
   end
