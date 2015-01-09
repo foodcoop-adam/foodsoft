@@ -40,7 +40,7 @@ Getting started
    For Debian/Ubuntu, that's [libicu-dev](https://packages.debian.org/stable/libicu-dev) [libv8-dev](https://packages.debian.org/stable/libv8-dev) [libmysqlclient-dev](https://packages.debian.org/stable/libmysqlclient-dev) [libxml2-dev](https://packages.debian.org/stable/libxml2-dev) [libxslt1-dev](https://packages.debian.org/stable/libxslt1-dev) [libffi-dev](https://packages.debian.org/stable/libffi-dev) [libreadline-dev](https://packages.debian.org/stable/libreadline-dev) [libmagickwand-dev](https://packages.debian.org/stable/libmagickcore-dev):
    ```
    # Debian/Ubuntu
-   sudo apt-get install libicu-dev libv8-dev libmysqlclient-dev libxml2-dev libxslt1-dev libffi-dev libreadline-dev libmagickcore-dev
+   sudo apt-get install libicu-dev libv8-dev libmysqlclient-dev libxml2-dev libxslt1-dev libffi-dev libreadline-dev imagemagick libmagickcore-dev libmagickwand-dev
    ```
 
    For CentOS/Redhat you need [libicu-devel](https://apps.fedoraproject.org/packages/libicu-devel) [v8](https://apps.fedoraproject.org/packages/v8) [community-mysql-devel](https://apps.fedoraproject.org/packages/community-mysql-devel) [libxml2-devel](https://apps.fedoraproject.org/packages/libxml2-devel) [libxslt-devel](https://apps.fedoraproject.org/packages/libxslt-devel) [libffi-devel](https://apps.fedoraproject.org/packages/libffi-devel) [readline-devel](https://apps.fedoraproject.org/packages/readline-devel) [ImageMagick-devel](https://apps.fedoraproject.org/packages/ImageMagick-devel):
