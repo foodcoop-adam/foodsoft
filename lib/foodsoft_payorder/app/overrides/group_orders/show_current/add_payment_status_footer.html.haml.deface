@@ -1,3 +1,4 @@
 / insert_after 'erb:contains("render"):contains("order_articles")'
-- if @render_totals and order_needs?
-  .pull-right= order_payment_status_button
+- if FoodsoftPayorder.enabled?
+  - if @render_totals and order_needs?
+    .pull-right= order_payment_status_button
