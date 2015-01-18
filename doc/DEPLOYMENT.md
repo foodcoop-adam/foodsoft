@@ -50,5 +50,5 @@ which contains the configuration. Create `database.yml`, `app_config.yml` and
 
 Deploy main
 
-    bundle exec cap main deploy
+    bundle exec cap main deploy deploy:restart
 
