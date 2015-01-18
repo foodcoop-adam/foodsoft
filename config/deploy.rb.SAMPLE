@@ -25,7 +25,7 @@
 
 
 # defaults that can be updated from the environment
-set :branch,              ENV["REVISION"] || ENV["BRANCH_NAME"] || "master"
+set :branch,              ENV["REVISION"] || ENV["BRANCH_NAME"] || "beta"
 set :suburi,              ENV["SUBURI"]
 
 # you probably want to change these
