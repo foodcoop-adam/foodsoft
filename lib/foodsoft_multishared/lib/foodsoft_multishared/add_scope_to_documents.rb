@@ -34,12 +34,6 @@ module FoodsoftMultishared
       def self.included(base) # :nodoc:
         base.class_eval do
 
-          alias_method :foodsoft_multishared_orig_body, :body
-          def body
-            @ordergroups = Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder('groups.scope, groups.name')
-            foodsoft_multishared_orig_body
-          end
-
           alias_method :foodsoft_multishared_orig_text, :text
           def text(s, options={})
             if g = FoodsoftMultishared.find_ordergroup_by_display(s)
@@ -59,6 +53,18 @@ module FoodsoftMultishared
       end
     end
 
+    module GroupsSorting
+      def self.included(base) # :nodoc:
+        base.class_eval do
+
+          alias_method :foodsoft_multishared_orig_ordergroups, :ordergroups
+          def ordergroups
+            @ordergroups ||= foodsoft_multishared_orig_ordergroups.reorder('groups.scope, groups.name')
+          end
+        end
+      end
+    end
+
   end
 end
 
@@ -67,4 +73,5 @@ ActiveSupport.on_load(:after_initialize) do
   MultipleOrdersByArticles.send :include, FoodsoftMultishared::AddScopeToDocument::Articles
   OrderByGroups.send :include, FoodsoftMultishared::AddScopeToDocument::Groups
   MultipleOrdersByGroups.send :include, FoodsoftMultishared::AddScopeToDocument::Groups
+  MultipleOrdersByGroups.send :include, FoodsoftMultishared::AddScopeToDocument::GroupsSorting
 end
