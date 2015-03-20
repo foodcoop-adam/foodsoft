@@ -31,7 +31,7 @@
     %td.center= group_order_article.result unless cur_open
   %td.colsep-right.price
     - price_sum = group_order_article.total_price(order_article)
-    %span.price_sum{data: {value: price_sum}, class: ('muted' if group_order_article.quantity == 0 and group_order_article.tolerance == 0)}
+    %span.price_sum{data: {value: price_sum}}
       = number_to_currency(price_sum)
     = render 'order_article_info', order_article: order_article
   - if @has_open_orders
