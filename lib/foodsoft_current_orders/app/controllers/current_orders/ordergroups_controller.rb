@@ -29,8 +29,12 @@ class CurrentOrders::OrdergroupsController < ApplicationController
   protected
 
   def find_group_orders
-    @all_ordergroups = Ordergroup.undeleted.order(:name).all
     @order_ids = Order.finished_not_closed.map(&:id)
+
+    @all_ordergroups = Ordergroup.undeleted.order(:name).all
+    @ordered_group_ids = GroupOrder.where(order_id: @order_ids).pluck('DISTINCT(ordergroup_id)')
+    @all_ordergroups.sort_by! {|o| @ordered_group_ids.include?(o.id) ? o.name : "ZZZZZ#{o.name}" }
+
     @ordergroup = Ordergroup.find(params[:id]) unless params[:id].nil?
     @goas = GroupOrderArticle.includes(:group_order, :order_article => [:article, :article_price]).
               where(group_orders: {order_id: @order_ids, ordergroup_id: @ordergroup.id}).ordered.all unless @ordergroup.nil?
