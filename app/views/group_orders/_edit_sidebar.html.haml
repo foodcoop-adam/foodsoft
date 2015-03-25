@@ -2,28 +2,40 @@
   .well.article-info-container.article-info{data: {spy: 'affix', 'offset-top' => 100}}
   = render 'current_order_sidebar', sum: @group_orders_sum
   .well.facets
-    %ul.nav.nav-list
-      %li
-        = form_for @q, url: url_for(action: :edit), html: {data: {'submit-onchange' => true}, class: 'form-search'}, remote: true do |f|
-          .input-append
-            = f.text_field :article_name_contains, placeholder: t('group_orders.form.search_article'), class: 'search-query input-block-level resettable'
-            %button.add-on.btn.reset-search{:type => :button, :title => t('group_orders.form.reset_article_search')}
-              %i.icon.icon-remove
-      %li.nav-header= ArticleCategory.model_name.human
-      - item_proc = lambda do |article_category, children|
-        - capture do
-          - is_active = article_category == @current_category
-          - is_active_path = (@current_category.path_ids.include?(article_category.id) rescue nil)
-          - classes = ('active' if is_active)
-          - collapsedata = {toggle: 'collapse', target: "li[data-category=#{article_category.id}] > ul"}
-          %li{data: {category: article_category.id}, class: classes}
-            - unless children.blank?
-              = link_to '', '#', data: collapsedata, class: "collapse-button icon-caret-#{is_active_path ? 'down' : 'right'}"
-            = link_to article_category.name, url_for(action: :edit, article_category_id: article_category.id, anchor: 'articles_table'), remote: true, data: collapsedata
-            - unless children.blank?
-              - classes = "nav nav-list collapse#{' in' if is_active_path}"
-              = content_tag :ul, children.html_safe, class: classes
-      = just_tree @article_categories, render_module: FoodsoftRenderTreeHelper::Block, content: item_proc
+    = form_for @q, url: url_for(action: :edit), html: {data: {'submit-onchange' => true}, class: 'form-search'}, remote: true do |f|
+      .input-append
+        = f.text_field :article_name_contains, placeholder: t('group_orders.form.search_article'), class: 'search-query input-block-level resettable'
+        %button.add-on.btn.reset-search{:type => :button, :title => t('group_orders.form.reset_article_search')}
+          %i.icon.icon-remove
+      %ul.nav.nav-tabs{style: 'margin-top: 2.5ex; margin-bottom: 1ex;'}
+        %li.active= link_to ArticleCategory.model_name.human(count: 2), '#nav-categories', data: {toggle: 'tab'}
+        - if @orders.count > 1
+          %li= link_to Supplier.model_name.human(count: 2), '#nav-suppliers', data: {toggle: 'tab'}
+      .tab-content
+        .tab-pane.active#nav-categories
+          %ul.nav.nav-list
+            - item_proc = lambda do |article_category, children|
+              - capture do
+                - is_active = article_category == @current_category
+                - is_active_path = (@current_category.path_ids.include?(article_category.id) rescue nil)
+                - classes = ('active' if is_active)
+                - collapsedata = {toggle: 'collapse', target: "li[data-category=#{article_category.id}] > ul"}
+                %li{data: {category: article_category.id}, class: classes}
+                  - unless children.blank?
+                    = link_to '', '#', data: collapsedata, class: "collapse-button icon-caret-#{is_active_path ? 'down' : 'right'}"
+                  = link_to article_category.name, url_for(action: :edit, article_category_id: article_category.id, anchor: 'articles_table'), remote: true, data: collapsedata
+                  - unless children.blank?
+                    - classes = "nav nav-list collapse#{' in' if is_active_path}"
+                    = content_tag :ul, children.html_safe, class: classes
+            = just_tree @article_categories, render_module: FoodsoftRenderTreeHelper::Block, content: item_proc
+        - if @orders.count > 1
+          .tab-pane#nav-suppliers
+            %ul.nav.nav-list
+              - @orders.each do |order|
+                - is_active = order.id == @current_order_id
+                - classes = ('active' if is_active)
+                %li{data: {order: order.id}, class: classes}
+                  = link_to order.name, url_for(action: :edit, order_id: order.id, anchor: 'articles_table'), remote: true
 
 - content_for :javascript do
   :javascript

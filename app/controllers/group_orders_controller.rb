@@ -33,14 +33,19 @@ class GroupOrdersController < ApplicationController
   end
 
   def edit
-    params[:q] ||= params[:search] # for meta_search instead of ransack
+    params[:q] ||= params[:search] || {} # for meta_search instead of ransack
     # @todo custom ransack matcher (after moving to Rails 4)
     if params[:article_category_id].blank?
       @current_category_id = nil
     else
       @current_category_id = params[:article_category_id].to_i
-      params[:q] ||= {}
       params[:q][:article_article_category_id_in] = ArticleCategory.find(@current_category_id).subtree_ids
+    end
+    if params[:order_id].blank?
+      @current_order_id = nil
+    else
+      @current_order_id = params[:order_id]
+      params[:q][:order_id_eq] = params[:order_id].to_i
     end
     @q = OrderArticle.search(params[:q])
     @order_articles = @order_articles.merge(@q.relation)
@@ -141,6 +146,7 @@ class GroupOrdersController < ApplicationController
         @order_date = (@order_date.to_date rescue nil)
       end
       @orders = Order.where(state: ['finished', 'closed']).where('DATE(orders.ends) = ?', @order_date) if @order_date
+      @orders = @orders.includes(:supplier).reorder('suppliers.name')
     end
   rescue ArgumentError
     @order_date = nil

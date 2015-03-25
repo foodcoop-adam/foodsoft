@@ -4,8 +4,13 @@
     // reset name when not specified
     $('#q_article_name_contains, #search_article_name_contains').val('');
   <% end %>
-  $('.facets li[data-category]').removeClass('active');
-  $('.facets li[data-category="<%= j params[:article_category_id] %>"]').addClass('active');
+
+  $('.facets li[data-category], li[data-order]').removeClass('active');
+  <% if params[:article_category_id] %>
+    $('.facets li[data-category="<%= j params[:article_category_id] %>"]').addClass('active');
+  <% elsif params[:order_id] %>
+    $('.facets li[data-order="<%= j params[:order_id] %>"]').addClass('active');
+  <% end %>
 <% end %>
 // scroll articles into view, for mobile
 window.location.href = '#articles_table';

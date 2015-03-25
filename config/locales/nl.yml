@@ -192,7 +192,9 @@ nl:
               exclusion: gedane taken kunnen niet herhaald worden
     models:
       article: Artikel
-      article_category: Categorie
+      article_category:
+        one: Categorie
+        other: Categoriën
       delivery: Levering
       financial_transaction: Financiële transactie
       invoice: Factuur
@@ -205,7 +207,9 @@ nl:
         other: Huishoudens
       stock_article: Voorraadartikel
       stock_taking: Inventaris
-      supplier: Leverancier
+      supplier:
+        one: Leverancier
+        other: Leveranciers
       task: Taak
       user: Gebruiker
       workgroup: Werkgroep
