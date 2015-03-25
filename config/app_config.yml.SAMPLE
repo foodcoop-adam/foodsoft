@@ -20,7 +20,7 @@ default: &defaults
     phone: "030 323 23249"
 
   # Homepage
-  homepage: http://www.foodcoop.nl
+  homepage: http://www.voedselcollectief.org
 
   # optional subtitle (empty by default)
   #sub_name: location city centre
@@ -110,7 +110,7 @@ default: &defaults
   # also send this mail to ('%{contact.email}' is replaced by the foodcoop contact)
   send_order_on_finish_cc: 
   - '%{contact.email}'
-  - foodcoopbestel@foodcoop.nl
+  - foodcoopbestel@voedselcollectief.org
 
   # Uncomment next line to completely skip mailing members when an order is closed (temporary hack)
   #skip_order_finished_mails: true
@@ -238,7 +238,7 @@ default: &defaults
   # To import other spreadsheets than csv, libreoffice can be used. Disabled by default.
   use_libreoffice: true
   # Page footer (html allowed). Default is a Foodsoft footer. Set to `blank` for no footer.
-  page_footer: <a href="%{homepage}">%{name}</a> ism <a href="http://www.foodcoop.nl/">FoodCoopNL</a>
+  page_footer: <a href="%{homepage}">%{name}</a> ism <a href="http://www.voedselcollectief.org/">Voedselcollectief NL</a>
 
   # Custom CSS for the foodcoop
   #custom_css: 'body { background-color: #fcffba; }'
@@ -255,7 +255,7 @@ default: &defaults
   #  Don't forget to set SPF or DKIM on the domains you use for the sender and from field.
   #email_from: FC Test <contact@foodcoop.test>
   # email address to be used as sender (unset by default)
-  email_sender: Foodsoft <info@foodcoop.nl>
+  email_sender: Foodsoft <info@voedselcollectief.org>
 
   # If your foodcoop uses a mailing list instead of internal messaging system
   #mailing_list: list@example.org
@@ -264,8 +264,8 @@ default: &defaults
   # Config for the exception_notification plugin
   notification:
     error_recipients:
-      - admin@foodcoop.nl
-    sender_address: "\"Foodsoft Error\" <admin@foodcoop.nl>"
+      - admin@voedselcollectief.org
+    sender_address: "\"Foodsoft Error\" <admin@voedselcollectief.org>"
     email_prefix: "[Foodsoft]"
 
 

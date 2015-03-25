@@ -12,7 +12,7 @@ Web-based software to manage a non-profit food coop (product catalog, ordering, 
 
 A food cooperative is a group of people that buy food from suppliers of their own choosing. A collective do-it-yourself supermarket. Members  order their products online and collect them on a specified day. And all put in a bit of work to make that possible. Foodsoft facilitates the process.
 
-This branch contains the version we use at [Foodcoop NL](http://www.foodcoop.nl). We track [foodcoops/foodsoft](https://github.com/foodcoops/foodsoft), and merge in some features found in branches of this repository, as well as some local changes.
+This branch contains the version used by many Dutch food cooperatives (including [Voedselcollectief NL](http://www.voedselcollectief.org)-based coops). We track [foodcoops/foodsoft](https://github.com/foodcoops/foodsoft), and merge in some features found in branches of this repository, as well as some local changes.
 
 If you're a food coop considering to use foodsoft, you're welcome to [contact us]. Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). You can [read documentation](http://foodcoop-adam.github.io/) to get an impression of the software. When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
 

@@ -30,7 +30,7 @@ set :suburi,              ENV["SUBURI"]
 
 # you probably want to change these
 set :application,         'foodsoft'            # application name (whatever you like)
-set :domain,              'order.foodcoop.nl'   # host
+set :domain,              'order.voedselcollectief.org' # host
 set :user,                'deploy'              # ssh deploy user
 set :run_user,            'foodsoft'            # user app runs as
 set :db_user,             Proc.new { "fs_#{fetch :suburi}" }
