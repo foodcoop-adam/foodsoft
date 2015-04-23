@@ -146,7 +146,7 @@ class GroupOrdersController < ApplicationController
         @order_date = (@order_date.to_date rescue nil)
       end
       @orders = Order.where(state: ['finished', 'closed']).where('DATE(orders.ends) = ?', @order_date) if @order_date
-      @orders = @orders.includes(:supplier).reorder('suppliers.name')
+      @orders = @orders.includes(:supplier).reorder('suppliers.name').to_a
     end
   rescue ArgumentError
     @order_date = nil
@@ -155,7 +155,7 @@ class GroupOrdersController < ApplicationController
 
   def get_order_articles
     return unless @orders
-    @all_order_articles = OrderArticle.joins(:article, :order).merge(@orders)
+    @all_order_articles = OrderArticle.joins(:article, :order).where(order_id: @orders.map(&:id))
     @order_articles = @all_order_articles.includes({:article => :supplier}, :article_price)
     @order_articles = @order_articles.order('articles.name')
     @order_articles = @order_articles.page(params[:page]).per(@per_page) unless action_name == 'show'
@@ -173,7 +173,7 @@ class GroupOrdersController < ApplicationController
     @has_open_orders = @order_articles.select {|oa| oa.order.open?}.any? unless @ordergroup.not_enough_apples?
     @has_stock = @order_articles.select {|oa| oa.order.stockit?}.any?
     @has_tolerance = @order_articles.select {|oa| oa.use_tolerance? }.any?
-    @group_orders_prices = rails3_pluck(@ordergroup.group_orders.joins(:order).merge(@orders),
+    @group_orders_prices = rails3_pluck(@ordergroup.group_orders.where(order_id: @orders.map(&:id)),
                                         'SUM(group_orders.price) AS price',
                                         'SUM(group_orders.gross_price) AS gross_price',
                                         'SUM(group_orders.net_price) AS net_price',
