@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 
 # this feature only makes sense when the signup plugin is enabled
 if defined? FoodsoftSignup
-  describe 'the signup plugin', :type => :feature do
+  feature 'the signup plugin'  do
 
     before do
       FoodsoftConfig.config[:use_signup] = true
@@ -17,7 +17,7 @@ if defined? FoodsoftSignup
       end
     end
 
-    describe 'its signup page', :type => :feature do
+    describe 'its signup page' do
       it 'is accessible when enabled' do
         visit signup_path
         expect_signup_page(page)
@@ -83,7 +83,7 @@ if defined? FoodsoftSignup
     end
 
 
-    describe :type => :feature do
+    describe 'approval' do
       let(:order) { create :order }
       let(:ordergroup) { create :ordergroup, :user_ids => [user.id], :approved => false }
       let(:user) { create :_user }
@@ -103,7 +103,7 @@ if defined? FoodsoftSignup
       end
     end
 
-    describe 'membership fee', :type => :feature do
+    describe 'membership fee' do
       let(:ordergroup) { Ordergroup.create name: 'foobar' }
       let(:admin) { create :admin }
       before do
@@ -128,7 +128,7 @@ if defined? FoodsoftSignup
       end
 
 
-      describe 'and payment fee', :type => :feature do
+      describe 'and payment fee' do
         let(:pay_fee) { (0.1 + rand(240)/100) }
 
         def credit(og, note, delta=0)

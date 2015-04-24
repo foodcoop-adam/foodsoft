@@ -1,9 +1,9 @@
 require_relative '../spec_helper'
 
-describe 'supplier', :type => :feature do
+feature 'supplier', js: true do
   let(:supplier) { create :supplier }
 
-  describe :type => :feature, :js => true do
+  describe 'create new' do
     let(:user) { create :user, groups:[create(:workgroup, role_suppliers: true)] }
     before { login user }
 
@@ -27,7 +27,7 @@ describe 'supplier', :type => :feature do
     end
   end
 
-  describe :type => :feature, :js => true do
+  describe 'editing articles' do
     let(:article_category) { create :article_category }
     let(:user) { create :user, groups:[create(:workgroup, role_article_meta: true)] }
     before { login user }

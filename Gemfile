@@ -37,7 +37,7 @@ gem 'inherited_resources'
 gem 'localize_input', git: "git://github.com/bennibu/localize_input.git"
 gem 'daemons'
 gem 'twitter-bootstrap-rails'
-gem 'simple-navigation'
+gem 'simple-navigation', '~> 3.13'
 gem 'simple-navigation-bootstrap'
 gem 'meta_search'
 gem 'acts_as_tree'
@@ -121,6 +121,7 @@ group :test do
   # need to include rspec components before i18n-spec or rake fails in test environment
   gem 'rspec-core'
   gem 'rspec-rerun'
+  gem 'rspec-legacy_formatters'
   gem 'i18n-spec'
   # code coverage
   gem 'simplecov', require: false

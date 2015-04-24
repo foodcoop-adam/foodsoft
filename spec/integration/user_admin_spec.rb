@@ -1,12 +1,10 @@
 require_relative '../spec_helper'
 
-
-describe 'user admin', :type => :feature do
+feature 'user admin', js: true do
   let(:admin) { create :admin }
   before { login admin }
 
-
-  describe 'can create a user', :type => :feature, :js => true do
+  describe 'can create a user' do
     let(:user) { build :_user }
 
     it 'without ordergroup' do
@@ -34,11 +32,9 @@ describe 'user admin', :type => :feature do
       expect(new_user.ordergroup).to_not be_nil
       expect(new_user.ordergroup.contact_address).to eq ordergroup.contact_address
     end
-
   end
 
-
-  describe 'can edit a user', :type => :feature, :js => true do
+  describe 'can edit a user' do
     let(:user) { create :_user }
 
     it 'and associate it to an existing ordergroup' do
@@ -66,7 +62,6 @@ describe 'user admin', :type => :feature do
       expect(user.ordergroup).to_not be_nil
       expect(user.ordergroup.contact_address).to eq ordergroup.contact_address
     end
-
   end
 
 

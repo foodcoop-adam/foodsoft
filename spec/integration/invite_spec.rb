@@ -1,10 +1,10 @@
 require_relative '../spec_helper'
 
-describe 'invitation', :type => :feature do
+feature InvitesController do
   let(:group) { create :ordergroup }
   let(:invite) { create :invite }
 
-  describe :type => :feature do
+  describe 'accepting' do
     it 'can be accessed' do
       visit accept_invitation_path(token: invite.token)
       expect(page).to have_selector('form.new_user')
@@ -32,7 +32,7 @@ describe 'invitation', :type => :feature do
     end
   end
 
-  describe :type => :feature do
+  describe 'creating' do
     let(:user) { create :user, groups: [create(:ordergroup)] }
     let(:admin) { create :admin }
 
@@ -65,38 +65,6 @@ describe 'invitation', :type => :feature do
     end
 
   end
-
-  # the following tests are perhaps a bit superfluous, but rather be safe than sorry
-  describe 'api', :type => :feature do
-    it 'can create a user' do
-      user_attrs = new_user_attributes(email: invite.email)
-      post accept_invitation_path(token: invite.token), {user: user_attrs}
-      expect(User.where(email: invite.email).first).to_not be nil
-    end
-
-    it 'cannot request a different ordergroup when one is given' do
-      invite = create :invite, group: group
-      user_attrs = new_user_attributes(email: invite.email, ordergroup: {id: create(:ordergroup).id})
-      post accept_invitation_path(token: invite.token), {user: user_attrs}
-      expect(User.where(email: invite.email).first.ordergroup.id).to eq group.id
-    end
-
-    it 'cannot request a new ordergroup when one is given' do
-      invite = create :invite, group: group
-      user_attrs = new_user_attributes(email: invite.email, ordergroup: {id: 'new'})
-      post accept_invitation_path(token: invite.token), {user: user_attrs}
-      expect(User.where(email: invite.email).first.ordergroup.id).to eq group.id
-    end
-
-    it 'cannot request a different ordergroup when none is given' do
-      invite = create :invite
-      newgroup = create :ordergroup
-      user_attrs = new_user_attributes(email: invite.email, ordergroup: {id: newgroup.id})
-      post accept_invitation_path(token: invite.token), {user: user_attrs}
-      expect(User.where(email: invite.email).first.ordergroup.id).to_not eq newgroup.id
-    end
-  end
-
 
   def test_accept_invitation_path(user_attributes)
     user = build :user, user_attributes

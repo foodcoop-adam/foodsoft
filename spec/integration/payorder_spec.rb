@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe 'payorder full flow', :type => :feature do
+feature 'payorder full flow', js: true do
   let(:admin) { create :admin }
   let(:user_a) { create :user_and_ordergroup }
   let(:user_b) { create :user_and_ordergroup }
@@ -13,44 +13,42 @@ describe 'payorder full flow', :type => :feature do
   let(:goa_b) { oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_b.ordergroup.id}).first }
   let(:goa_c) { oa.group_order_articles.joins(:group_order).where(:group_orders => {:ordergroup_id => user_c.ordergroup.id}).first }
 
-  describe :type => :feature, :js => true do
-    before do
-      order # make sure order is referenced
-      FoodsoftConfig.config[:use_payorder] = true
-      FoodsoftConfig.config[:payorder_remove_unpaid] = true
-      FoodsoftConfig.config[:payorder_payment] = 'root_path'
-      FoodsoftConfig.config[:payorder_payment] = 'new_payments_mollie_path' if can_use_mollie?
-    end
+  before do
+    order # make sure order is referenced
+    FoodsoftConfig.config[:use_payorder] = true
+    FoodsoftConfig.config[:payorder_remove_unpaid] = true
+    FoodsoftConfig.config[:payorder_payment] = 'root_path'
+    FoodsoftConfig.config[:payorder_payment] = 'new_payments_mollie_path' if can_use_mollie?
+  end
 
-    it 'agrees' do
-      # group_a orders 3+1
-      login user_a
-      group_order_delta oa, 3, 1
-      # group_b orders 2+3 and pays
-      login user_b
-      group_order_delta oa, 2, 3
-      group_order_pay user_b
-      # group_a orders 5+1 and pays
-      login user_a
-      group_order_delta oa, 2, 0
-      group_order_pay user_a
-      # group_c orders 3+0 and doesn't pay or confirm
-      login user_c
-      group_order_delta oa, 3, 0
-      # group_a changes order to 2+1
-      login user_a
-      group_order_delta oa, -3, 0
-      # group_b changes order to 8+3 and doesn't pay
-      login user_b
-      group_order_delta oa, 6, 0
-      # finish
-      order.finish!(admin)
-      oa.reload
-      # check
-      expect([oa.quantity, oa.tolerance]).to eq [4, 4]
-      expect([goa_a, goa_b].map(&:result)).to eq [3, 2]
-      expect(goa_c).to be_nil
-    end
+  it 'agrees' do
+    # group_a orders 3+1
+    login user_a
+    group_order_delta oa, 3, 1
+    # group_b orders 2+3 and pays
+    login user_b
+    group_order_delta oa, 2, 3
+    group_order_pay user_b
+    # group_a orders 5+1 and pays
+    login user_a
+    group_order_delta oa, 2, 0
+    group_order_pay user_a
+    # group_c orders 3+0 and doesn't pay or confirm
+    login user_c
+    group_order_delta oa, 3, 0
+    # group_a changes order to 2+1
+    login user_a
+    group_order_delta oa, -3, 0
+    # group_b changes order to 8+3 and doesn't pay
+    login user_b
+    group_order_delta oa, 6, 0
+    # finish
+    order.finish!(admin)
+    oa.reload
+    # check
+    expect([oa.quantity, oa.tolerance]).to eq [4, 4]
+    expect([goa_a, goa_b].map(&:result)).to eq [3, 2]
+    expect(goa_c).to be_nil
   end
 
 

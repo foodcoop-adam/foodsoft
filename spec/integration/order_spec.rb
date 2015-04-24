@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe Order, :type => :feature do
+feature Order, js: true do
   let(:admin) { create :user, groups:[create(:workgroup, role_orders: true)] }
   let(:supplier) { create :supplier, order_howto: Faker::Internet.email }
   let(:article) { create :article, supplier: supplier, unit_quantity: 3 }
@@ -25,38 +25,6 @@ describe Order, :type => :feature do
     oa.reload
   end
 
-  describe :type => :feature, :js => true do
-    before do
-      login admin
-    end
-
-    it 'can close an order and send mail' do
-      FoodsoftConfig.config[:send_order_on_finish] = true
-      FoodsoftConfig.config[:send_order_on_finish_cc] = nil
-      order_contact_phone = Faker::PhoneNumber.phone_number 
-      delivery_contact_name = Faker::Name.name
-      close_order do
-        fill_in 'order_info_order_contact_phone', :with => order_contact_phone
-        fill_in 'order_info_delivery_contact_phone', :with => Faker::PhoneNumber.phone_number 
-        fill_in 'order_info_delivery_contact_name', :with => delivery_contact_name
-        fill_in 'order_info_delivered_before_date', :with => Time.now.strftime('%Y-%m-%d')
-        fill_in 'order_info_delivered_before_time', :with => Time.now.strftime('%H:%M')
-      end
-      expect(order).to be_finished
-      expect(page).to_not have_link I18n.t('orders.index.action_end')
-      email = ActionMailer::Base.deliveries.select {|email| email.to[0] == supplier.order_howto}.first
-      expect(email).to_not be_nil
-      expect(email.text_part.body.to_s).to include delivery_contact_name
-      expect(email.text_part.body.to_s).to include order_contact_phone
-    end
-
-    it 'can close an order without sending an email' do
-      close_order
-      expect(order).to be_finished
-      expect(page).to_not have_link I18n.t('orders.index.action_end')
-    end
-  end
-
   def close_order
     set_quantities [2,0], [1,0]
     visit orders_path
@@ -69,4 +37,32 @@ describe Order, :type => :feature do
     order.reload
   end
 
+
+  before { login admin }
+
+  it 'can close an order and send mail' do
+    FoodsoftConfig.config[:send_order_on_finish] = true
+    FoodsoftConfig.config[:send_order_on_finish_cc] = nil
+    order_contact_phone = Faker::PhoneNumber.phone_number 
+    delivery_contact_name = Faker::Name.name
+    close_order do
+      fill_in 'order_info_order_contact_phone', :with => order_contact_phone
+      fill_in 'order_info_delivery_contact_phone', :with => Faker::PhoneNumber.phone_number 
+      fill_in 'order_info_delivery_contact_name', :with => delivery_contact_name
+      fill_in 'order_info_delivered_before_date', :with => Time.now.strftime('%Y-%m-%d')
+      fill_in 'order_info_delivered_before_time', :with => Time.now.strftime('%H:%M')
+    end
+    expect(order).to be_finished
+    expect(page).to_not have_link I18n.t('orders.index.action_end')
+    email = ActionMailer::Base.deliveries.select {|email| email.to[0] == supplier.order_howto}.first
+    expect(email).to_not be_nil
+    expect(email.text_part.body.to_s).to include delivery_contact_name
+    expect(email.text_part.body.to_s).to include order_contact_phone
+  end
+
+  it 'can close an order without sending an email' do
+    close_order
+    expect(order).to be_finished
+    expect(page).to_not have_link I18n.t('orders.index.action_end')
+  end
 end
