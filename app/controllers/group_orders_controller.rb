@@ -59,8 +59,9 @@ class GroupOrdersController < ApplicationController
   def update
     oa_attrs = params[:group_order][:group_order_articles_attributes]
     oa_attrs.keys.each {|key| oa_attrs[key.to_i] = oa_attrs.delete(key)} # Rails 4 - transform_keys
-    @order_articles = OrderArticle.includes(:order, :article, :article_price).where(id: oa_attrs.keys) 
-    @order_articles = @order_articles.where(orders: {state: 'open'}) # security!
+    @orders = Order.where(state: 'open').to_a
+    @order_articles = OrderArticle.includes(:article, :article_price).where(id: oa_attrs.keys)
+    @order_articles = @order_articles.where(order_id: @orders.map(&:id)) # security!
     compute_order_article_details
 
     GroupOrder.transaction do
@@ -89,7 +90,7 @@ class GroupOrdersController < ApplicationController
     # only makes sense for current ...
     compute_order_article_details
   end
-  
+
   private
 
   # Returns true if @current_user is member of an Ordergroup.
