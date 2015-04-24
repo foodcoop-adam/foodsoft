@@ -3,7 +3,7 @@ class Admin::OrdergroupsController < Admin::BaseController
   inherit_resources
   
   def index
-    @ordergroups = Ordergroup.undeleted.order('name ASC')
+    @ordergroups = Ordergroup.undeleted.natural_order
 
     # if somebody uses the search field:
     unless params[:query].blank?

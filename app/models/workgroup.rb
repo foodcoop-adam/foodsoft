@@ -7,6 +7,7 @@ class Workgroup < Group
 
   validates_uniqueness_of :name
   validate :last_admin_on_earth, :on => :update
+
   before_destroy :check_last_admin_group
 
   protected

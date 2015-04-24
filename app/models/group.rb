@@ -9,6 +9,7 @@ class Group < ActiveRecord::Base
   attr_reader :user_tokens
 
   scope :undeleted, -> { where(deleted_at: nil) }
+  scope :natural_order, ->{ order(:name) }
 
   # Returns true if the given user if is an member of this group.
   def member?(user)

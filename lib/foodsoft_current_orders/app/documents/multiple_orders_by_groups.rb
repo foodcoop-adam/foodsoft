@@ -12,7 +12,7 @@ class MultipleOrdersByGroups < OrderPdf
 
   def ordergroups
     unless @ordergroups
-      @ordergroups = Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').reorder(:name)
+      @ordergroups = Ordergroup.joins(:orders).where(orders: {id: @order}).select('distinct(groups.id)').select('groups.*').natural_order
       @ordergroups = @ordergroups.where(id: @options[:ordergroup]) if @options[:ordergroup]
     end
     @ordergroups

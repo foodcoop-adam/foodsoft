@@ -11,7 +11,7 @@ class MultipleOrdersScopeByGroups < OrderPdf
   end
 
   def scopes
-    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).group('groups.scope').order('groups.scope').count
+    @scopes ||= Ordergroup.joins(:orders).where(orders: {id: @order}).group('groups.scope').order('groups.scope, groups.name').count
   end
 
   def body

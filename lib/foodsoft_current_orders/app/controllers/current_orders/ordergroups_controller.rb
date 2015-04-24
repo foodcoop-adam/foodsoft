@@ -31,7 +31,7 @@ class CurrentOrders::OrdergroupsController < ApplicationController
   def find_group_orders
     @order_ids = Order.finished_not_closed.map(&:id)
 
-    @all_ordergroups = Ordergroup.undeleted.order(:name).all
+    @all_ordergroups = Ordergroup.undeleted.natural_order.all
     @ordered_group_ids = GroupOrder.where(order_id: @order_ids).pluck('DISTINCT(ordergroup_id)')
     @all_ordergroups.sort_by! {|o| @ordered_group_ids.include?(o.id) ? o.name : "ZZZZZ#{o.name}" }
 
