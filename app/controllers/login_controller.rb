@@ -7,7 +7,7 @@ class LoginController < ApplicationController
   def forgot_password
     @user = User.new
   end
-  
+
   # Sends an email to a user with the token that allows setting a new password through action "password".
   def reset_password
     if request.get? || params[:user].nil? # Catch for get request and give better error message.
@@ -19,12 +19,12 @@ class LoginController < ApplicationController
     end
     redirect_to login_url, :notice => I18n.t('login.controller.reset_password.notice')
   end
-  
+
   # Set a new password with a token from the password reminder email.
   # Called with params :id => User.id and :token => User.reset_password_token to specify a new password.
   def new_password
   end
-  
+
   # Sets a new password.
   # Called with params :id => User.id and :token => User.reset_password_token to specify a new password.
   def update_password
@@ -48,11 +48,17 @@ class LoginController < ApplicationController
     #  redirect_to login_url, alert: I18n.t('login.controller.error_group_invalid')
     elsif request.post?
       User.transaction do
-        @user = User.new(params[:user])
+        @user = User.new(user_params)
         # enforce group (security!)
-        @user.ordergroup = {id: (@invite.group_id or 'new')}
+        if @invite.group_id.present?
+          @user.ordergroup = {id: @invite.group_id}
+        else
+          @user.ordergroup = ordergroup_params.merge(id: 'new')
+        end
         # save!
+        Rails.logger.info "saving"
         if @user.save
+          Rails.logger.info "destroying invite"
           @invite.destroy
           session[:locale] = @user.locale
           redirect_to login_url, notice: I18n.t('login.controller.accept_invitation.notice')
@@ -70,5 +76,21 @@ class LoginController < ApplicationController
     if (@user.nil? || @user.reset_password_expires < Time.now)
       redirect_to forgot_password_url, alert: I18n.t('login.controller.error_token_invalid')
     end
+  end
+
+  # @todo unduplicate from home_controller
+  def user_params
+    params
+      .require(:user)
+      .permit(:nick, :first_name, :last_name, :email, :phone, :password, :password_confirmation)
+      .merge(params[:user].slice(:settings_attributes))
+  end
+
+  # @todo unduplicate from home_controller
+  def ordergroup_params
+    params
+      .require(:user)
+      .fetch(:ordergroup, {})
+      .permit(:contact_address)
   end
 end

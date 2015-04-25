@@ -16,7 +16,7 @@ class HomeController < ApplicationController
 
   def update_profile
     if @current_user.update_attributes(user_params)
-      @current_user.ordergroup.update_attributes(ordergroup_params) if ordergroup_params
+      @current_user.ordergroup.update_attributes(ordergroup_params) if ordergroup_params.any?
       session[:locale] = @current_user.locale
       redirect_to my_profile_url, notice: I18n.t('home.changes_saved')
     else
@@ -89,7 +89,7 @@ class HomeController < ApplicationController
   def ordergroup_params
     params
       .require(:user)
-      .require(:ordergroup)
+      .fetch(:ordergroup, {})
       .permit(:contact_address)
   end
 
