@@ -129,7 +129,8 @@ feature 'settling an order', js: true do
     end
     expect(page).to have_selector('form#new_group_order_article')
     within('#new_group_order_article') do
-      select user.ordergroup.name, :from => 'group_order_article_ordergroup_id'
+      #select user.ordergroup.name, :from => 'group_order_article_ordergroup_id'
+      select2 user.ordergroup.name, :from => GroupOrderArticle.human_attribute_name(:ordergroup_id)
       fill_in 'group_order_article_result', :with => 8
       find('input[type="submit"]').click
     end
@@ -170,7 +171,8 @@ feature 'settling an order', js: true do
     click_link I18n.t('finance.balancing.edit_results_by_articles.add_article')
     expect(page).to have_selector('form#new_order_article')
     within('#new_order_article') do
-      select new_article.name, :from => 'order_article_article_id'
+      #select new_article.name, :from => 'order_article_article_id'
+      select2 new_article.name, :from => OrderArticle.human_attribute_name(:article)
       find('input[type="submit"]').click
     end
     expect(page).to_not have_selector('form#new_order_article')

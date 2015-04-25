@@ -47,7 +47,8 @@ feature 'supplier', js: true do
       within('#new_article') do
         fill_in 'article_name', :with => article.name
         fill_in 'article_unit', :with => article.unit
-        select article.article_category.name, :from => 'article_article_category_id'
+        #select article.article_category.name, :from => 'article_article_category_id'
+        select2 article.article_category.name, from: Article.human_attribute_name('category')
         fill_in 'article_price', :with => article.price
         fill_in 'article_unit_quantity', :with => article.unit_quantity
         fill_in 'article_tax', :with => article.tax

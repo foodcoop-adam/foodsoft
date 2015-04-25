@@ -76,12 +76,15 @@ feature 'user admin', js: true do
       fill_in 'user_password_confirmation', :with => user.password unless user.password.blank?
       # fill in ordergroup fields
       if ordergroup.nil?
-        select '', :from => 'user_ordergroup_id'
+        #select '', :from => 'user_ordergroup_id'
+        select2 /^$/, from: User.human_attribute_name(:ordergroup)
       elsif ordergroup.new_record?
-        select 'new', :from => 'user_ordergroup_id'
+        #select 'new', :from => 'user_ordergroup_id'
+        select2 '(new ordergroup)', from: User.human_attribute_name(:ordergroup)
         fill_in 'user_ordergroup_contact_address', :with => ordergroup.contact_address unless ordergroup.contact_address.nil?
       else
-        select ordergroup.name, :from => 'user_ordergroup_id' # XXX ordergroup.id doesn't work :(
+        #select ordergroup.name, :from => 'user_ordergroup_id' # XXX ordergroup.id doesn't work :(
+        select2 ordergroup.name, from: User.human_attribute_name(:ordergroup)
       end
       # submit
       find('input[type=submit]').click

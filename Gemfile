@@ -114,6 +114,7 @@ group :test do
   gem 'factory_girl_rails', '~> 4.0'
   gem 'faker'
   gem 'capybara'
+  gem 'capybara-select2', github: 'goodwill/capybara-select2'
   # webkit and poltergeist don't seem to work yet
   gem 'selenium-webdriver'
   gem 'database_cleaner'
