@@ -2,6 +2,7 @@ en:
   current_orders:
     articles:
       article:
+        counts: '%{ordergroups} ordergroups ordered %{articles} different articles.'
         no_selection: Choose an article to show who ordered it, or download pick lists at the right.
       article_info:
         from: from %{supplier}
