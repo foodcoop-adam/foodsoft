@@ -11,7 +11,7 @@ class MultipleOrdersScopeByArticles < OrderPdf
   end
 
   def order_articles
-    @order_articles ||= OrderArticle.joins(:order, :article).where(:orders => {:id => @order}).ordered.reorder('orders.id, articles.name')
+    @order_articles ||= OrderArticle.joins(:order, :article).where(:orders => {:id => @order}).reorder('orders.id, articles.name')
   end
 
   def body
@@ -19,7 +19,7 @@ class MultipleOrdersScopeByArticles < OrderPdf
       down_or_page
 
       amounts = {}
-      for goa in order_article.group_order_articles.ordered
+      for goa in order_article.group_order_articles.natural_order
         scope = goa.group_order.ordergroup.scope
         amounts[scope] ||= {quantity: 0, tolerance: 0, result: 0, total_price: 0}
         [:quantity, :tolerance, :result, :total_price].each {|f| amounts[scope][f] += goa.send(f) }

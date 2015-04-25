@@ -11,7 +11,7 @@ class MultipleOrdersByArticles < OrderPdf
   end
 
   def order_articles
-    @order_articles ||= OrderArticle.joins(:order, :article).where(:orders => {:id => @order}).ordered.reorder('orders.id, articles.name')
+    @order_articles ||= OrderArticle.joins(:order, :article).where(:orders => {:id => @order}).reorder('orders.id, articles.name')
   end
 
   def body
@@ -21,7 +21,7 @@ class MultipleOrdersByArticles < OrderPdf
       rows = []
       dimrows = []
       has_units_str = ''
-      for goa in order_article.group_order_articles.ordered
+      for goa in order_article.group_order_articles.natural_order
         units = result_in_units(goa, order_article.article)
         rows << [show_group(goa.group_order.ordergroup),
                  goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,

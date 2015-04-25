@@ -26,7 +26,7 @@ class OrderByGroups < OrderPdf
       rows = []
       dimrows = []
 
-      group_order_articles = group_order.group_order_articles.ordered
+      group_order_articles = group_order.group_order_articles.natural_order
       has_tolerance = !group_order_articles.select {|goa| goa.order_article.price.unit_quantity > 1}.empty?
 
       group_order_articles.each do |goa|

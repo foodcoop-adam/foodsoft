@@ -27,7 +27,7 @@ class MultipleOrdersByGroups < OrderPdf
       taxes = Hash.new {0}
       rows = []
       dimrows = []
-      group_order_articles = GroupOrderArticle.ordered.joins(:group_order => :order).where(:group_orders =>{:ordergroup_id => ordergroup.id}).where(:orders => {id: @order}).includes(:order_article => :article_price).reorder('orders.id')
+      group_order_articles = GroupOrderArticle.joins(:group_order => :order).where(:group_orders =>{:ordergroup_id => ordergroup.id}).where(:orders => {id: @order}).includes(:order_article => :article_price).reorder('orders.id').natural_order
       has_tolerance = group_order_articles.where('article_prices.unit_quantity > 1').any?
 
       group_order_articles.each do |goa|

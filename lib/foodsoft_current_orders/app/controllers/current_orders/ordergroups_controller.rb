@@ -37,7 +37,7 @@ class CurrentOrders::OrdergroupsController < ApplicationController
 
     @ordergroup = Ordergroup.find(params[:id]) unless params[:id].nil?
     @goas = GroupOrderArticle.includes(:group_order, :order_article => [:article, :article_price]).
-              where(group_orders: {order_id: @order_ids, ordergroup_id: @ordergroup.id}).ordered.all unless @ordergroup.nil?
+              where(group_orders: {order_id: @order_ids, ordergroup_id: @ordergroup.id}).natural_order.all unless @ordergroup.nil?
   end
 
 end

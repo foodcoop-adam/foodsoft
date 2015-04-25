@@ -8,5 +8,5 @@
         = ", #{pkg_info}".html_safe unless pkg_info.blank?
         )
 
-  - for goa in order_article.group_order_articles.ordered
+  - for goa in order_article.group_order_articles.natural_order
     = render 'shared/articles_by/article_single_goa', goa: goa, edit: local_assigns[:edit], base_unit: local_assigns[:base_unit]
