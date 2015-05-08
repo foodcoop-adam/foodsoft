@@ -18,6 +18,7 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'select2-rails', '>= 3.4.0'
+gem 'rails_tokeninput'
 gem 'bootstrap-datepicker-rails'
 gem 'date_time_attribute'
 gem 'rails-assets-listjs', '0.2.0.beta.4' # remember to maintain list.*.js plugins and template engines on update
