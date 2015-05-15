@@ -1,5 +1,18 @@
+# Foodsoft 3.3.7-adam
+(15 May 2015)
+
+* Members can now browse articles by categories or suppliers
+* Show number of ordered groups in current_orders plugin
+* More sorting options in receive and distribution screens
+* Add printing time to PDF footer
+* Bugfix: fix invitations and make it more secure
+* Bugfix: don't show sum in grey in order history when received is nonzero
+* Bugfix: group_order PDF should only show the member's ordergroup
+* Bugfix: hide payment button when payorder is disabled
+* Bugfix: make sync work when unit has no name
+
 # Foodsoft 3.3.6-adam
-(31 dec 2014)
+(31 Dec 2014)
 
 * Configuration screen (except for users of the multishared plugin)
 * Allow configuration of timezone, currency, webstats tracking code
@@ -18,7 +31,7 @@
 * Bugfix: bottom payment button now works
 
 # Foodsoft 3.3.5-adam
-(29 aug 2014)
+(29 Aug 2014)
 
 * Improvements in the receive screen
 * Make distribute screen layout a little clearer
