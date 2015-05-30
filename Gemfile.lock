@@ -20,13 +20,6 @@ GIT
       rspec
 
 GIT
-  remote: git://github.com/wvengen/ice_cube.git
-  revision: addacaab715c70c5a9b736767ae98032e8efab92
-  branch: issues/50-from_ical-rebased
-  specs:
-    ice_cube (0.12.1)
-
-GIT
   remote: git://github.com/wvengen/the_sortable_tree.git
   revision: 22d72ec71b9a07a3b2dbdd2d0e7262f947de0c72
   specs:
@@ -240,6 +233,7 @@ GEM
     i18n (0.7.0)
     i18n-spec (0.6.0)
       iso
+    ice_cube (0.13.0)
     inherited_resources (1.6.0)
       actionpack (>= 3.2, < 5)
       has_scope (~> 0.6.0.rc)
@@ -528,7 +522,7 @@ DEPENDENCIES
   haml-rails
   i18n-js!
   i18n-spec
-  ice_cube!
+  ice_cube (~> 0.13.0)
   inherited_resources
   jquery-rails
   jquery-ui-rails
