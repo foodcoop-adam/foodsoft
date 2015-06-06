@@ -216,6 +216,8 @@ GEM
     faker (1.4.3)
       i18n (~> 0.5)
     ffi (1.9.10)
+    gaffe (1.0.2)
+      rails (>= 3.2.0)
     git-version-bump (0.15.1)
     haml (4.0.6)
       tilt
@@ -522,6 +524,7 @@ DEPENDENCIES
   foodsoft_payorder!
   foodsoft_signup!
   foodsoft_split_manufacturer!
+  gaffe
   haml-rails
   i18n-js!
   i18n-spec
