@@ -49,4 +49,5 @@ License
 -------
 
 GPL version 3 or later, please see [LICENSE](LICENSE.md) for the full text.
+Some bundled third-party components have [other licenses](vendor/README.md).
 
