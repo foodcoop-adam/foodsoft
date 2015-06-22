@@ -54,7 +54,7 @@ class VokomokumController < ApplicationController
       user.save!
       # make sure user has an ordergroup (different group id though, since we also have workgroups)
       unless user.ordergroup
-        ordergroup = Ordergroup.create!(name: user.display.truncate(25))
+        ordergroup = Ordergroup.create!(name: "#{'%03d'%id} #{user.display}".truncate(25, omission: "\u2026"))
         user.memberships.create!(group: ordergroup)
       end
       # TODO update associations to existing workgroups with matching name
