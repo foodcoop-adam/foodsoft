@@ -1,8 +1,9 @@
 # encoding: utf-8
-class CurrentOrders::ArticlesController < ApplicationController
+class CurrentOrders::ArticlesController < CurrentOrders::ApplicationController
 
   before_filter :authenticate_orders
   before_filter :find_order_and_order_article, only: [:index, :show]
+  before_filter :update_base_unit, only: [:index, :show, :show_on_group_order_article_create]
 
   def index
     # sometimes need to pass id as parameter for forms

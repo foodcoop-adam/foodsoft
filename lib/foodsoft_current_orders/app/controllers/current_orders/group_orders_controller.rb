@@ -1,4 +1,4 @@
-class CurrentOrders::GroupOrdersController < ApplicationController
+class CurrentOrders::GroupOrdersController < CurrentOrders::ApplicationController
   # Security
   before_filter :ensure_ordergroup_member
 

@@ -1,4 +1,4 @@
-class CurrentOrders::OrdersController < ApplicationController
+class CurrentOrders::OrdersController < CurrentOrders::ApplicationController
 
   before_filter :authenticate_orders, except: :my
 

@@ -2,7 +2,7 @@
 -# @todo move to model
 - quantity, tolerance, result = goa.quantity, goa.tolerance, goa.result
 - multiplier, unit = 1, '× ' + goa.order_article.article.unit
-- if local_assigns[:base_unit] and unit = goa.order_article.article.unit_unit
+- if local_assigns[:base_unit] && unit = goa.order_article.article.unit_unit
   - multiplier = unit.scalar
   - unit = unit.units
 -# output row

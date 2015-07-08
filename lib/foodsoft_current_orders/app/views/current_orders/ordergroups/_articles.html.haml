@@ -1,5 +1,5 @@
 - if @ordergroup
-  %table.table.table-hover#articles_by_groups_table{data: {'base-unit' => params[:base_unit]}}
+  %table.table.table-hover#articles_by_groups_table{data: {'base-unit' => @base_unit}}
     %thead
       %tr
         %th{style: 'width: 35%'}= heading_helper Article, :name
@@ -16,15 +16,15 @@
         %td.center
           .btn-group
             - if true #if units and units.units != order_article.article.unit
-              = link_to t('current_orders.articles.ordergroups.piece'), current_orders_ordergroups_path(id: @ordergroup.id), remote: true, class: "btn btn-small #{'active' unless params[:base_unit]}"
-              = link_to t('current_orders.articles.ordergroups.unit'), current_orders_ordergroups_path(id: @ordergroup.id, base_unit: true), remote: true, class: "btn btn-small #{'active' if params[:base_unit]}"
+              = link_to t('current_orders.articles.ordergroups.piece'), current_orders_ordergroups_path(id: @ordergroup.id, base_unit: false), remote: true, class: "btn btn-small #{'active' unless @base_unit}"
+              = link_to t('current_orders.articles.ordergroups.unit'), current_orders_ordergroups_path(id: @ordergroup.id, base_unit: true), remote: true, class: "btn btn-small #{'active' if @base_unit}"
 
     - total = 0
     %tbody.list
       - if @goas and @goas.length > 0
         - for goa in @goas
           - total += goa.total_price
-          = render 'article', goa: goa, base_unit: params[:base_unit]
+          = render 'article', goa: goa, base_unit: @base_unit
 
       - else
         %tr
