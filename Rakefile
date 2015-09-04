@@ -4,6 +4,6 @@
 
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
-require 'rspec-rerun/tasks'
+require 'rspec-rerun/tasks' if Rails.env.test? || Rails.env.development?
 
 Foodsoft::Application.load_tasks
