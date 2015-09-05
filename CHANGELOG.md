@@ -1,3 +1,11 @@
+# Foodsoft 3.3.8-adam
+(5 Sep 2015)
+
+* Show more friendly error pages.
+* Keep base unit switch in the same position across page views.
+* Bugfix: better handle sending a message without recipients.
+* Bugfix: include fonts in PDF for better supporting utf-8 characters.
+
 # Foodsoft 3.3.7-adam
 (15 May 2015)
 
