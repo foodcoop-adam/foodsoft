@@ -1,6 +1,6 @@
 Foodsoft
 =========
-[![Build Status](https://travis-ci.org/foodcoop-adam/foodsoft.png?branch=master)](https://travis-ci.org/foodcoop-adam/foodsoft)
+[![Build Status](https://travis-ci.org/foodcoop-adam/foodsoft.svg?branch=beta)](https://travis-ci.org/foodcoop-adam/foodsoft)
 [![Coverage Status](https://coveralls.io/repos/foodcoop-adam/foodsoft/badge.png?branch=master)](https://coveralls.io/r/foodcoop-adam/foodsoft?branch=master)
 [![Docs Status](http://inch-ci.org/github/foodcoop-adam/foodsoft.png?branch=master)](http://inch-ci.org/github/foodcoop-adam/foodsoft)
 [![Code Climate](https://codeclimate.com/github/foodcoop-adam/foodsoft.png)](https://codeclimate.com/github/foodcoop-adam/foodsoft)
