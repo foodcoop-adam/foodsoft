@@ -112,6 +112,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'test-unit', '~> 3.0' # required for Ruby 2.2+
   gem 'rspec-rails'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'faker'
