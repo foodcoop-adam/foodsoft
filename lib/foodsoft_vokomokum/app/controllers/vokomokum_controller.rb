@@ -26,11 +26,13 @@ class VokomokumController < ApplicationController
     end
     redirect_to redirect_to_url
 
+  rescue FoodsoftVokomokum::InactiveException => e
+    Rails.logger.debug "Vokomokum authentication returned inactive user"
+    redirect_with_params FoodsoftConfig[:vokomokum_members_url], error: 'user inactive'
+
   rescue FoodsoftVokomokum::AuthnException => e
     Rails.logger.warn "Vokomokum authentication failed: #{e.message}"
-    returl = Addressable::URI.parse(FoodsoftConfig[:vokomokum_members_url])
-    returl.query_values = (returl.query_values or {}).merge({came_from: request.original_url})
-    redirect_to returl.to_s
+    redirect_with_params FoodsoftConfig[:vokomokum_members_url], came_from: request.original_url
   end
 
   def export_amounts
@@ -60,6 +62,12 @@ class VokomokumController < ApplicationController
       # TODO update associations to existing workgroups with matching name
       user
     end
+  end
+
+  def redirect_with_params(url, params)
+    returl = Addressable::URI.parse(url)
+    returl.query_values = (returl.query_values or {}).merge(params)
+    redirect_to returl.to_s
   end
 
 end

@@ -5,6 +5,7 @@ module FoodsoftVokomokum
 
   class VokomokumException < Exception; end
   class AuthnException < VokomokumException; end
+  class InactiveException < AuthnException; end
   class UploadException < VokomokumException; end
 
   # Validate user at Vokomokum member system from existing cookies, return user info.
@@ -16,6 +17,7 @@ module FoodsoftVokomokum
     json = ActiveSupport::JSON.decode(res.body)
     json['error'] and raise AuthnException.new('Vokomokum login failed: ' + json['error'])
     json['user_id'].blank? and return
+    json['active'] or raise InactiveException.new("Welcome back! You can't order just yet, please contact membership@vokomokum.nl to become active again.")
     {
       id: json['user_id'],
       first_name: json['given_name'],
