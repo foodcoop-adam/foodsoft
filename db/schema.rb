@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141111155832) do
+ActiveRecord::Schema.define(:version => 20150923190747) do
 
   create_table "adyen_notifications", :force => true do |t|
     t.boolean  "live",                                :default => false, :null => false
@@ -34,17 +34,17 @@ ActiveRecord::Schema.define(:version => 20141111155832) do
 
   add_index "adyen_notifications", ["psp_reference", "event_code", "success"], :name => "adyen_notification_uniqueness", :unique => true
 
-  create_table "article_categories", force: true do |t|
-    t.string  "name",        default: "", null: false
+  create_table "article_categories", :force => true do |t|
+    t.string  "name",        :default => "", :null => false
     t.string  "description"
     t.string  "ancestry"
     t.integer "position"
-    t.string "scope"
+    t.string  "scope"
   end
 
-  add_index "article_categories", ["ancestry"], name: "index_article_categories_on_ancestry", using: :btree
-  add_index "article_categories", ["name"], name: "index_article_categories_on_name", unique: true, using: :btree
-  add_index "article_categories", ["position"], name: "index_article_categories_on_position", using: :btree
+  add_index "article_categories", ["ancestry"], :name => "index_article_categories_on_ancestry"
+  add_index "article_categories", ["name"], :name => "index_article_categories_on_name", :unique => true
+  add_index "article_categories", ["position"], :name => "index_article_categories_on_position"
   add_index "article_categories", ["scope"], :name => "index_article_categories_on_scope"
 
   create_table "article_prices", :force => true do |t|
@@ -105,19 +105,19 @@ ActiveRecord::Schema.define(:version => 20141111155832) do
   add_index "deliveries", ["supplier_id"], :name => "index_deliveries_on_supplier_id"
 
   create_table "financial_transactions", :force => true do |t|
-    t.integer  "ordergroup_id",                                  :default => 0, :null => false
-    t.decimal  "amount",           :precision => 8, :scale => 2
-    t.text     "note",                                                          :null => false
-    t.integer  "user_id",                                        :default => 0, :null => false
-    t.datetime "created_on",                                                    :null => false
+    t.integer  "ordergroup_id",                                     :default => 0, :null => false
+    t.decimal  "amount",              :precision => 8, :scale => 2
+    t.text     "note",                                                             :null => false
+    t.integer  "user_id",                                           :default => 0, :null => false
+    t.datetime "created_on",                                                       :null => false
     t.datetime "updated_on"
     t.string   "payment_method"
     t.string   "payment_plugin"
     t.string   "payment_id"
-    t.decimal  "payment_amount",   :precision => 8, :scale => 3
+    t.decimal  "payment_amount",      :precision => 8, :scale => 3
     t.string   "payment_currency"
     t.string   "payment_state"
-    t.decimal  "payment_fee",      :precision => 8, :scale => 3
+    t.decimal  "payment_fee",         :precision => 8, :scale => 3
     t.string   "payment_acct_number"
     t.string   "payment_acct_name"
     t.text     "payment_info"
@@ -127,12 +127,12 @@ ActiveRecord::Schema.define(:version => 20141111155832) do
   add_index "financial_transactions", ["payment_plugin", "payment_id"], :name => "index_financial_transactions_on_payment_plugin_and_payment_id"
 
   create_table "group_order_article_quantities", :force => true do |t|
-    t.integer  "group_order_article_id", :default => 0,     :null => false
-    t.integer  "quantity",               :default => 0
-    t.integer  "tolerance",              :default => 0
-    t.datetime "created_on",                                :null => false
+    t.integer  "group_order_article_id",   :default => 0,     :null => false
+    t.integer  "quantity",                 :default => 0
+    t.integer  "tolerance",                :default => 0
+    t.datetime "created_on",                                  :null => false
     t.integer  "financial_transaction_id"
-    t.boolean  "confirmed",              :default => false, :null => false
+    t.boolean  "confirmed",                :default => false, :null => false
   end
 
   add_index "group_order_article_quantities", ["group_order_article_id"], :name => "index_group_order_article_quantities_on_group_order_article_id"
@@ -279,6 +279,7 @@ ActiveRecord::Schema.define(:version => 20141111155832) do
     t.integer  "created_by_user_id"
     t.datetime "pickup"
     t.string   "scope"
+    t.datetime "boxfill"
   end
 
   add_index "orders", ["scope"], :name => "index_orders_on_scope"
@@ -348,9 +349,9 @@ ActiveRecord::Schema.define(:version => 20141111155832) do
   end
 
   create_table "suppliers", :force => true do |t|
-    t.string   "name",               :default => "", :null => false
-    t.string   "address",            :default => "", :null => false
-    t.string   "phone",              :default => "", :null => false
+    t.string   "name",               :default => "",   :null => false
+    t.string   "address",            :default => "",   :null => false
+    t.string   "phone",              :default => "",   :null => false
     t.string   "phone2"
     t.string   "fax"
     t.string   "email"

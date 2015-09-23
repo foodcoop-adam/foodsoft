@@ -22,7 +22,7 @@ class GroupOrder < ActiveRecord::Base
   scope :in_finished_orders, joins(:order).where(:orders => {:state => 'finished'})
   scope :in_unsettled_orders, joins(:order).where(:orders => {:state => ['open', 'finished']})
 
-  scope :ordered, :include => :ordergroup, :order => 'groups.name'
+  scope :ordered, -> { includes(:ordergroup).order('groups.name') }
 
   # Updates the "price" attribute.
   def update_price!
@@ -37,4 +37,3 @@ class GroupOrder < ActiveRecord::Base
   end
 
 end
-
