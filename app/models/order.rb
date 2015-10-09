@@ -280,17 +280,12 @@ class Order < ActiveRecord::Base
   # Sets order.status to 'close' and updates all Ordergroup.account_balances
   def close!(user)
     raise I18n.t('orders.model.error_closed') if closed?
-    transaction_note = I18n.t('orders.model.notice_close', :name => name,
-                              :ends => ends.strftime(I18n.t('date.formats.default')))
 
-    gos = group_orders.all(:include => :ordergroup)       # Fetch group_orders
-    gos.each { |group_order| group_order.update_price! }  # Update prices of group_orders
+    # Update prices of group_orders
+    group_orders.find_each(&:update_price!)
 
     transaction do                                        # Start updating account balances
-      for group_order in gos
-        price = group_order.price * -1                    # decrease! account balance
-        group_order.ordergroup.add_financial_transaction!(price, transaction_note, user)
-      end
+      charge_group_orders!(user)
 
       if stockit?                                         # Decreases the quantity of stock_articles
         for oa in order_articles.all(:include => :article)
@@ -356,6 +351,19 @@ class Order < ActiveRecord::Base
   # This will be either the maximum value of a current order or the actual order value of a finished order.
   def update_price_of_group_orders
     group_orders.each { |group_order| group_order.update_price! }
+  end
+
+  def charge_group_orders!(user)
+    group_orders.includes(:ordergroup).find_each do |group_order|
+      price = group_order.price * -1 # decrease! account balance
+      group_order.ordergroup.add_financial_transaction!(price, transaction_note, user)
+    end
+  end
+
+  def transaction_note
+    @transaction_note ||= begin
+      I18n.t 'orders.model.notice_close', name: name, ends: ends.strftime(I18n.t('date.formats.default'))
+    end
   end
 
 end
