@@ -7,7 +7,7 @@ with the ordering system of [Vokomokum](http://www.vokomokum.nl/), a Foodcoop
 based in Amsterdam, The Netherlands. It features:
 * login using an existing session cookie,
 * automatic user creation on successful login, and
-* uploading of ordergroup totals to the Vokomokum system (in progress).
+* sending order totals to the Vokomokum members system when settling.
 
 
 Configuration
@@ -18,9 +18,6 @@ This plugin is configured in the foodcoop configuration in foodsoft's
    ```yaml
    # Vokomokum members website url
    vokomokum_members_url: http://members.vokomokum.nl/
-
-   # Vokomokum order website url
-   vokomokum_order_url: http://order.vokomokum.nl/
 
    # Vokomokum cookie domain (for single-logout)
    vokomokum_cookie_domain: .vokomokum.nl

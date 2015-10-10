@@ -1,21 +1,20 @@
 module FoodsoftVokomokum
-  module FinishOrder
+  module SettleOrder
 
     def self.included(base) # :nodoc:
       base.class_eval do
-        alias_method :orig_finish!, :finish!
 
-        attr_reader :vokomokum_finishing
-        @vokomokum_finishing = false
+        private
 
-        def finish!(user, options={})
-          Order.transaction do
-            @vokomokum_finishing = true
-            ret = orig_finish!(user, options)
-            @vokomokum_finishing = false
-            FoodsoftVokomokum.upload_amounts
-            ret
+        def charge_group_orders!(user)
+          charges = []
+          group_orders.includes(:ordergroup => :users).find_each do |group_order|
+            user_id = FoodsoftVokomokum.userid_for_ordergroup(group_order.ordergroup)
+            user_id.present? or raise Exception.new("No user for ordergroup '#{group_order.ordergroup.name}'")
+            charges << {order_id: id, amount: group_order.price.to_f, user_id: user_id, note: transaction_note}
           end
+          s = FoodsoftVokomokum.charge_members!(user.vokomokum_auth_cookies, charges)
+          Rails.logger.info s
         end
 
       end
@@ -25,5 +24,5 @@ module FoodsoftVokomokum
 end
 
 ActiveSupport.on_load(:after_initialize) do
-  Order.send :include, FoodsoftVokomokum::FinishOrder
+  Order.send :include, FoodsoftVokomokum::SettleOrder
 end

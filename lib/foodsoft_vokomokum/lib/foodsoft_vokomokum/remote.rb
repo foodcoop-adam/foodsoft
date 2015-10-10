@@ -29,62 +29,26 @@ module FoodsoftVokomokum
     raise AuthnException.new('Vokomokum login returned an invalid response: ' + error.message)
   end
 
-  # Upload ordergroup totals to Vokomokum system.
-  #   This is a hash of {ordergroup_id: sum}
-  #   Type can be one of 'Groente', 'Kaas', 'Misc.'
-  def self.upload_amounts(amounts = all_amounts, type = 'Groente')
-    Rails.logger.debug "Vokomokum update for #{type}: #{amounts.inspect}"
-
-    # first submit as CSV to see if there are any errors
-    self.upload_amounts_csv(amounts, type)
-
-    type = type.downcase.gsub '.',''
-    parms = {submit: 'Submit', which: type, column: "mo_vers_#{type}"}
-
-    amounts.each_pair do |ordergroup, amount|
-      user = user_for_ordergroup(ordergroup)
-      if user.nil?
-        if 0 != amount
-          Rails.logger.warn "Ordergroup ##{ordergroup} has no users, cannot book amount: #{amount}"
-        end
-      elsif user.id < ID_OFFSET # only upload amounts for vokomokum users
-        parms["mo_vers_#{type}_#{user.id}"] = amount
-      end
-    end
-
-    res = order_req('/cgi-bin/vers_upload.cgi', parms);
-    if res.body =~ /<h2\s+class="errmsg"[^>]*>(.*?)<\/h2>/m
-      raise UploadException.new("Vokomokum upload failed: #{$1}")
+  # Charges members
+  # @return [String] Status message on success
+  def self.charge_members!(cookies, charges)
+    res = members_req('charge-members', cookies, {charges: charges})
+    Rails.logger.debug 'Vokomokum charge-members returned: ' + res.body
+    json = ActiveSupport::JSON.decode(res.body)
+    if json['status'] == 'ok'
+      json['msg']
+    elsif json['msg'] =~ /only .* people can do this/i
+      raise AuthnException.new('Vokomokum charge-members failed: ' + json['msg'])
+    else
+      raise VokomokumException.new('Vokomokum charge-members failed: ' + json['msg'])
     end
   end
-
-  # Submit amounts as CSV.
-  # An UploadException is raised if there are any errors in the data.
-  def self.upload_amounts_csv(amounts = all_amounts, type = 'Groente')
-    # submit fresh page
-    res = order_req('/cgi-bin/vers_upload.cgi', {
-                      type => type,
-                      paste: export_amounts(amounts)
-    });
-    if res.body =~ /<h2\s+class="errmsg"[^>]*>(.*?)<\/h2>/m
-      raise UploadException.new("Vokomokum upload failed: #{$1}")
-    end
-
-    # TODO submit the form, or it won't be saved at all
-  end
-
-
 
   protected
 
-  def self.members_req(path, cookies)
-    data = {client_id: FoodsoftConfig[:vokomokum_client_id], client_secret: FoodsoftConfig[:vokomokum_client_secret]}
+  def self.members_req(path, cookies, data={})
+    data = {client_id: FoodsoftConfig[:vokomokum_client_id], client_secret: FoodsoftConfig[:vokomokum_client_secret]}.merge(data)
     self.remote_req(FoodsoftConfig[:vokomokum_members_url], path, data, cookies)
-  end
-
-  def self.order_req(path, data)
-    data = data.merge({client_id: FoodsoftConfig[:vokomokum_client_id], client_secret: FoodsoftConfig[:vokomokum_client_secret]})
-    self.remote_req(FoodsoftConfig[:vokomokum_order_url], path, data)
   end
 
   def self.remote_req(url, path, data=nil, cookies={})
@@ -95,7 +59,8 @@ module FoodsoftVokomokum
       req = Net::HTTP::Get.new(uri.request_uri)
     else
       req = Net::HTTP::Post.new(uri.request_uri)
-      req.set_form_data data
+      req.content_type = 'application/json'
+      req.body = data.to_json
     end
     # TODO cookie-encode the key and value
     req['Cookie'] = cookies.to_a.map {|v| "#{v[0]}=#{v[1]}"}.join('; ') #
@@ -112,7 +77,7 @@ module FoodsoftVokomokum
       raise UploadException.new("Could not connect to Vokomokum: #{exc.message}")
     end
 
-    res.code.to_i == 200 or raise UploadException.new("Vokomokum upload returned with HTTP error #{res.code}")
+    res.code.to_i == 200 or raise UploadException.new("Vokomokum request returned with HTTP error #{res.code}")
     res
   end
 
