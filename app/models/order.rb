@@ -145,16 +145,18 @@ class Order < ActiveRecord::Base
   # I guess `def initialize` would work, but it's tricky http://stackoverflow.com/questions/1186400
   def init_dates
     self.starts ||= Time.now
-    if FoodsoftConfig[:order_schedule]
+    if cfg = FoodsoftConfig[:order_schedule]
       # try to be smart when picking a reference day
-      last = (DateTime.parse(FoodsoftConfig[:order_schedule]['initial']) rescue nil)
+      last = (DateTime.parse(cfg['initial']) rescue nil)
       last ||= Order.finished.reorder(:pickup).where('pickup IS NOT NULL').first.try(:pickup)
       last ||= self.starts
       # adjust end and pickup dates
-      self.ends   ||= FoodsoftDateUtil.next_occurrence last, self.starts,
-                        FoodsoftConfig[:order_schedule]['ends']
-      self.pickup ||= FoodsoftDateUtil.next_occurrence last, self.starts,
-                        FoodsoftConfig[:order_schedule]['pickup']
+      if cfg['ends'] && cfg['ends']['recurr']
+        self.ends ||= FoodsoftDateUtil.next_occurrence last, self.starts, cfg['ends']
+      end
+      if cfg['pickup'] && cfg['pickup']['recurr']
+        self.pickup ||= FoodsoftDateUtil.next_occurrence last, self.starts, cfg['pickup']
+      end
     end
     self
   end
