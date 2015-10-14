@@ -1,3 +1,8 @@
+# Foodsoft 3.3.9-adam
+(14 Oct 2015)
+
+* Bugfix: only prefill order dates when specified in the configuration
+
 # Foodsoft 3.3.8-adam
 (5 Sep 2015)
 
