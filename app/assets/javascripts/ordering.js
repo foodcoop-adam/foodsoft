@@ -64,13 +64,17 @@ $(function() {
     var amount_to_order = units_to_order * unit_quantity,
         quantity_left = Math.max(total_quantity - amount_to_order, 0),
         tolerance_left = total_tolerance - Math.max(amount_to_order - total_quantity, 0),
+        tolerance_left_clip = Math.min(tolerance_left, unit_quantity),
         missing = Math.max(unit_quantity - quantity_left - tolerance_left, 0);
 
     function spct(x) { return String(Math.floor(100*x/unit_quantity)) + '%'; }
 
-    console.log(quantity_left, tolerance_left, missing);
-    $('.progress .bar:nth-child(1)', row).width(spct(quantity_left)).text(quantity_left);
-    $('.progress .bar:nth-child(2)', row).width(spct(tolerance_left)).text(tolerance_left)
+    $('.progress .bar:nth-child(1)', row)
+      .width(spct(quantity_left))
+      .text(quantity_left);
+    $('.progress .bar:nth-child(2)', row)
+      .width(spct(tolerance_left_clip))
+      .text(tolerance_left_clip + (tolerance_left > tolerance_left_clip ? '+' : ''))
       .toggleClass('bar-light', quantity_left != 0)
       .toggleClass('bar-lighter', quantity_left == 0);
     $('.progress .text', row).text(missing);

@@ -76,13 +76,16 @@ module GroupOrdersHelper
 
     quantity_left = [order_article.quantity - amount_to_order, 0].max
     tolerance_left = order_article.tolerance - [amount_to_order - order_article.quantity, 0].max
+    tolerance_left_clip = [tolerance_left, unit_quantity].min
     missing = [unit_quantity - quantity_left - tolerance_left, 0].max
 
-    pct = ->(x){ (100*x/unit_quantity).to_i }
+    spct = ->(x){ "width: #{(100*x/unit_quantity).to_i}%" }
 
+    tolerance_left_txt = "#{tolerance_left_clip}#{"+" if tolerance_left > tolerance_left_clip}"
+    clslight = quantity_left==0 ? "bar-lighter" : "bar-light"
     content_tag(:div, class: "progress #{'progress-reverse' if quantity_left==0}") do
-      content_tag(:div, quantity_left, class: "bar", style: "width: #{pct[quantity_left]}%") +
-      content_tag(:div, tolerance_left, class: "bar bar-light#{'er bar-inset' if quantity_left==0}", style: "width: #{pct[tolerance_left]}%") +
+      content_tag(:div, quantity_left, class: "bar", style: spct[quantity_left]) +
+      content_tag(:div, tolerance_left_txt, class: "bar #{clslight}", style: spct[tolerance_left_clip]) +
       content_tag(:span, missing, class: "text")
     end
   end
