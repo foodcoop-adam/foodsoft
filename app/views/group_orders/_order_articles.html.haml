@@ -1,3 +1,6 @@
+- if @has_boxfill
+  .alert.alert-info= t 'group_orders.form.in_boxfill_phase'
+
 = form_for :group_order, url: group_order_path(params[:id]), method: :put do |f|
   %table.table.table-hover
     %thead
