@@ -1,5 +1,6 @@
 
 $(function() {
+  // handlers
   $(document).on('click', 'button[data-increment]', function() {
     data_delta_update($('#'+$(this).data('increment')), +1);
   });
@@ -11,7 +12,7 @@ $(function() {
   });
 });
 
-function data_delta_update(el, direction) {
+function data_delta_update(el, direction, editing) {
   var id = $(el).attr('id');
 
   var min = $(el).data('min');
@@ -30,13 +31,15 @@ function data_delta_update(el, direction) {
   $('button[data-decrement='+id+']').attr('disabled', newval<=min ? 'disabled' : null);
   $('button[data-increment='+id+']').attr('disabled', newval>=max ? 'disabled' : null);
 
-  // warn when what was entered is not a number
-  $(el).toggleClass('error', val!='' && val!='.' && (!$.isNumeric(val) || val < 0));
+  if (editing !== false) {
+    // warn when what was entered is not a number
+    $(el).toggleClass('error', val!='' && val!='.' && (!$.isNumeric(val) || val < 0));
 
-  // update field, unless the user is typing
-  if (!$(el).is(':focus')) {
-    $(el).val(round_float(newval, granularity));
-    $(el).trigger('changed');
+    // update field, unless the user is typing
+    if (!$(el).is(':focus')) {
+      $(el).val(round_float(newval, granularity));
+      $(el).trigger('changed');
+    }
   }
 }
 
@@ -46,4 +49,3 @@ function round_float(s, granularity) {
   var e = granularity ? 1/granularity : 1000;
   return Math.round(Number(s)*e) / e;
 }
-

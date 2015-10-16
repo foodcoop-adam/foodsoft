@@ -185,7 +185,7 @@ $(function() {
           .toggleClass('icon-caret-down', expanded);
       }
     });
-    
+
     // See stupidtable.js for initialization of local table sorting
 
     newElementsReady();
@@ -210,6 +210,11 @@ function newElementsReady() {
     //   bubbling - http://stackoverflow.com/questions/9577971
     $('form[data-validate]').one('focusin', function() {
       $(this).enableClientSideValidations();
+    });
+
+    // initialize delta input button states
+    $('input[type="text"][data-delta]').each(function() {
+      data_delta_update(this, 0, false);
     });
 }
 
@@ -270,4 +275,3 @@ function highlightRow(checkbox) {
         row.removeClass('selected');
     }
 }
-
