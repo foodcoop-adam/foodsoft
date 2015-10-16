@@ -12,9 +12,15 @@ Web-based software to manage a non-profit food coop (product catalog, ordering, 
 
 A food cooperative is a group of people that buy food from suppliers of their own choosing. A collective do-it-yourself supermarket. Members  order their products online and collect them on a specified day. And all put in a bit of work to make that possible. Foodsoft facilitates the process.
 
-This branch contains the version used by many Dutch food cooperatives (including [Voedselcollectief NL](http://www.voedselcollectief.org)-based coops). We track [foodcoops/foodsoft](https://github.com/foodcoops/foodsoft), and merge in some features found in branches of this repository, as well as some local changes.
+This branch contains the version used by a couple of Dutch food cooperatives, most importantly
+[Foodcoop Amsterdam](http://www.foodcoopamsterdam.nl), [Vokomokum](http://www.vokomokum.nl),
+[FoodCoopNoord](http://www.foodcoopnoord.nl) and [Voedlink](http://www.voedlink.nl).
 
-If you're a food coop considering to use foodsoft, you're welcome to [contact us]. Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). You can [read documentation](http://foodcoop-adam.github.io/) to get an impression of the software. When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
+It is based on [foodcoops/foodsoft](https://github.com/foodcoops/foodsoft) (which we call _upstream_).
+While new features are still being added, ultimately this is all meant to be integrated back into upstream
+([#163](https://github.com/foodcoop-adam/foodsoft/issues/163)).
+
+If you're a food coop considering to use foodsoft, you're welcome to [contact us](dev-voko-contact@willem.engen.nl). Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). You can [read documentation](http://foodcoop-adam.github.io/) to get an impression of the software. When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
 
 More information about using this software and contributing can be found on [our wiki](https://github.com/foodcoop-adam/foodsoft/wiki), as wel [foodsoft's wiki](https://github.com/foodcoops/foodsoft/wiki).
 
@@ -35,6 +41,9 @@ Developing
 Get foodsoft [running locally](doc/SETUP_DEVELOPMENT.md),
 then visit our [Developing Guidelines](https://github.com/foodcoops/foodsoft/wiki/Developing-Guidelines)
 page on the wiki.
+
+When developing a new feature, please consider to make it work on upstream first, then backport it here.
+That helps keeping the focus on integrating everything back into upstream.
 
 
 Deploying
