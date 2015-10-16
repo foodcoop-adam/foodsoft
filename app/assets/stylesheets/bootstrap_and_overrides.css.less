@@ -48,7 +48,7 @@ body {
 
 
 // Fix empty dd tags in horizontal dl, see https://github.com/twitter/bootstrap/issues/4062
-.dl-horizontal { 
+.dl-horizontal {
     dd { .clearfix(); }
 }
 
@@ -164,7 +164,7 @@ table {
   td.odd {
     background-color: @tableBackgroundAccent;
   }
-  
+
   td.main_info {
     font-weight: bold;
   }
@@ -282,6 +282,11 @@ th.price_markup_note {
 }
 .dimmed {
   color: tint(@textColor, @nonessentialDim);
+}
+
+// give less attention to inputs with zero value that can't be changed
+.delta-input-zero .delta-input-disabled {
+  opacity: 0.5;
 }
 
 .article-info-container {
@@ -478,7 +483,7 @@ td.symbol, th.symbol {
 .select2-container.input-small {
   width: inherit;
 }
- 
+
 // get rid of extra bottom margin inside well
 .well p:last-child {
   margin-bottom: 0;

@@ -8,27 +8,27 @@
   %td= article_origin order_article.article
   %td.unit{data: {'unit_quantity' => order_article.price.unit_quantity}}= order_article.article.unit
   %td.colsep-right.price{data: {value: order_article.price.fc_price}}= number_to_currency(order_article.price.fc_price)
-  %td.center.quantity
+  %td.center.quantity{class: ('delta-input-zero' if group_order_article.quantity == 0)}
     - if cur_open
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
-        - data_delta = {'min' => 0, 'granularity' => 1}
-        - data_delta['max'] = order_article.quantity_available + group_order_article.quantity if order_article.max_quantity
-        - data_delta['value-others'] = order_article.quantity - group_order_article.quantity
+        - data_delta = {min: 0, granularity: 1}
+        - data_delta[:max] = order_article.quantity_available + group_order_article.quantity if order_article.max_quantity
+        - data_delta[:value_others] = order_article.quantity - group_order_article.quantity
         - if order_article.order.boxfill?
-          - data_delta['min'] = group_order_article.quantity
-          - data_delta['max'] = [data_delta['max'], order_article.quantity + order_article.missing_units].compact.min
+          - data_delta[:min] = group_order_article.quantity
+          - data_delta[:max] = [data_delta['max'], order_article.quantity + order_article.missing_units].compact.min
         = f.input_field :quantity, as: :delta, class: 'input-nano', data: data_delta, id: "q_#{order_article.id}"
     - else
       = group_order_article.quantity
   - if @has_tolerance
-    %td.center.tolerance
+    %td.center.tolerance{class: ('delta-input-zero' if group_order_article.tolerance == 0)}
       - if cur_open
         = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
           - if cur_has_tolerance
-            - data_delta = {'min' => 0, 'granularity' => 1, 'max' => order_article.price.unit_quantity-1}
-            - data_delta['value-others'] = order_article.tolerance - group_order_article.tolerance
+            - data_delta = {min: 0, granularity: 1, max: order_article.price.unit_quantity-1}
+            - data_delta[:value_others] = order_article.tolerance - group_order_article.tolerance
             - if order_article.order.boxfill?
-              - data_delta['min'] = group_order_article.tolerance
+              - data_delta[:min] = group_order_article.tolerance
             = f.input_field :tolerance, as: :delta, class: 'input-nano', data: data_delta, id: "t_#{order_article.id}"
       - else
         = group_order_article.tolerance
