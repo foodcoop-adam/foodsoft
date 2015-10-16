@@ -15,15 +15,7 @@ class Admin::ConfigsController < Admin::BaseController
   end
 
   def update
-    # turn recurring rules into something palatable
-    if p = params[:config][:order_schedule]
-      for k in [:pickup, :ends] do
-        if p[k] and p[k][:recurr]
-          p[k][:recurr] = ActiveSupport::JSON.decode(p[k][:recurr])
-          p[k][:recurr] = FoodsoftDateUtil.rule_from(p[k][:recurr]).to_ical if p[k][:recurr]
-        end
-      end
-    end
+    parse_recurring_selects!(params[:config][:order_schedule])
     # store configuration
     ActiveRecord::Base.transaction do
       # TODO support nested configuration keys
@@ -44,6 +36,18 @@ class Admin::ConfigsController < Admin::BaseController
     engines = Rails::Engine.subclasses.map(&:instance).select { |e| e.respond_to?(:configuration) }
     engines.each { |e| e.configuration(@tabs, self) }
     @tabs.uniq!
+  end
+
+  # turn recurring rules into something palatable
+  def parse_recurring_selects!(config)
+    if config
+      for k in [:pickup, :boxfill, :ends] do
+        if config[k] && config[k][:recurr]
+          config[k][:recurr] = ActiveSupport::JSON.decode(config[k][:recurr])
+          config[k][:recurr] = FoodsoftDateUtil.rule_from(config[k][:recurr]).to_ical if config[k][:recurr]
+        end
+      end
+    end
   end
 
 end

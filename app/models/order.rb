@@ -38,7 +38,7 @@ class Order < ActiveRecord::Base
 
   # Allow separate inputs for date and time
   include DateTimeAttribute
-  date_time_attribute :starts, :ends, :pickup
+  date_time_attribute :starts, :boxfill, :ends, :pickup
 
   def stockit?
     supplier_id == 0
@@ -137,8 +137,16 @@ class Order < ActiveRecord::Base
     state == "closed"
   end
 
+  def boxfill?
+    FoodsoftConfig[:use_boxfill] && open? && boxfill.present? && boxfill < Time.now
+  end
+
+  def is_boxfill_useful?
+    FoodsoftConfig[:use_boxfill] && supplier.try(:has_tolerance?)
+  end
+
   def expired?
-    !ends.nil? && ends < Time.now
+    ends.present? && ends < Time.now
   end
 
   # sets up first guess of dates when initializing a new object
@@ -150,7 +158,10 @@ class Order < ActiveRecord::Base
       last = (DateTime.parse(cfg['initial']) rescue nil)
       last ||= Order.finished.reorder(:pickup).where('pickup IS NOT NULL').first.try(:pickup)
       last ||= self.starts
-      # adjust end and pickup dates
+      # adjust dates
+      if cfg['boxfill'] && cfg['boxfill']['recurr'] && is_boxfill_useful?
+        self.boxfill ||= FoodsoftDateUtil.next_occurrence last, self.starts, cfg['boxfill']
+      end
       if cfg['ends'] && cfg['ends']['recurr']
         self.ends ||= FoodsoftDateUtil.next_occurrence last, self.starts, cfg['ends']
       end
@@ -301,8 +312,9 @@ class Order < ActiveRecord::Base
   protected
 
   def starts_before_ends
-    return unless ends and starts
-    errors.add(:ends, I18n.t('orders.model.error_starts_before_ends')) if ends <= starts
+    errors.add(:ends, I18n.t('orders.model.error_starts_before_ends')) if ends && starts && ends <= starts
+    errors.add(:ends, I18n.t('orders.model.error_boxfill_before_ends')) if ends && boxfill && ends <= boxfill
+    errors.add(:boxfill, I18n.t('orders.model.error_starts_before_boxfill')) if boxfill && starts && boxfill <= starts
   end
   def starts_and_ends_before_pickup
     return unless pickup
@@ -347,4 +359,3 @@ class Order < ActiveRecord::Base
   end
 
 end
-

@@ -174,6 +174,7 @@ class GroupOrdersController < ApplicationController
     @has_open_orders = @order_articles.select {|oa| oa.order.open?}.any? unless @ordergroup.not_enough_apples?
     @has_stock = @order_articles.select {|oa| oa.order.stockit?}.any?
     @has_tolerance = @order_articles.select {|oa| oa.use_tolerance? }.any?
+    @has_boxfill = @order_articles.select {|oa| oa.order.boxfill?}.any?
     @group_orders_prices = rails3_pluck(@ordergroup.group_orders.where(order_id: @orders.map(&:id)),
                                         'SUM(group_orders.price) AS price',
                                         'SUM(group_orders.gross_price) AS gross_price',
