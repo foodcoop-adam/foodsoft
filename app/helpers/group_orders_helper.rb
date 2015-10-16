@@ -72,11 +72,18 @@ module GroupOrdersHelper
 
   def final_unit_bar(order_article)
     unit_quantity = order_article.price.unit_quantity
-    progress_units = order_article.quantity+order_article.tolerance - order_article.units_to_order*unit_quantity
-    progress_pct = [100, 100*progress_units/unit_quantity].min.to_i
-    content_tag(:div, class: 'progress') do
-      content_tag(:div, progress_units, class: 'bar', style: "width: #{progress_pct}%") +
-      content_tag(:div, [0, unit_quantity-progress_units].max, class: 'bar', style: "width: #{100-progress_pct}%")
+    amount_to_order = order_article.units_to_order * unit_quantity
+
+    quantity_left = [order_article.quantity - amount_to_order, 0].max
+    tolerance_left = order_article.tolerance - [amount_to_order - order_article.quantity, 0].max
+    missing = [unit_quantity - quantity_left - tolerance_left, 0].max
+
+    pct = ->(x){ (100*x/unit_quantity).to_i }
+
+    content_tag(:div, class: "progress #{'progress-reverse' if quantity_left==0}") do
+      content_tag(:div, quantity_left, class: "bar", style: "width: #{pct[quantity_left]}%") +
+      content_tag(:div, tolerance_left, class: "bar bar-light#{'er bar-inset' if quantity_left==0}", style: "width: #{pct[tolerance_left]}%") +
+      content_tag(:span, missing, class: "text")
     end
   end
 

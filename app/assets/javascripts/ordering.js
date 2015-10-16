@@ -61,18 +61,20 @@ $(function() {
     //   update decreasing number first, to make sure that together it's no more than 100%
     //   otherwise one of the numbers in the progress bar may temporarily disappear
     // (same as GroupOrdersHelper#final_unit_bar)
-    var progress_units = total_quantity+total_tolerance - units_to_order*unit_quantity;
-    var progress_pct = Math.floor(Math.min(100, 100*progress_units/unit_quantity));
-    var bars = [
-      [$('.progress .bar:nth-child(1)', row), progress_pct,     progress_units],
-      [$('.progress .bar:nth-child(2)', row), 100-progress_pct, Math.max(0, unit_quantity-progress_units)]
-    ];
-    if (Number(bars[0][0].html()) < progress_units) bars.reverse();
-    $.each(bars, function(i, bar) {
-      bar[0]
-      .width(String(bar[1])+'%')
-      .html(String(bar[2]));
-    });
+    var amount_to_order = units_to_order * unit_quantity,
+        quantity_left = Math.max(total_quantity - amount_to_order, 0),
+        tolerance_left = total_tolerance - Math.max(amount_to_order - total_quantity, 0),
+        missing = Math.max(unit_quantity - quantity_left - tolerance_left, 0);
+
+    function spct(x) { return String(Math.floor(100*x/unit_quantity)) + '%'; }
+
+    console.log(quantity_left, tolerance_left, missing);
+    $('.progress .bar:nth-child(1)', row).width(spct(quantity_left)).text(quantity_left);
+    $('.progress .bar:nth-child(2)', row).width(spct(tolerance_left)).text(tolerance_left)
+      .toggleClass('bar-light', quantity_left != 0)
+      .toggleClass('bar-lighter', quantity_left == 0);
+    $('.progress .text', row).text(missing);
+    $('.progress', row).toggleClass('progress-reverse', quantity_left == 0);
   });
 });
 
