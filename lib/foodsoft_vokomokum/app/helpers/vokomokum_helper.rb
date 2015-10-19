@@ -13,4 +13,12 @@ module VokomokumHelper
   def my_ordergroup_path
     "#{remote_vokomokum_user_url}#transactions"
   end
+
+  # Override transaction paths
+  def finance_ordergroups_path
+    URI.join(FoodsoftConfig[:vokomokum_members_url], 'transactions').to_s
+  end
+  def finance_root_path
+    finance_ordergroups_path
+  end
 end
