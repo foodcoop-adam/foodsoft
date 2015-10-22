@@ -72,11 +72,21 @@ module GroupOrdersHelper
 
   def final_unit_bar(order_article)
     unit_quantity = order_article.price.unit_quantity
-    progress_units = order_article.quantity+order_article.tolerance - order_article.units_to_order*unit_quantity
-    progress_pct = [100, 100*progress_units/unit_quantity].min.to_i
-    content_tag(:div, class: 'progress') do
-      content_tag(:div, progress_units, class: 'bar', style: "width: #{progress_pct}%") +
-      content_tag(:div, [0, unit_quantity-progress_units].max, class: 'bar', style: "width: #{100-progress_pct}%")
+    amount_to_order = order_article.units_to_order * unit_quantity
+
+    quantity_left = [order_article.quantity - amount_to_order, 0].max
+    tolerance_left = order_article.tolerance - [amount_to_order - order_article.quantity, 0].max
+    tolerance_left_clip = [tolerance_left, unit_quantity].min
+    missing = [unit_quantity - quantity_left - tolerance_left, 0].max
+
+    spct = ->(x){ "width: #{(100*x/unit_quantity).to_i}%" }
+
+    tolerance_left_txt = "#{tolerance_left_clip}#{"+" if tolerance_left > tolerance_left_clip}"
+    clslight = quantity_left==0 ? "bar-lighter" : "bar-light"
+    content_tag(:div, class: "progress #{'progress-reverse' if quantity_left==0}") do
+      content_tag(:div, quantity_left, class: "bar", style: spct[quantity_left]) +
+      content_tag(:div, tolerance_left_txt, class: "bar #{clslight}", style: spct[tolerance_left_clip]) +
+      content_tag(:span, missing, class: "text")
     end
   end
 

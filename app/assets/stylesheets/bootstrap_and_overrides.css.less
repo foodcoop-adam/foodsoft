@@ -354,14 +354,12 @@ tr.order-article .article-info { display: none; }
     padding-right: 2px;
     .progress {
       margin: 0;
-      .bar:first-child {
-        color: #ccf;
+      .bar {
+        // give the numbers just bit less attention here
         text-shadow: none;
-      }
-      .bar:last-child {
-        color: #ddd;
-        background: inherit;
-        text-shadow: none;
+        &:not(.bar-lighter) {
+          color: fade(@white, 75%);
+        }
       }
     }
   }
@@ -614,7 +612,7 @@ i.package.icon-only {
       // XXX there must be a better way
       margin-bottom: 0;
       .help-block {
-	margin-top: 0;
+        margin-top: 0;
         margin-bottom: 20px;
       }
     }
@@ -636,6 +634,26 @@ i.package.icon-only {
 // allow to have indicator text instead of input with same markup
 .control-text {
   margin-top: 5px;
+}
+
+// make text in remaining portion of progress bar fit in
+.progress {
+  font-size: 12px;
+  text-align: center;
+  color: #ddd;
+}
+.progress-reverse .bar {
+  float: right;
+}
+.progress-light .bar, .progress .bar.bar-light {
+  #gradient > .vertical(mix(#149bdf, #f5f5f5, 70%), mix(#0480be, #f9f9f9, 70%));
+}
+.progress-lighter .bar, .progress .bar.bar-lighter {
+  #gradient > .vertical(mix(#149bdf, #f5f5f5, 5%), mix(#0480be, #f9f9f9, 5%));
+  color: #bbb;
+}
+.progress .bar.bar-inset {
+  box-shadow: inherit; // barline attracts too much attention
 }
 
 // unlock button same size as warning sign
