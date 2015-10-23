@@ -60,6 +60,7 @@ module Admin::ConfigsHelper
       options[:value] = FoodsoftDateUtil.rule_from(options[:value])
       options[:rules] ||= []
       options[:rules].unshift options[:value] unless options[:value].blank?
+      options[:rules].push [I18n.t('recurring_select.not_recurring'), '{}'] if options.delete(:allow_blank) # blank after current value
       form.select_recurring key, options.delete(:rules).uniq, options
     else
       form.input_field key, options

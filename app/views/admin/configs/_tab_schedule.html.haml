@@ -2,16 +2,16 @@
   = config_input fields, 'initial', input_html: {class: 'datepicker'}
   = fields.simple_fields_for 'pickup' do |fields|
     .fold-line
-      = config_input fields, 'recurr', as: :select_recurring, input_html: {class: 'input-xlarge'}
+      = config_input fields, 'recurr', as: :select_recurring, input_html: {class: 'input-xlarge'}, allow_blank: true
       = config_input fields, 'time', input_html: {class: 'input-mini'}
   = fields.simple_fields_for 'ends' do |fields|
     .fold-line
-      = config_input fields, 'recurr', as: :select_recurring, input_html: {class: 'input-xlarge'}
+      = config_input fields, 'recurr', as: :select_recurring, input_html: {class: 'input-xlarge'}, allow_blank: true
       = config_input fields, 'time', input_html: {class: 'input-mini'}
   #boxfill-schedule.collapse{class: ('in' if FoodsoftConfig[:use_boxfill])}
     = fields.simple_fields_for 'boxfill' do |fields|
       .fold-line
-        = config_input fields, 'recurr', as: :select_recurring, input_html: {class: 'input-xlarge'}
+        = config_input fields, 'recurr', as: :select_recurring, input_html: {class: 'input-xlarge'}, allow_blank: true
         = config_input fields, 'time', input_html: {class: 'input-mini'}
   -# can't use collapse and tooltip on same element :/
   = config_input form, :use_boxfill, as: :boolean do
