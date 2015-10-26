@@ -1,0 +1,5 @@
+en:
+  vokomokum:
+    send_payment_reminders:
+      button: 'Send payment reminders'
+      confirm: 'This will send an email to all members with a negative balance. Are you sure?'

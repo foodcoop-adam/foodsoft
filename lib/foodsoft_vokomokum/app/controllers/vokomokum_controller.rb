@@ -49,6 +49,10 @@ class VokomokumController < ApplicationController
     send_data FoodsoftVokomokum.export_amounts, filename: 'vers.csv', type: 'text/plain; charset=utf-8', disposition: 'inline'
   end
 
+  def send_payment_reminders
+    msg = FoodsoftVokomokum.send_payment_reminders!(session[:vokomokum_auth_cookies])
+    redirect_to finance_order_index_path, notice: msg
+  end
 
   protected
 

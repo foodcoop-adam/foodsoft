@@ -32,16 +32,15 @@ module FoodsoftVokomokum
   # Charges members
   # @return [String] Status message on success
   def self.charge_members!(cookies, charges)
-    res = members_req('charge-members', cookies, {charges: charges})
-    Rails.logger.debug 'Vokomokum charge-members returned: ' + res.body
-    json = ActiveSupport::JSON.decode(res.body)
-    if json['status'] == 'ok'
-      json['msg']
-    elsif json['msg'] =~ /only .* people can do this/i
-      raise AuthnException.new('Vokomokum charge-members failed: ' + json['msg'])
-    else
-      raise VokomokumException.new('Vokomokum charge-members failed: ' + json['msg'])
-    end
+    json = members_req_json('charge-members', cookies, {charges: charges})
+    json['msg']
+  end
+
+  # Sends payment reminders
+  # @return [String] Status message on success
+  def self.send_payment_reminders!(cookies)
+    json = members_req_json('mail-payment-reminders', cookies)
+    json['msg']
   end
 
   protected
@@ -49,6 +48,21 @@ module FoodsoftVokomokum
   def self.members_req(path, cookies, data={})
     data = {client_id: FoodsoftConfig[:vokomokum_client_id], client_secret: FoodsoftConfig[:vokomokum_client_secret]}.merge(data)
     self.remote_req(FoodsoftConfig[:vokomokum_members_url], path, data, cookies)
+  end
+
+  def self.members_req_json(path, cookies, data={})
+    res = self.members_req(path, cookies, data)
+    Rails.logger.debug "Vokomokum #{path} returned: " + res.body
+    json = ActiveSupport::JSON.decode(res.body)
+    if json['status'] != 'ok'
+      if json['msg'] =~ /only .* people can do this/i
+        raise AuthnException.new('Vokomokum request failed: ' + json['msg'])
+      else
+        raise VokomokumException.new('Vokomokum request failed: ' + json['msg'])
+      end
+    else
+      json
+    end
   end
 
   def self.remote_req(url, path, data=nil, cookies={})
