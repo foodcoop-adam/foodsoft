@@ -51,9 +51,9 @@ class Message < ActiveRecord::Base
 
   def reply_to=(message_id)
     @reply_to = Message.find(message_id)
-    add_recipients([@reply_to.sender])
+    add_recipients([@reply_to.sender]) if @reply_to.sender.present? # may be deleted
     self.subject = I18n.t('messages.model.reply_subject', :subject => @reply_to.subject)
-    self.body = I18n.t('messages.model.reply_header', :user => @reply_to.sender.display, :when => I18n.l(@reply_to.created_at, :format => :short)) + "\n"
+    self.body = I18n.t('messages.model.reply_header', :user => @reply_to.sender.try(:display), :when => I18n.l(@reply_to.created_at, :format => :short)) + "\n"
     @reply_to.body.each_line{ |l| self.body += I18n.t('messages.model.reply_indent', :line => l) }
   end
 
