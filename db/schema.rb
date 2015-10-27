@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150923190747) do
+ActiveRecord::Schema.define(:version => 20151027200059) do
 
   create_table "adyen_notifications", :force => true do |t|
     t.boolean  "live",                                :default => false, :null => false
@@ -272,14 +272,15 @@ ActiveRecord::Schema.define(:version => 20150923190747) do
     t.text     "note"
     t.datetime "starts"
     t.datetime "ends"
-    t.string   "state",                                            :default => "open"
-    t.integer  "lock_version",                                     :default => 0,      :null => false
+    t.string   "state",                                                   :default => "open"
+    t.integer  "lock_version",                                            :default => 0,      :null => false
     t.integer  "updated_by_user_id"
-    t.decimal  "foodcoop_result",    :precision => 8, :scale => 2
+    t.decimal  "foodcoop_result",           :precision => 8, :scale => 2
     t.integer  "created_by_user_id"
     t.datetime "pickup"
     t.string   "scope"
     t.datetime "boxfill"
+    t.datetime "payment_reminders_sent_at"
   end
 
   add_index "orders", ["scope"], :name => "index_orders_on_scope"
