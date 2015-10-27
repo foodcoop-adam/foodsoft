@@ -51,6 +51,7 @@ class VokomokumController < ApplicationController
 
   def send_payment_reminders
     msg = FoodsoftVokomokum.send_payment_reminders!(session[:vokomokum_auth_cookies])
+    Order.where(state: 'closed').where(payment_reminders_sent_at: nil).update_all(payment_reminders_sent_at: Time.now)
     redirect_to finance_order_index_path, notice: msg
   end
 

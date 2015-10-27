@@ -2,6 +2,9 @@
 
 - content_for :actionbar do
   .btn-group
-    = link_to finance_vokomokum_send_payment_reminders_path, class: 'btn', data: {method: 'post', confirm: t('vokomokum.send_payment_reminders.confirm')} do
+    - vkmk_cls = 'btn'
+    -# catch attention when all orders are settled but not all had payment mails sent
+    - vkmk_cls += ' btn-primary' if FoodsoftVokomokum.need_to_send_payment_reminders?
+    = link_to finance_vokomokum_send_payment_reminders_path, class: vkmk_cls, data: {method: 'post', confirm: t('vokomokum.send_payment_reminders.confirm')} do
       %i.icon.icon-envelope
       = t 'vokomokum.send_payment_reminders.button'
