@@ -207,8 +207,8 @@ en:
     models:
       article: Article
       article_category:
-        one: Article category
-        other: Article categories
+        one: Category
+        other: Categories
       delivery: Delivery
       financial_transaction: Financial transaction
       invoice: Invoice
