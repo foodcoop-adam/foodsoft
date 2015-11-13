@@ -38,8 +38,9 @@ body {
 
 // article status
 @articleUsedColor: green;
-@articlePartusedColor: #d50;
 @articleUnusedColor: red;
+@articlePartusedColor: #d50;          // similar urgency as articleUnusedColor
+@articclePartusedMemberColor: orange; // for members it's a little less urgent
 @articleUnavailColor: #999;
 @articleUpdatedColor: #468847;
 
@@ -272,13 +273,13 @@ th.price_markup_note {
 
 // ordering
 .used {
-  color: @articleUsedColor;
+  color: @articleUsedColor !important;
 }
 .partused {
-  color: @articlePartusedColor;
+  color: @articlePartusedColor !important;
 }
 .unused {
-  color: @articleUnusedColor;
+  color: @articleUnusedColor !important;
 }
 .dimmed {
   color: tint(@textColor, @nonessentialDim);

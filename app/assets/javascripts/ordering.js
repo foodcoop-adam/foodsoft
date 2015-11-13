@@ -49,13 +49,23 @@ $(function() {
     $('.price_total').html(I18n.l('currency', new_price_total)).data('value', new_price_total);
 
     // calculate filled units
-    var total_quantity = Number($('.quantity [data-value-others]', row).data('value-others')) + quantity;
-    var total_tolerance = Number($('.tolerance [data-value-others]', row).data('value-others')) + tolerance;
+    var quantity_others = Number($('.quantity [data-value-others]', row).data('value-others'));
+    var tolerance_others = Number($('.tolerance [data-value-others]', row).data('value-others'));
+    var total_quantity = quantity_others + quantity;
+    var total_tolerance = tolerance_others + tolerance;
     // (same as OrderArticle#calculate_units_to_order)
     var units_to_order = Math.floor(total_quantity/unit_quantity);
     var remainder = total_quantity % unit_quantity;
     units_to_order += ((remainder > 0) && (remainder + total_tolerance >= unit_quantity) ? 1 : 0)
     $('.units_to_order_value', row).html(units_to_order);
+
+    // update colors
+    // see GroupOrdersHelper#group_order_article_class_name
+    var quantity_available = (units_to_order * unit_quantity) - quantity_others;
+    $('.quantity input[data-delta]', row)
+      .toggleClass('unused',   quantity > 0 && quantity_available <= 0)
+      .toggleClass('used',     quantity > 0 && quantity_available >= quantity)
+      .toggleClass('partused', quantity > 0 && quantity_available > 0 && quantity_available < quantity);
 
     // progess bar update
     //   update decreasing number first, to make sure that together it's no more than 100%

@@ -14,10 +14,11 @@
         - data_delta = {min: 0, granularity: 1}
         - data_delta[:max] = order_article.quantity_available + group_order_article.quantity if order_article.max_quantity
         - data_delta[:value_others] = order_article.quantity - group_order_article.quantity
+        - cls = group_order_article_class_name(group_order_article.quantity, group_order_article.result(:quantity))
         - if order_article.order.boxfill?
           - data_delta[:min] = group_order_article.quantity
           - data_delta[:max] = [data_delta['max'], order_article.quantity + order_article.missing_units].compact.min
-        = f.input_field :quantity, as: :delta, class: 'input-nano', data: data_delta, id: "q_#{order_article.id}"
+        = f.input_field :quantity, as: :delta, class: "input-nano #{cls}", data: data_delta, id: "q_#{order_article.id}"
     - else
       = group_order_article.quantity
   - if @has_tolerance

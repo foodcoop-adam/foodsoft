@@ -23,13 +23,28 @@ module GroupOrdersHelper
     path ? link_to(name, path, options) : name
   end
 
-  # Return css class names for order result table
-
+  # @return [String] CSS class name for order result table
   def order_article_class_name(quantity, tolerance, result)
     if (quantity + tolerance > 0)
       result > 0 ? 'success' : 'failed'
     else
       'ignored'
+    end
+  end
+
+  # @param n [Number] Requested quantity (or tolerance)
+  # @param n_result [Number] Resulting quantity (or tolerance)
+  # @return [String] CSS class name for group_order_article based on result
+  # @see OrdersHelper#order_article_class
+  def group_order_article_class_name(n, n_result)
+    if n > 0
+      if n_result == 0
+        'unused'
+      elsif n_result < n
+        'partused'
+      else
+        'used'
+      end
     end
   end
 
