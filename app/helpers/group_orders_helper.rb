@@ -39,11 +39,11 @@ module GroupOrdersHelper
   def group_order_article_class_name(n, n_result)
     if n > 0
       if n_result == 0
-        'unused'
+        'unused member'
       elsif n_result < n
-        'partused'
+        'partused member'
       else
-        'used'
+        'used member'
       end
     end
   end

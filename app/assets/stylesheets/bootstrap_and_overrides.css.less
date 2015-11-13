@@ -39,10 +39,14 @@ body {
 // article status
 @articleUsedColor: green;
 @articleUnusedColor: red;
-@articlePartusedColor: #d50;          // similar urgency as articleUnusedColor
-@articclePartusedMemberColor: orange; // for members it's a little less urgent
+@articlePartusedColor: #d50;
 @articleUnavailColor: #999;
 @articleUpdatedColor: #468847;
+
+// similar as article status, but then for members - less urgency
+@memberArticleUsedColor: green;
+@memberArticleUnusedColor: #d50;
+@memberArticlePartusedColor: #933;
 
 // dim colors by this amount when the information is less important
 @nonessentialDim: 35%;
@@ -272,18 +276,13 @@ th.price_markup_note {
 }
 
 // ordering
-.used {
-  color: @articleUsedColor !important;
-}
-.partused {
-  color: @articlePartusedColor !important;
-}
-.unused {
-  color: @articleUnusedColor !important;
-}
-.dimmed {
-  color: tint(@textColor, @nonessentialDim);
-}
+.used            { color: @articleUsedColor !important; }
+.partused        { color: @articlePartusedColor !important; }
+.unused          { color: @articleUnusedColor !important; }
+.used.member     { color: @memberArticleUsedColor !important; }
+.partused.member { color: @memberArticlePartusedColor !important; }
+.unused.member   { color: @memberArticleUnusedColor !important; }
+.dimmed          { color: tint(@textColor, @nonessentialDim); }
 
 // give less attention to inputs with zero value that can't be changed
 .delta-input-zero .delta-input-disabled {
