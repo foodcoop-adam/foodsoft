@@ -49,10 +49,10 @@ SimpleNavigation::Configuration.run do |navigation|
 
    primary.item :config, I18n.t('navigation.config._title'), '#',
                 highlights_on: %r[/(article_categories|admin/workgroups)\b],
-                if: -> { current_user.role_finance? or current_user.role_article_meta? } do |subnav|
+                if: -> { current_user.role_article_meta? || current_user.role_admin? } do |subnav|
       subnav.item :categories, I18n.t('navigation.articles.categories'), article_categories_path, if: -> { current_user.role_article_meta? }
-      subnav.item :workgroups, I18n.t('navigation.admin.workgroups'), admin_workgroups_path
-      subnav.item :config, I18n.t('navigation.admin.config'), admin_config_path
+      subnav.item :workgroups, I18n.t('navigation.admin.workgroups'), admin_workgroups_path, if: -> { current_user.role_admin? }
+      subnav.item :config, I18n.t('navigation.admin.config'), admin_config_path, if: -> { current_user.role_admin? }
     end
 
     engines.each { |e| e.navigation(primary, self) }
