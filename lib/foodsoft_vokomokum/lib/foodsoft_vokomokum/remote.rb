@@ -22,7 +22,8 @@ module FoodsoftVokomokum
       id: json['user_id'],
       first_name: json['given_name'],
       last_name: [json['middle_name'], json['family_name']].compact.join(' '),
-      email: json['email']
+      email: json['email'],
+      groups: json['groups']
     }
   rescue ActiveSupport::JSON.parse_error => error
     raise AuthnException.new('Vokomokum login returned an invalid response: ' + error.message)

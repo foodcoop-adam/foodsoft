@@ -52,6 +52,19 @@ path, setting the `Mem` parameter to the session cookie. E.g.:
    </form>
    ```
 
+Workgroups
+----------
+
+A member's workgroup memberships are updated at each login. This requires the
+workgroup names in Foodsoft to be exactly equal to the workgroup names in the
+Vokomokum member system (including case). Please make sure to rename the
+workgroups in Foodsoft too when changing them in the members system.
+
+There is one exception: workgroup with id 1 (typically the Admin workgroup)
+is managed in Foodsoft, to make sure that if something goes wrong there are
+people who can repair it. It would be better not to delete it.
+
+
 Additional notes
 ----------------
 
@@ -59,4 +72,3 @@ Since Vokomokum uses member ids extensively, the user id of foodsoft is
 synchronised with that. This also means that any users available to foodsoft
 but not to Vokomokum are created with an offset of 20000.  If the number of
 Vokomokum users would ever cross that boundary, this needs to be increased.
-

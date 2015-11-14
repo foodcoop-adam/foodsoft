@@ -4,6 +4,12 @@ class VokomokumController < ApplicationController
   skip_before_filter :authenticate, :only => :login
   before_filter :authenticate_finance, :only => :export_amounts
 
+  # Workgroup ids not managed by Vokomokum. On login each member's groups are
+  # synchronised with Vokomokum. We assume that the first group is the admin group
+  # and managed locally in Foodsoft.
+  # @todo Add boolean to workgroup to indicate whether it is synchronized or not.
+  FOODSOFT_WORKGROUP_IDS = [1]
+
   def login
     # use cookies, but allow to get them from parameters (if on other domain)
     sweets = params.slice(:Mem, :Key)
@@ -14,7 +20,8 @@ class VokomokumController < ApplicationController
     user = update_or_create_user(userinfo[:id],
                                  userinfo[:email],
                                  userinfo[:first_name],
-                                 userinfo[:last_name])
+                                 userinfo[:last_name],
+                                 find_workgroups(userinfo[:groups]))
     super user
 
     # XXX redirection code copied from SessionController#create
@@ -42,7 +49,7 @@ class VokomokumController < ApplicationController
 
   protected
 
-  def update_or_create_user(id, email, first_name, last_name, workgroups=[])
+  def update_or_create_user(id, email, first_name, last_name, workgroups=nil)
     User.transaction do
       begin
         user = User.find(id)
@@ -59,9 +66,22 @@ class VokomokumController < ApplicationController
         ordergroup = Ordergroup.create!(name: "#{'%03d'%id} #{user.display}".truncate(25, omission: "\u2026"))
         user.memberships.create!(group: ordergroup)
       end
-      # TODO update associations to existing workgroups with matching name
+      # update workgroups
+      user.update_attributes workgroups: workgroups unless workgroups.nil?
       user
     end
+  end
+
+  # Find Foodsoft groups for those returned from Vokomokum's userinfo endpoint.
+  #
+  # Looks at each group as returned from the userinfo endpoint, and returns Foodsoft
+  # groups that this user belongs to.
+  #
+  # @param group_data [Aray<Hash<String, Object>>] Array of groups
+  # @return [Array<Workgroup>] Foodsoft workgroups this user belongs to
+  # @see FOODSOFT_WORKGROUP_IDS
+  def find_workgroups(group_data)
+    Workgroup.undeleted.where('name IN (?) OR id IN (?)', group_data.map {|d| d['name']}, FOODSOFT_WORKGROUP_IDS)
   end
 
   def redirect_with_params(url, params)
