@@ -8,9 +8,6 @@ SimpleNavigation::Configuration.run do |navigation|
   # to include an engine but keep it from modifying the menu:
   #engines.reject! { |e| e.instance_of? FoodsoftMyplugin::Engine }
 
-  use_adyen = -> { FoodsoftAdyen.enabled? rescue nil }
-  detect_pin = -> { FoodsoftAdyen.detect_pin(request) if use_adyen.call }
-
   navigation.items do |primary|
     primary.dom_class = 'nav'
 
@@ -39,7 +36,6 @@ SimpleNavigation::Configuration.run do |navigation|
       #subnav.item :stage_divider
       #subnav.item :invoices, I18n.t('navigation.finances.invoices'), finance_invoices_path
       #subnav.item :finance_home, I18n.t('navigation.finances.home'), finance_root_path
-      subnav.item :pin_terminal, I18n.t('payments.navigation.pin'), detect_payments_adyen_pin_path, if: use_adyen if defined? FoodsoftAdyen
     end
 
     primary.item :stage_divider, nil, nil, class: 'divider-vertical'
@@ -53,7 +49,7 @@ SimpleNavigation::Configuration.run do |navigation|
 
    primary.item :config, I18n.t('navigation.config._title'), '#',
                 highlights_on: %r[/(article_categories|admin/workgroups)\b],
-                if: -> { current_user.role_finance? or current_user.role_article_meta? or defined? FoodsoftAdyen } do |subnav|
+                if: -> { current_user.role_finance? or current_user.role_article_meta? } do |subnav|
       subnav.item :categories, I18n.t('navigation.articles.categories'), article_categories_path, if: -> { current_user.role_article_meta? }
       subnav.item :workgroups, I18n.t('navigation.admin.workgroups'), admin_workgroups_path
       subnav.item :config, I18n.t('navigation.admin.config'), admin_config_path
