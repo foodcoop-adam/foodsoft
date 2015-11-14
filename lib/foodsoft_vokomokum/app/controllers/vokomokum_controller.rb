@@ -67,7 +67,10 @@ class VokomokumController < ApplicationController
         user.memberships.create!(group: ordergroup)
       end
       # update workgroups
-      user.update_attributes workgroups: workgroups unless workgroups.nil?
+      unless workgroups.nil?
+        new_workgroups = workgroups + user.workgroups.where(id: FOODSOFT_WORKGROUP_IDS).to_a
+        user.update_attributes workgroups: new_workgroups
+      end
       user
     end
   end
@@ -79,9 +82,8 @@ class VokomokumController < ApplicationController
   #
   # @param group_data [Aray<Hash<String, Object>>] Array of groups
   # @return [Array<Workgroup>] Foodsoft workgroups this user belongs to
-  # @see FOODSOFT_WORKGROUP_IDS
   def find_workgroups(group_data)
-    Workgroup.undeleted.where('name IN (?) OR id IN (?)', group_data.map {|d| d['name']}, FOODSOFT_WORKGROUP_IDS)
+    Workgroup.undeleted.where(name: group_data.map {|d| d['name']})
   end
 
   def redirect_with_params(url, params)
