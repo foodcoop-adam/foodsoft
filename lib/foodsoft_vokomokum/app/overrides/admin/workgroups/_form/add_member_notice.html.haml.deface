@@ -1,0 +1,6 @@
+/ insert_before 'erb:contains("simple_form_for")'
+.alert.alert-warn
+  Please note each member's workgroup memberships are updated at login
+  according to the members system.
+  %br
+  Make sure to keep the workgroup name here exactly equal to the one in the members system.
