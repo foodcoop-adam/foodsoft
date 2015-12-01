@@ -21,10 +21,14 @@ module FoodsoftVokomokum
 
     module User
       extend ActiveSupport::Concern
+
       included do
         attr_accessor :vokomokum_auth_cookies
+        # for hooks that happen in a model and return a message
+        attr_accessor :vokomokum_remote_msg
       end
     end
+
   end
 end
 

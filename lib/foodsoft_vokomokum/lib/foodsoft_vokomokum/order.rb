@@ -1,9 +1,9 @@
 module FoodsoftVokomokum
-  module SettleOrder
+  module Settle
+    module Order
+      extend ActiveSupport::Concern
 
-    def self.included(base) # :nodoc:
-      base.class_eval do
-
+      included do
         private
 
         def charge_group_orders!(user)
@@ -13,16 +13,30 @@ module FoodsoftVokomokum
             user_id.present? or raise Exception.new("No user for ordergroup '#{group_order.ordergroup.name}'")
             charges << {order_id: id, amount: group_order.price.to_f, user_id: user_id, note: transaction_note}
           end
-          s = FoodsoftVokomokum.charge_members!(user.vokomokum_auth_cookies, charges)
-          Rails.logger.info s
+          user.vokomokum_remote_msg = FoodsoftVokomokum.charge_members!(user.vokomokum_auth_cookies, charges)
+          Rails.logger.info user.vokomokum_remote_msg
         end
-
       end
     end
 
+    module Controller
+      extend ActiveSupport::Concern
+
+      included do
+        after_filter :vokomokum_show_msg_on_close, only: :close
+      end
+
+      private
+
+      def vokomokum_show_msg_on_close
+        # replace flash with message from Vokomokum members system
+        flash[:notice] = current_user.vokomokum_remote_msg
+      end
+    end
   end
 end
 
 ActiveSupport.on_load(:after_initialize) do
-  Order.send :include, FoodsoftVokomokum::SettleOrder
+  Order.send :include, FoodsoftVokomokum::Settle::Order
+  Finance::BalancingController.send :include, FoodsoftVokomokum::Settle::Controller
 end
