@@ -6,8 +6,10 @@ This plugin integrates
 with the ordering system of [Vokomokum](http://www.vokomokum.nl/), a Foodcoop
 based in Amsterdam, The Netherlands. It features:
 * login using an existing session cookie,
-* automatic user creation on successful login, and
-* sending order totals to the Vokomokum members system when settling.
+* automatic user creation on successful login,
+* sending order totals to the Vokomokum members system when settling,
+* synchronizing workgroup memberships from the members system, and
+*
 
 
 Configuration
@@ -32,22 +34,36 @@ This plugin is configured in the foodcoop configuration in foodsoft's
 There are no default values, so you need to set them. This is intentional.
 
 
+Running a local members instance
+---------------------------------
+
+To test the Vokomokum plugin, an instance of the Vokomokum members system
+is needed. This is most easily done using a [Docker](http://docker.com/) image:
+
+    docker pull nhoening/vokomokum-members
+    docker run --name=vkmkm -d -p 6543:6543 nhoening/vokomokum-members
+
+Then set `vokomokum_members_url: http://localhost:6543/` in your `app\_config.yml`.
+
+Because it's running at a different port, auto-login won't get back to Foodsoft.
+After logging into the members system, look at the `Mem` and `Key` cookies,
+and add these as GET parameters to Foodsoft's `/f/login/vokomokum` url.
+
+
 Login with session cookie
 -------------------------
 
 When running foodsoft on the same domain, the session cookie can be shared.
 Foodsoft will pick that up and validate it with the Vokomokum member system.
 
-To use Foodsoft on a different domain, a form is needed to pass on the session
-cookie. All that's needed is a web form that POSTs to the `login/vokomokum`
-path, setting the `Mem` parameter to the session cookie. E.g.:
+To use Foodsoft on a different domain, the authentication cookie can also
+be passed in the url. For example, redirecting to
 
-   ```html
-   <form action='https://order.foodsoft.test/f/login/vokomokum' method='post'>
-     <input type='hidden' name='Mem' value='"0123456789!userid_type:int"'>
-     <input type='submit' value='Fresh ordering'>
-   </form>
-   ```
+    https://order.foodsoft.test/f/login/vokomokum?Mem=123&Key=abcdefghIjk-jias
+
+Would login user 123 in Foodsoft with the specified session key. For more
+security, this is also accepted as a POSTed form body.
+
 
 Workgroups
 ----------
@@ -69,3 +85,7 @@ Since Vokomokum uses member ids extensively, the user id of foodsoft is
 synchronised with that. This also means that any users available to foodsoft
 but not to Vokomokum are created with an offset of 20000.  If the number of
 Vokomokum users would ever cross that boundary, this needs to be increased.
+
+Perhaps this offset is dropped in the future, since the member id is now
+included in the ordergroup name as well. For now, we use the id of the first
+member of an ordergroup.
