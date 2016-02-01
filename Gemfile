@@ -7,8 +7,8 @@ gem "rails", '~> 3.2.9'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'sass-rails'
+  gem 'coffee-rails'
   gem 'less-rails'
   gem 'uglifier', '>= 1.0.3'
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
@@ -17,7 +17,7 @@ end
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'select2-rails', '>= 3.4.0'
+gem 'select2-rails', '~> 3.5.0'
 gem 'rails_tokeninput'
 gem 'bootstrap-datepicker-rails'
 gem 'date_time_attribute'
