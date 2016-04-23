@@ -6,6 +6,10 @@
         = number_to_currency sum unless sum == 0
       %i.icon-shopping-cart
       = t 'group_orders.my_current_order'
+  = link_to url_for(action: :edit, q: {quantity_or_tolerance_gt: 0}, kind: 'everyone', anchor: 'articles_table'), remote: true do
+    .well.well-link{style: 'margin-bottom: 5px'}
+      %i.icon-th-large.text-muted
+      = t 'group_orders.everyones_current_order'
 - else
   .well.well-link
     %i.icon-shopping-cart= t '.no_current_orders'

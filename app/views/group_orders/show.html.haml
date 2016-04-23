@@ -15,12 +15,8 @@
             .pull-right
               = number_to_currency price
 
-.page-header
-  %h1
-    %i.icon-shopping-cart.soft-icon
-    = orders_title @orders
-    %span{style: 'font-weight: normal; font-size: 12pt; vertical-align: middle'}
-      = orders_status_line @orders
+.page-header#page_header
+  = render 'page_header', kind: 'show'
 
 #articles_table
   - if @orders.nil? or @orders.empty?

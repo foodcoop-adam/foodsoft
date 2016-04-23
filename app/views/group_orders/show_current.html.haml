@@ -3,14 +3,11 @@
 - content_for :sidebar do
   = render 'edit_sidebar'
 
-.page-header
-  %h1
-    %i.icon-shopping-cart.soft-icon
-    = t 'group_orders.my_current_order'
-    %span.normal= orders_status_line(@orders)
+.page-header#page_header
+  = render 'page_header'
 
 #articles_table
-  - if @order_articles and !@order_articles.empty?
+  - if @order_articles && !@order_articles.empty?
     = render 'order_articles'
   - else
     = t '.no_articles'

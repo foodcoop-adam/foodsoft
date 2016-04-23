@@ -75,8 +75,12 @@ module GroupOrdersHelper
     end
   end
 
-  def orders_title(orders)
-    if orders.select(&:open?).any?
+  def orders_title(orders, kind = nil)
+    if kind == 'everyone'
+      I18n.t('group_orders.everyones_current_order')
+    elsif kind == 'edit'
+      I18n.t('group_orders.browse')
+    elsif orders.select(&:open?).any?
       I18n.t('group_orders.my_current_order')
     elsif orders.select(&:finished?).any?
       I18n.t('group_orders.my_last_order')

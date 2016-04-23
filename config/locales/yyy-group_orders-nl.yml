@@ -22,6 +22,8 @@ nl:
     keys:
       use_tolerance: Gebruik tolerantie
   group_orders:
+    browse: Beschikbare artikelen
+    everyones_current_order: Besteld door iedereen
     my_current_order: Mijn bestelling
     my_last_order: Mijn laatste bestelling
     my_previous_order: Vorige bestelling
