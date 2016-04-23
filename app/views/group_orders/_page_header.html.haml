@@ -1,0 +1,9 @@
+- kind = local_assigns[:kind] || action_name
+- kind = 'everyone' if kind == 'edit' && params[:kind] == 'everyone'
+%h1
+  - if kind == 'show'
+    %i.icon-shopping-cart.soft-icon
+  - elsif kind == 'everyone'
+    %i.icon-th-large.soft-icon
+  = orders_title @orders, kind
+  %span.normal= orders_status_line @orders

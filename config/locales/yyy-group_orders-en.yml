@@ -22,6 +22,8 @@ en:
     keys:
       use_tolerance: Use tolerance
   group_orders:
+    browse: Available articles
+    everyones_current_order: Ordered by everyone
     my_current_order: My current order
     my_last_order: My last order
     my_previous_order: Previous order

@@ -1,3 +1,4 @@
+$('#page_header').html('<%= j render("page_header") %>')
 $('#articles_table').html('<%= j render("order_articles") %>');
 <% if defined?(FoodsoftPayorder) && FoodsoftPayorder.enabled? %>
   // workaround foodcoop-adam/foodsoft#175
