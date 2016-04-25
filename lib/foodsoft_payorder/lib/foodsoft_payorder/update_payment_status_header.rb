@@ -6,6 +6,7 @@ module FoodsoftPayorder
         base.class_eval do
 
           # add javascript to update button - can't use deface because it's javascript
+          # plus hack to recompute progress bar and amount colors :(( foodcoop-adam/foodsoft#175
           # TODO use something like content_for_in_controllers, move js to partial
           alias_method :foodsoft_payorder_orig_price_details, :price_details
           def price_details

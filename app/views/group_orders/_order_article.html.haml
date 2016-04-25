@@ -13,7 +13,10 @@
       = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
         - data_delta = {min: 0, granularity: 1}
         - data_delta[:max] = order_article.quantity_available + group_order_article.quantity if order_article.max_quantity
-        - data_delta[:value_others] = order_article.quantity - group_order_article.quantity
+        - if defined?(FoodsoftPayorder) && FoodsoftPayorder.enabled? # hack to get Payorder to work :(( foodcoop-adam/foodsoft#175
+          - data_delta[:value_others] = order_article.quantity - group_order_article.group_order_article_quantities.confirmed.sum(:quantity)
+        - else
+          - data_delta[:value_others] = order_article.quantity - group_order_article.quantity
         - cls = group_order_article_class_name(group_order_article.quantity, group_order_article.result(:quantity))
         - if order_article.order.boxfill?
           - data_delta[:min] = group_order_article.quantity
@@ -27,7 +30,10 @@
         = simple_fields_for "group_order[group_order_articles_attributes][#{order_article.id}]", group_order_article do |f|
           - if cur_has_tolerance
             - data_delta = {min: 0, granularity: 1, max: order_article.price.unit_quantity-1}
-            - data_delta[:value_others] = order_article.tolerance - group_order_article.tolerance
+            - if defined?(FoodsoftPayorder) && FoodsoftPayorder.enabled? # hack to get Payorder to work :(( foodcoop-adam/foodsoft#175
+              - data_delta[:value_others] = order_article.tolerance - group_order_article.group_order_article_quantities.confirmed.sum(:tolerance)
+            - else
+              - data_delta[:value_others] = order_article.tolerance - group_order_article.tolerance
             - if order_article.order.boxfill?
               - data_delta[:min] = group_order_article.tolerance
             = f.input_field :tolerance, as: :delta, class: 'input-nano', data: data_delta, id: "t_#{order_article.id}"

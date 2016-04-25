@@ -1,1 +1,5 @@
 $('#articles_table').html('<%= j render("order_articles") %>');
+<% if defined?(FoodsoftPayorder) && FoodsoftPayorder.enabled? %>
+  // workaround foodcoop-adam/foodsoft#175
+  $('td.quantity input[data-delta]').trigger('foodsoft-ordering-state-changed');
+<% end %>

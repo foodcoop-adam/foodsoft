@@ -26,6 +26,12 @@ $(function() {
       row.removeData('ordering-timeout-id');
     }, quantityTimeDeltaClientMs));
 
+    $(this).trigger('foodsoft-ordering-state-changed');
+  });
+
+  $(document).on('foodsoft-ordering-state-changed', '#articles_table input[data-delta]', function() {
+    var row = $(this).closest('tr');
+
     //
     // update page locally
     //

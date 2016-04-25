@@ -22,3 +22,13 @@
         });
       }
     });
+
+-# terrible hack to do client-side update because server-side is off :(( foodcoop-adam/foodsoft#175
+-# this is a quick fix, hope to move to fully client-side based solution later
+-# deface override doesn't work for javascript - this could move actualy to a html override I guess
+- if defined?(FoodsoftPayorder) && FoodsoftPayorder.enabled?
+  - content_for :javascript do
+    :javascript
+      $(function() {
+        $('td.quantity input[data-delta]').trigger('foodsoft-ordering-state-changed');
+      });
