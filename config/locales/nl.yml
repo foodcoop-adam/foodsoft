@@ -74,6 +74,7 @@ nl:
         sent_to_all: Aan alle leden sturen
         subject: Onderwerp
       order:
+        boxfill: Dozen vullen na
         closed_by: Afgerekend door
         created_by: Geopend door
         ends: Eindigt op
@@ -275,6 +276,8 @@ nl:
         title: Huishouden %{name}
     search_placeholder: naam ...
     users:
+      controller:
+        sudo_done: Je bent nu ingelogd als %{user}. Wees voorzichtig, en vergeet niet uit te loggen wanneer je klaar bent!
       edit:
         title: Lid bewerken
       index:
@@ -612,6 +615,13 @@ nl:
     general: Er is een probleem opgetreden.
     general_again: Er is een fout opgetreden. Probeer het opnieuw.
     general_msg: 'Er is een probleem opgetreden: %{msg}'
+    not_found:
+      title: Pagina niet gevonden
+      text: Sorry, deze pagina lijkt niet te bestaan.
+    internal_server_error:
+      title: Interne fout van de server
+      text1: Er is een onverwachte fout opgetreden. Sorry!
+      text2: De technische mensen zijn op de hoogte gebracht. Als het probleem blijft bestaan, neem dan contact met op.
   feedback:
     create:
       notice: Bericht verstuurd. Vriendelijk bedankt!
@@ -745,10 +755,8 @@ nl:
       linked_delivery: een levering
       linked_order: een bestelling
       new:
-        back: Terug
         title: Nieuwe factuur toevoegen
       show:
-        back: Terug
         title: Factuur %{number}
     ordergroups:
       index:
@@ -807,6 +815,7 @@ nl:
       notfound: Foute URL, dit is niet jouw bestelling.
     form:
       action_save: Bestelling opslaan
+      in_boxfill_phase: Eén of meer bestellingen zijn in de fase om tekorten te verminderen. Help mee om de dozen te vullen!
       new_funds: Nieuw tegoed
       price: Prijs
       reset_article_search: Alles tonen
@@ -1654,6 +1663,7 @@ nl:
       title_all: Alle groepstaken
   ui:
     actions: Acties
+    back: Terug
     cancel: Annuleren
     close: Sluiten
     delete: Verwijder
