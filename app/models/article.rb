@@ -197,11 +197,11 @@ class Article < ActiveRecord::Base
 
   # product information url, fallback to optional supplier-wide value
   def info_url(supplier=self.supplier)
-    self[:info_url] or supplier.article_info_url(self)
+    self[:info_url].present? ? self[:info_url] : supplier.article_info_url(self)
   end
 
   def use_tolerance?
-    supplier.use_tolerance? and unit_quantity > 1
+    supplier.use_tolerance? && unit_quantity > 1
   end
 
   protected
