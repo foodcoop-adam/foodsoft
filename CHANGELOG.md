@@ -1,3 +1,14 @@
+# Foodsoft 3.3.10-adam
+(25 Apr 2016)
+
+* Show tolerance in progress bar
+* Give member amounts a color based on whether it's part of a full box or not
+* Add optional boxfill phase to orders
+* Bugfix: admin menu sometimes showed inaccessible items
+* Bugfix: keep showing supplier's article info url after editing the article
+* Bugfix: non-synced article count on synchronisation included deleted articles
+* Bugfix: order schedule can now be cleared
+
 # Foodsoft 3.3.9-adam
 (14 Oct 2015)
 
