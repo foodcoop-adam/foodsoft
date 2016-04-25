@@ -506,7 +506,6 @@ DEPENDENCIES
   charlock_holmes
   client_side_validations
   client_side_validations-simple_form
-  coffee-rails
   connection_pool
   coveralls
   daemons

@@ -8,7 +8,6 @@ gem "rails", '~> 3.2.9'
 # in production environments by default.
 group :assets do
   gem 'sass-rails'
-  gem 'coffee-rails'
   gem 'less-rails'
   gem 'uglifier', '>= 1.0.3'
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
