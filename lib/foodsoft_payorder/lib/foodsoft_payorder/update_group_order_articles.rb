@@ -79,7 +79,7 @@ module FoodsoftPayorder
           alias_method :foodsoft_payorder_orig_update_quantities_merge, :update_quantities_merge
           def update_quantities_merge(quantities)
             if FoodsoftPayorder.enabled?
-              if quantities[0] and quantities[1]
+              if quantities[0] && quantities[1]
                 quantities[0].send :foodsoft_payorder_set_transaction # make sure it's set
                 if quantities[0].financial_transaction.present? != quantities[1].financial_transaction.present? \
                    or quantities[0].confirmed != quantities[1].confirmed
