@@ -2,13 +2,19 @@
 class OrderByGroups < OrderPdf
   include OrdersHelper
 
+  # optimal value depends on the number of articles ordered on average by each
+  #   ordergroup as well as the available memory
+  BATCH_SIZE = 50
+
+  attr_reader :order
+
   def filename
-    I18n.t('documents.order_by_groups.filename', :name => @order.name, :date => @order.ends.to_date) + '.pdf'
+    I18n.t('documents.order_by_groups.filename', :name => order.name, :date => order.ends.to_date) + '.pdf'
   end
 
   def title
-    I18n.t('documents.order_by_groups.title', :name => @order.name,
-      :date => @order.ends.strftime(I18n.t('date.formats.default')))
+    I18n.t('documents.order_by_groups.title', :name => order.name,
+      :date => order.ends.strftime(I18n.t('date.formats.default')))
   end
 
   def group_orders
@@ -17,19 +23,18 @@ class OrderByGroups < OrderPdf
 
   def body
     # Start rendering
-    group_orders.includes(:ordergroup).each do |group_order|
+    each_group_order do |group_order|
       down_or_page 15
 
       total = 0
+      has_tolerance = false
       taxes = Hash.new {0}
       fc_markup_price = 0
       rows = []
       dimrows = []
 
-      group_order_articles = group_order.group_order_articles.natural_order
-      has_tolerance = !group_order_articles.select {|goa| goa.order_article.price.unit_quantity > 1}.empty?
-
-      group_order_articles.each do |goa|
+      each_group_order_article_for(group_order) do |goa|
+        has_tolerance = true if goa.order_article.price.unit_quantity > 1
         price = goa.order_article.price.fc_price(group_order.ordergroup)
         sub_total = price * goa.result
         total += sub_total
@@ -42,7 +47,7 @@ class OrderByGroups < OrderPdf
                   goa.result,
                   result_in_units(goa),
                   number_to_currency(sub_total),
-                  (goa.order_article.price.unit_quantity if has_tolerance)]
+                  goa.order_article.price.unit_quantity]
         dimrows << rows.length if goa.result == 0
       end
       next if rows.length == 0
@@ -62,11 +67,9 @@ class OrderByGroups < OrderPdf
       # table header
       rows.unshift I18n.t('documents.order_by_groups.rows').dup
       rows.first[4] = {content: rows.first[4], colspan: 2}
-      if has_tolerance
-        rows.first[-1] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
-      else
-        rows.first[-1] = nil
-      end
+      rows.first[-1] = {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center}
+
+      rows.each {|r| r[-1] = nil} unless has_tolerance
 
       text show_group(group_order.ordergroup), size: fontsize(13), style: :bold
       table rows, width: bounds.width, cell_style: {size: fontsize(8), overflow: :shrink_to_fit} do |table|
@@ -108,4 +111,27 @@ class OrderByGroups < OrderPdf
     end
 
   end
+
+  private
+
+  def group_orders
+    order.group_orders.ordered.
+      joins(:ordergroup).order('groups.name').
+      preload(:group_order_articles => {:order_article => [:article, :article_price]})
+  end
+
+  def each_group_order
+    group_orders.find_each_with_order(batch_size: BATCH_SIZE) {|go| yield go }
+  end
+
+  def group_order_articles_for(group_order)
+    goas = group_order.group_order_articles.to_a
+    goas.sort_by!(&:id)
+    goas
+  end
+
+  def each_group_order_article_for(group_order)
+    group_order_articles_for(group_order).each {|goa| yield goa }
+  end
+
 end
