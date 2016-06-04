@@ -1,8 +1,12 @@
 # encoding: utf-8
 class OrderFax < OrderPdf
 
+  BATCH_SIZE = 250
+
+  attr_reader :order
+
   def filename
-    I18n.t('documents.order_fax.filename', foodcoop: FoodsoftConfig[:name], supplier: @order.name, date: @order.ends.to_date) + '.pdf'
+    I18n.t('documents.order_fax.filename', foodcoop: FoodsoftConfig[:name], supplier: order.name, date: order.ends.to_date) + '.pdf'
   end
 
   def title
@@ -20,8 +24,8 @@ class OrderFax < OrderPdf
       move_down 5
       text "#{contact[:zip_code]} #{contact[:city]}", size: fontsize(9), align: :right
       move_down 5
-      unless @order.supplier.try(:customer_number).blank?
-        text "#{Supplier.human_attribute_name :customer_number}: #{@order.supplier[:customer_number]}", size: fontsize(9), align: :right
+      unless order.supplier.try(:customer_number).blank?
+        text "#{Supplier.human_attribute_name :customer_number}: #{order.supplier[:customer_number]}", size: fontsize(9), align: :right
         move_down 5
       end
       unless contact[:phone].blank?
@@ -35,12 +39,12 @@ class OrderFax < OrderPdf
 
     # Recipient
     bounding_box [margin_box.left,margin_box.top-60], width: 200 do
-      text @order.name
+      text order.name
       move_down 5
-      text @order.supplier.try(:address).to_s
-      unless @order.supplier.try(:fax).blank?
+      text order.supplier.try(:address).to_s
+      unless order.supplier.try(:fax).blank?
         move_down 5
-        text "#{Supplier.human_attribute_name :fax}: #{@order.supplier[:fax]}"
+        text "#{Supplier.human_attribute_name :fax}: #{order.supplier[:fax]}"
       end
     end
 
@@ -60,9 +64,9 @@ class OrderFax < OrderPdf
 
     unless @options[:order_contact_name] or @options[:delivery_contact_name]
       # legacy, this is confusing when we have an order and delivery contact
-      contact = @order.supplier.try(:contact_person)
+      contact = order.supplier.try(:contact_person)
       unless contact.blank?
-        text "#{Supplier.human_attribute_name :contact_person}: #{@order.supplier[:contact_person]}"
+        text "#{Supplier.human_attribute_name :contact_person}: #{order.supplier[:contact_person]}"
         move_down 10
       end
     end
@@ -90,21 +94,21 @@ class OrderFax < OrderPdf
       {image: "#{Rails.root}/app/assets/images/package-bg.png", scale: 0.6, position: :center},
       OrderArticle.human_attribute_name(:units_to_order_short),
       I18n.t('documents.order_fax.subtotal')]]
-    data += @order.order_articles.ordered.includes(:article).order('articles.order_number, articles.name').collect do |a|
-      subtotal = a.units_to_order * a.price.unit_quantity * a.price.price
+    each_order_article do |oa|
+      subtotal = oa.units_to_order * oa.price.unit_quantity * oa.price.price
       total_net += subtotal
-      total_deposit += a.units_to_order * a.price.unit_quantity * a.price.deposit
-      total_tax += a.units_to_order * a.price.unit_quantity * a.price.tax_price
-      total_gross += a.units_to_order * a.price.unit_quantity * a.price.gross_price
-      [a.article.order_number,
-       a.article.name,
-       number_to_currency(a.price.price),
-       a.price.deposit != 0 ? number_to_currency(a.price.deposit) : nil,
-       number_to_percentage(a.price.tax),
-       a.article.unit,
-       a.article.unit_quantity > 1 ? "× #{a.article.unit_quantity}" : nil,
-       a.units_to_order,
-       number_to_currency(subtotal)]
+      total_deposit += oa.units_to_order * oa.price.unit_quantity * oa.price.deposit
+      total_tax += oa.units_to_order * oa.price.unit_quantity * oa.price.tax_price
+      total_gross += oa.units_to_order * oa.price.unit_quantity * oa.price.gross_price
+      data << [oa.article.order_number,
+               oa.article.name,
+               number_to_currency(oa.price.price),
+               oa.price.deposit != 0 ? number_to_currency(oa.price.deposit) : nil,
+               number_to_percentage(oa.price.tax),
+               oa.article.unit,
+               oa.price.unit_quantity > 1 ? "× #{oa.price.unit_quantity}" : nil,
+               oa.units_to_order,
+               number_to_currency(subtotal)]
     end
 
     # Hide columns if no data present
@@ -142,6 +146,19 @@ class OrderFax < OrderPdf
       columns(2..4).align     = :right
       columns(-1).align       = :right
     end
+  end
+
+  private
+
+  def order_articles
+    order.order_articles.ordered.
+      joins(:article).
+      order('articles.order_number, articles.name').
+      preload(:article, :article_price)
+  end
+
+  def each_order_article
+    order_articles.find_each_with_order(batch_size: BATCH_SIZE) {|oa| yield oa }
   end
 
 end
