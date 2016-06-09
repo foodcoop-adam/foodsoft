@@ -19,5 +19,6 @@ before_script:
   - "bundle exec rake foodsoft:setup:stock_config"
   - 'printf "test: &test\n  adapter: mysql2\n  database: foodsoft_test\n  username: travis\n  encoding: utf8\n" >config/database.yml'
   - 'printf "sharedlists:\n  <<: *test\n" >>config/database.yml'
+  - "echo \"SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));\" | mysql"
   - 'bundle exec rake db:create db:schema:load RAILS_ENV=test'
 script: bundle exec rake rspec-rerun:spec

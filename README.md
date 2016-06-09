@@ -32,6 +32,10 @@ Notes specific to this fork
 
 * The main branch is _beta_. This is based on _master_ (which is deprecated), which in turn was forked from a Rails 3 version of foodcoops/foodsoft. Many upstream changes were merged in, and many other changes as well. Beta was initially meant as a testing ground for a redesigned member ordering interface, but ended up being used in production. There is some technical debt here. While there has been some work in _feature/rails4-adam_ to migrate this to Rails 4, the idea is now to merge back changes to upstream instead.
 
+* You may need to disable MySQL's strict mode by running:
+
+      echo "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));" | mysql
+
 See also the wiki page [foodcoop adaptations](https://github.com/foodcoop-adam/foodsoft/wiki/Foodcoop-adaptations).
 
 
