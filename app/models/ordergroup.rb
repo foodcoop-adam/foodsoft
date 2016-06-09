@@ -1,10 +1,11 @@
 # encoding: utf-8
 #
 # Ordergroups can order, they are "children" of the class Group
-# 
+#
 # Ordergroup have the following attributes, in addition to Group
 # * account_balance (decimal)
 class Ordergroup < Group
+  include FindEachWithOrder
 
   APPLE_MONTH_AGO = 6                 # How many month back we will count tasks and orders sum
 
@@ -36,7 +37,7 @@ class Ordergroup < Group
   def value_of_open_orders(exclude = nil)
     group_orders.in_open_orders.reject{|go| go == exclude}.collect(&:price).sum
   end
-  
+
   def value_of_finished_orders(exclude = nil)
     group_orders.in_finished_orders.reject{|go| go == exclude}.collect(&:price).sum
   end
@@ -124,7 +125,7 @@ class Ordergroup < Group
     user.memberships << Membership.new(group: og)
     og
   end
-  
+
   # return price markup percentage for this ordergroup
   def markup_pct
     if list = FoodsoftConfig[:price_markup_list]
@@ -171,6 +172,5 @@ class Ordergroup < Group
     end
     name
   end
- 
-end
 
+end
