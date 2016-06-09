@@ -196,10 +196,10 @@ class GroupOrderArticle < ActiveRecord::Base
   # Until the order is finished this will be the maximum price or
   # the minimum price depending on configuration. When the order is finished it
   # will be the value depending of the article results.
-  def total_price(order_article = self.order_article, quantity = self.quantity, tolerance = self.tolerance)
-    total_prices(order_article, quantity, tolerance)[:price]
+  def total_price(order_article = self.order_article, quantity = self.quantity, tolerance = self.tolerance, ordergroup = group_order.ordergroup)
+    total_prices(order_article, quantity, tolerance, ordergroup)[:price]
   end
-  def total_prices(order_article = self.order_article, quantity = self.quantity, tolerance = self.tolerance)
+  def total_prices(order_article = self.order_article, quantity = self.quantity, tolerance = self.tolerance, ordergroup = group_order.ordergroup)
     price = order_article.price
     amount = if order_article.order.open?
                if FoodsoftConfig[:tolerance_is_costly]
@@ -212,12 +212,12 @@ class GroupOrderArticle < ActiveRecord::Base
              end
     {
       net_price:    amount * price.price,
-      gross_price:  amount * price.gross_price(group_order.ordergroup),
+      gross_price:  amount * price.gross_price(ordergroup),
       deposit:      amount * price.deposit,
-      price:        amount * price.fc_price(group_order.ordergroup),
-      tax_price:    amount * price.tax_price(group_order.ordergroup),
-      fc_tax_price: amount * price.fc_tax_price(group_order.ordergroup),
-      fc_markup_price: amount * price.fc_markup_price(group_order.ordergroup)
+      price:        amount * price.fc_price(ordergroup),
+      tax_price:    amount * price.tax_price(ordergroup),
+      fc_tax_price: amount * price.fc_tax_price(ordergroup),
+      fc_markup_price: amount * price.fc_markup_price(ordergroup)
     }
   end
 
