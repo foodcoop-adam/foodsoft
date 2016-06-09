@@ -30,7 +30,7 @@ class MultipleOrdersByGroups < OrderPdf
       each_group_order_article_for(ordergroup) do |goa|
         has_tolerance = true if goa.order_article.price.unit_quantity > 1
         price = goa.order_article.price
-        goa_totals = goa.total_prices
+        goa_totals = goa.total_prices(goa.order_article, goa.quantity, goa.tolerance, ordergroup)
         totals[:net_price] += goa_totals[:net_price]
         totals[:deposit] += goa_totals[:deposit]
         totals[:gross_price] += goa_totals[:gross_price]
@@ -39,7 +39,7 @@ class MultipleOrdersByGroups < OrderPdf
         taxes[goa.order_article.price.tax.to_f.round(2)] += goa_totals[:fc_tax_price]
         rows <<  [goa.order_article.article.name,
                   goa.group_order.order.name.truncate(10, omission: ''),
-                  number_to_currency(price.fc_price(goa.group_order.ordergroup)),
+                  number_to_currency(price.fc_price(ordergroup)),
                   goa.order_article.article.unit,
                   goa.tolerance > 0 ? "#{goa.quantity} + #{goa.tolerance}" : goa.quantity,
                   goa.result,
