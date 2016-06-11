@@ -1,3 +1,9 @@
+# Foodsoft 3.4.0-adam
+(11 Jun 2016)
+
+* Add overview of articles by all members
+* Improve performance when making PDFs
+
 # Foodsoft 3.3.10-adam
 (25 Apr 2016)
 
