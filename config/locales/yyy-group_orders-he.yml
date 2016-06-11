@@ -1,0 +1,13 @@
+he:
+  activerecord:
+    attributes:
+      group_order_article:
+        quantity: כמות
+  group_orders:
+    my_current_order: הזמנה נוכחית שלי
+    order_articles:
+      all_members_tolerance: סה"כ קבוצתי
+      all_members_short: כולם
+  login:
+    accept_invitation_form:
+      submit: צור משתמש
