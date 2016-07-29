@@ -49,6 +49,10 @@ Because it's running at a different port, auto-login won't get back to Foodsoft.
 After logging into the members system, look at the `Mem` and `Key` cookies,
 and add these as GET parameters to Foodsoft's `/f/login/vokomokum` url.
 
+There are default accounts _admin@vokomokum.nl_, _peter@gmail.com_ and
+_hans@gmail.com_ all with password _notsecret_
+(see [mksqlitedb.py](https://app.assembla.com/spaces/vokomokum/git/source/master/members/scripts/mksqlitedb.py)).
+
 
 Login with session cookie
 -------------------------
