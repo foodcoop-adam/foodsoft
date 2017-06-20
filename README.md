@@ -20,7 +20,7 @@ It is based on [foodcoops/foodsoft](https://github.com/foodcoops/foodsoft) (whic
 While new features are still being added, ultimately this is all meant to be integrated back into upstream
 ([#163](https://github.com/foodcoop-adam/foodsoft/issues/163)).
 
-If you're a food coop considering to use foodsoft, you're welcome to [contact us](dev-voko-contact@willem.engen.nl). Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). You can [read documentation](http://foodcoop-adam.github.io/) to get an impression of the software. When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
+If you're a food coop considering to use foodsoft, first stop would be [foodcoops.github.io](https://foodcoops.github.io/). You're also welcome to [contact us](mailto:dev-voko-contact@willem.engen.nl). Or look at the [wiki page for foodcoops](https://github.com/foodcoops/foodsoft/wiki/For-foodcoops). You can [read documentation](http://foodcoop-adam.github.io/) to get an impression of the software. When you'd like to experiment with or develop foodsoft, you can read [how to set it up](doc/SETUP_DEVELOPMENT.md) on your own computer.
 
 More information about using this software and contributing can be found on [our wiki](https://github.com/foodcoop-adam/foodsoft/wiki), as wel [foodsoft's wiki](https://github.com/foodcoops/foodsoft/wiki).
 
@@ -35,6 +35,8 @@ Notes specific to this fork
 * You may need to disable MySQL's strict mode by running:
 
       echo "SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));" | mysql
+
+* This fork turned out to be a dead end, even though is is still used. Most effort is to integrate functionality back into upstream.
 
 See also the wiki page [foodcoop adaptations](https://github.com/foodcoop-adam/foodsoft/wiki/Foodcoop-adaptations).
 
